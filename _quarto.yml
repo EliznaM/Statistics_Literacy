@@ -1,0 +1,62 @@
+project:
+  type: book
+
+book:
+  title: "Statistical Literacy"
+  author: "Elizna Maasdorp"
+  date: "2024/04/13"
+  
+  chapters:
+    - index.qmd
+    - part: why_statistics.qmd
+      chapters:
+        - uncertainty.qmd
+        - sample_population.qmd
+        - probability.qmd
+        - what_is_model.qmd
+    - part: what_is_data.qmd
+      chapters: 
+        - categorical.qmd
+        - numeric.qmd
+    - part: where_data.qmd
+      chapters:
+        - study_design.qmd
+        - measurement.qmd
+        - bias.qmd
+    - part: working_with_data.qmd
+      chapters: 
+        - goals.qmd
+        - file_types.qmd
+        - software.qmd
+    - part: visualise.qmd
+      chapters:
+        - plot_types.qmd
+    - part: describe.qmd
+      chapters:
+        - central_spread.qmd
+        - tables.qmd
+    - part: inference.qmd
+      chapters:
+        - sampling_distro.qmd
+        - diff_tests.qmd
+        - corr_lm.qmd
+        - classify.qmd
+        - quant_uncertainty.qmd
+    - part: clever.qmd
+      chapters:
+        - resampling.qmd
+        - learning.qmd
+    
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: united
+execute: 
+  echo: false
+  warning: false
+  error: false
+
+
+

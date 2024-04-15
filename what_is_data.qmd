@@ -1,0 +1,121 @@
+# What is data?
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+```{r}
+data_1 <- read_rds("rds/data_1.rds")
+display_rows <- 12
+```
+
+Here are `r display_rows` rows of a fictional dataset on a viral disease outbreak.  The full dataset has `r nrow(data_1)` observations (rows), and `r ncol(data_1)` variables (columns).  It describes imaginary participants from 3 fictional towns who fell ill with 3 strains of an unknown viral disease.  Some measurements were taken from their blood.  
+
+::: {.column-page}
+
+```{r}
+
+set.seed(444)
+data_1 |> 
+  slice(sample(1:nrow(data_1), display_rows)) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>  
+  kable_styling(full_width = FALSE, position = "left")
+
+```
+
+:::
+
+The plot below was created from some of the variables in the dataset.  Answer the questions below.  You can click to reveal the correct answer, but try it yourself first!
+
+```{r}
+
+data_1 |> 
+  filter(!is.na(sex)) |> 
+  ggplot(aes(strain, immune_prot_A, colour = sex))+
+  geom_boxplot()+
+  geom_jitter(alpha = 0.5, position = position_jitterdodge())+
+  facet_wrap(~town)+
+  scale_colour_manual(values = themeCols$hex)
+
+```
+
+1. List all the variables you see represented in this plot (Tip: there are 4).
+
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answer
+
+*  strain  
+*  town  
+*  sex  
+*  immune_prot_A  
+
+If you thought "Brenbo", "Drogen" and "Tenwa" were variables, look at the data table again.  They are not variables, but *observations* inside the `town` variable. The same is true for "A52", "CC3" and "G879".  They are observations in the `strain` variable. 
+
+:::
+
+2.  Which colour represents the female participants?
+
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answer
+
+`r themeCols$cols[1]`
+
+:::
+
+3.  True or false:  Immune protein A was slightly higher in females with strain A52, who lived in Drogen. 
+
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answer
+
+False.  You can find the answer in the middle panel, by looking at the two boxplots aligned with strain A52.
+
+:::
+
+4.  True or false:  There were no participants from Brenbo who were ill with the CC3 strain.  
+
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answer
+
+True.  In the left panel, there is no plot for CC3, because the dataset contained no data for participants from Brenbo with that strain.  
+
+:::
+
+Data are information we capture about individuals, events or phenomena.  We usually make it useful by putting it into a format that organises it, like a table, so that pieces of information that belong together, are together.  When data are in a tidy table, we can usually call the rows *observations* and the columns *variables*.  
+
+::: {.column-margin}
+
+Data *are* may sound strange to you, but the word data is actually the plural of the word *datum*, which is one data point. See <https://www.collinsdictionary.com/dictionary/english/datum>. 
+
+:::
+
+The variables can have different types, according to what they represent, as listed in the table below.
+
+```{r}
+
+tibble('Data type' = c("categorical", "", "numeric", ""),
+       'Data subtype' = c("nominal", "ordinal", "discrete",
+                        "continuous"),
+       Definition = c("Variables with categories (rather than numbers).  Nominal is when the categories have no natural order.", "Variable with categories of things (rather than numbers).  Ordinal is when the categories have a natural order, like 'high' and 'low'.", 
+                      "Variables with numbers only.  Discrete is when the numbers are whole numbers (no decimal possible), like apples or children.", 
+                      "Variables with numbers only.  Continuous is when the numbers can have decimals, which can stretch to infinity.")) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+```
+
+::: {.callout-warning appearance="simple"}
+
+Data types is a fundamental concept to understand for working with data. Complete quiz 1 to test your own understanding. 
+
+:::
+
+
