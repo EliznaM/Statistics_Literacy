@@ -13,6 +13,13 @@ theme_set(theme_minimal())
 
 ```
 
+::: {.callout-tip collapse="false" appearance="simple"}
+## Learning outcomes
+
+List outcomes for topic here
+
+:::
+
 ```{r}
 data_1 <- read_rds("rds/data_1.rds")
 display_rows <- 12

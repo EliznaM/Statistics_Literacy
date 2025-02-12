@@ -1,0 +1,324 @@
+# Correlation and linear regression
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Outcomes
+
+  * Interpret a scatter plot with a fitted line  
+  * Interpret correlation coefficients   
+  * Interpret the components of the formula for a straight line  
+  * Explain the concept of residuals 
+  * Interpret a simple linear regression result 
+  * Interpret a multiple linear regression result
+
+:::
+
+## Correlation 
+
+In our scientific experiments, we usually take measurements. In an earlier section, we were measuring the weight of frogs, for example. We could also have measured the total body length of the frogs and then we would have two continuous numeric variables. We may be interested in knowing if there was any *relationship* between weight and body length, i.e. if a frog has a longer body, does it weigh more? We could explore that visually in a scatter plot, which was introduced in a previous section. Looking at the plots below, where each dot represents a frog, it should be clear that as the length increases, the weight also increases, although the amount by which it increases seems to vary between frogs. Therefore, just by looking at the plots, it is obvious to us that there is an *association* between the two variables:  when one increases, the other also increases. In plot B, we added a line to represent the association.
+
+```{r}
+set.seed(380)
+plotdta <- tibble(id = paste0("f", 1:50),
+       weight = sample(30:40, 50, replace = TRUE),
+       x = weight/6 
+        + rnorm(50, sd = 0.3)
+       ,
+       length = x) 
+
+p1 <- plotdta |> 
+  ggplot(aes(weight, length))+
+  geom_point()
+  
+p2 <- plotdta |> 
+  ggplot(aes(weight, length))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])
+
+ggpubr::ggarrange(p1, p2, labels = c("A", "B"))
+  
+```
+
+We call this association *correlation*, and we have a formula (which we won't show and discuss here) to calculate a correlation coefficient, which can range between -1 and 1 and which represents the strength of the correlation. If the amount by which weight increased, with a 1cm increase in length, was exactly the same for every frog, we would have perfect correlation and a correlation coefficient of 1, as in the plots below. Each time, the length of a frog is exactly a sixth of its weight. 
+
+```{r}
+set.seed(380)
+plotdta <- tibble(id = paste0("f", 1:50),
+       weight = sample(30:40, 50, replace = TRUE),
+       x = weight/6 
+        # + rnorm(50, sd = 0.3)
+       ,
+       length = x) 
+
+p1 <- plotdta |> 
+  ggplot(aes(weight, length))+
+  geom_point()
+  
+p2 <- plotdta |> 
+  ggplot(aes(weight, length))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])
+
+ggpubr::ggarrange(p1, p2, labels = c("A", "B"))
+  
+```
+
+As you know from living in the universe, it is very rare for associations to be this perfect. There will be variation or *error* around our measurements, and therefore the observations will fall *around* the straight line on the plot, rather than *on* it. The closer the observations are to the line, on average, the stronger the relationship, represented in the correlation coefficient being closer to 1 (for a positive correlation) or -1 (for a negative correlation). The further away and all over the place the observations are, the weaker the relationship, represented in the correlation coefficient being close to zero.
+
+```{r}
+
+set.seed(380)
+plotdta <- tibble(id = paste0("f", 1:50),
+       weight = sample(30:40, 50, replace = TRUE),
+       x1 = weight/6 
+        + rnorm(50, sd = 0.3),
+       x2 = weight/6 
+        + rnorm(50, sd = 0.07),
+       x3 = weight/6 
+        + rnorm(50, sd = 1.3),
+       length1 = x1,
+       length2 = -x2,
+       length3 = x3) 
+
+cors <- map(plotdta[c(6,7,8)], 
+    ~paste0(round(cor.test(plotdta$weight, .x)$estimate, 2)))
+
+
+p1 <- plotdta |> 
+  ggplot(aes(weight, length1))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])+
+  annotate("text", x = 39, y = 4.5, label = paste0("r = ", cors[1]))
+  
+p2 <- plotdta |> 
+  ggplot(aes(weight, length2))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])+
+  annotate("text", x = 32.5, y = -6.3, label = paste0("r = ", cors[2]))
+  
+
+p3 <- plotdta |> 
+  ggplot(aes(weight, length3))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])+
+  annotate("text", x = 39, y = 4, label = paste0("r = ", cors[3]))
+  
+
+ggpubr::ggarrange(p1, p2, p3, labels = c("A", "B", "C"),
+                  nrow = 1, ncol = 3)
+
+
+```
+
+## Linear models 
+
+Hopefully, by now you have started to wonder how we know where to put the line? Which of the lines in the plot below is the best one?
+
+```{r}
+
+plotdta |> 
+  ggplot(aes(weight, length3))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])+
+  geom_abline(slope = 0.3, intercept = 4.5 - 29.5*0.3, 
+              colour = themeCols$hex[2], linewidth = 1)+
+  geom_abline(slope = 0.1, intercept = 4.8 - 29.5*0.1, 
+              colour = themeCols$hex[2], linewidth = 1)
+
+
+```
+
+From mathematics at school, you should recall that we can graph a line to represent a relationship, and that such a line has a formula, which specifies the slope and intercept (where it cuts through the y-axis). The lines in the plot above all have different formulas. But which formula best represents the relationship between the two variables?  
+
+The general formula for a linear model is  
+
+y = b + ax + e
+
+where b is the intercept, a is the slope and e is error.  
+
+If the correlation was perfect and all observations fell exactly on the line, e would be zero. But with the observations not falling exactly on the line, e is not zero and actually represents how far each observation, on average, is from the line. Therefore, what if we use these distances from the line, to decide which line is the best fit?  If we can find the line that is on average the closest to each observation, so that we make e as small as possible for each observation, that would be the best line. See the error demonstrated in the plot below. Two points are circled and the grey lines stretching from it to the fitted line, represent the error, which we also call the *residuals*. 
+
+```{r}
+
+x <- which(plotdta$length3 < 5 & plotdta$length3 > 4.4)
+# plotdta[x,]
+
+plotdta |> 
+  ggplot(aes(weight, length3))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])+
+  geom_segment(y = 4.55, yend = 5.8, x = 37, xend = 37,
+               colour = themeCols$hex[1],
+               linewidth = 1, linetype = 1)+
+  geom_segment(y = 6.52, yend = 5.7, x = 36, xend = 36,
+               colour = themeCols$hex[1],
+               linewidth = 1, linetype = 1)+
+  annotate("point", x = 37, y = 4.55, colour = "red", size = 5,
+           shape = 1)+
+  annotate("point", x = 36, y = 6.5, colour = "red", size = 5,
+           shape = 1)
+
+```
+
+If you imagine drawing the residual line for each observation in the plot, it should make intuitive sense that the line which minimises all the residuals, is the line that best fits the data. This is the principle behind least squares regression, or what we generally call the simple linear regression model. This should also make it clearer to you that the correlation coefficients are closer to 1 or -1, when the observations are on average, closer to the line (i.e. the residuals are smaller).
+
+When we have done an experiment and taken several measurements of variables we were interested in, we can apply simple linear regression to test whether there are associations between specific variables. For example, if we were growing some microbe in media and wanted to see whether different concentrations of glucose was associated with the growth rate, we could potentially use a linear model.  There is one important thing to check, though.  Is the relationship actually linear? There are other ways that two variables can be associated, apart from a linear relationship. The plots below demonstrate an exponential relationship. In this case a linear model would not be appropriate (although in this case applying a logistic transformation to the data would be a workaround to still enable us to use a linear model).
+
+```{r}
+plotdta <- tibble(growth = sample(rnorm(50, mean = 300, sd = 120)),
+                  glucose = growth^2 + rnorm(50, sd = 0.03))
+
+p1 <- plotdta |> 
+  ggplot(aes(glucose, growth))+
+  geom_point()+
+  geom_smooth(se = FALSE, method = "lm",
+              colour = themeCols$hex[2])
+
+p2 <- plotdta |> 
+  ggplot(aes(glucose, growth))+
+  geom_point()+
+  geom_smooth(se = FALSE,
+              colour = themeCols$hex[2])
+
+ggpubr::ggarrange(p1, p2, labels = c("A", "B"))
+
+```
+
+If we are satisfied that the relationship is linear however, we would use statistical software to perform a linear regression. Let's return to the frogs' length and weight.
+
+We would specify the *dependent variable*, or outcome variable (the y in the formula). In this case we hypothesise that the longer a frog is, the more it would weigh. Therefore weight is *dependent* on length, or length *predicts* weight to some extent. Weight is the dependent variable and length is the *independent variable* or *predictor* (the x in the formula).  
+
+weight = a*length + e  
+
+The statistical software *fits* a linear model through the least squares method we discussed above - it finds the line that minimises the squares of the residuals, and then provides output that describes the formula and how well the model *fit* the data. The concept is the same as with the correlation coefficient of before. If the residuals are large, the model doesn't fit the data very well and by implication, length doesn't predict weight very well. Below is the output that R provides when using the ``` lm()``` function.
+
+```{r}
+
+set.seed(380)
+plotdta <- tibble(id = paste0("f", 1:50),
+       weight = sample(30:40, 50, replace = TRUE),
+       x1 = weight/6 
+        + rnorm(50, sd = 0.3),
+       x2 = weight/6 
+        + rnorm(50, sd = 0.07),
+       x3 = weight/6 
+        + rnorm(50, sd = 1.3),
+       length1 = x1,
+       length2 = -x2,
+       length3 = x3) 
+
+```
+
+
+```{r echo=TRUE}
+fit <- lm(weight ~ length1, data = plotdta)
+
+```
+
+
+```{r}
+
+ broom::tidy(fit) |> 
+   kable(table.attr = 'data-quarto-disable-processing="true"') |>
+   kable_styling(full_width = FALSE, position = "left")
+   
+```
+
+The *estimate* column reports the model coefficients, i.e. the y and x of the formula. The formula of the model therefore, is y = 7.60 + 4.75x. We interpret this as follows:  For every 1 unit increase in length, weight increases by 4.75 units. As you can see, we don't generally use the intercept in the interpretation.  Each coefficient has a p-value, and it represents the probability that the coefficient was the result of random chance, rather than the result of the association between weight and length.
+
+If there is no association between the predictor and the outcome, the coefficient for that predictor will be close to zero and the p-value will be high, indicating that when the predictor increases (or decreases) by 1 unit, the outcome does not change much (the coefficient is practically zero).
+The model also has an overall p-value and metrics which represent how good the fit of the model is (i.e. how close the points are to the fitted line, or how small or large the residuals are). 
+
+```{r}
+
+broom::glance(lm(weight ~ length1, data = plotdta)) |> 
+   select(-sigma, -statistic) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+We generally would look at the adjusted R-squared and the p-value of the model to judge how well the model (the fitted line) describes the data. We usually interpret the R-squared as the "amount of variance in y, explained by the predictors". The R-squared ranges between 0 and 1, with 0 being no association at all, and 1 being a perfect association. In this case, the R-squared of 0.81 means that length explains 81% of the variance in weight, which is a very strong association.  
+
+Clearly, however, it does not explain all of the variation.  There remains error or uncertainty (unexplained variance). One way to try to reduce the unexplained variance, and therefore to understand the outcome variable better, is to add more predictors to the model. If there are other factors that we think can reasonably be associated with the outcome variable, we can create a multiple linear regression model, which includes multiple predictors. In the case of length and weight of frogs, we may think that sex also plays a role, and add that to the model. Each predictor will have a coefficient (a slope) in the model output, and a p-value. The conceptual formula for the model now looks like this, with a and b, representing the slopes or coefficients for length and sex.  
+
+weight = a*length + b*sex + e  
+
+```{r}
+
+plotdta <- plotdta |> 
+  arrange(length3) |> 
+  mutate(sex = c(rep("f", 15), sample(c("f", "m"), 20, replace = TRUE),
+         rep("m", 15)))
+
+```
+
+
+```{r echo=TRUE}
+fit <- lm(weight ~ length1 + sex, data = plotdta)
+
+```
+
+
+```{r}
+
+ broom::tidy(fit) |> 
+   kable(table.attr = 'data-quarto-disable-processing="true"') |>
+   kable_styling(full_width = FALSE, position = "left")
+   
+```
+
+We see that in this case, the coefficient for sex is close to zero and the p-value is not significant, so there is no association with weight. 
+
+```{r}
+
+broom::glance(lm(weight ~ length1 + sex, data = plotdta)) |> 
+   select(-sigma, -statistic) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+
+```
+
+The adjusted R-squared has also not improved substantially, so we would generally go back to the results from the first model. If the adjusted R-squared did however improve and it seemed like sex helped to explain more of the variance in weight, we would keep it in the model and report its results, rather than the first model.  
+
+## Linear model assumptions
+
+When using statistical tests, we always have to be aware of whether we are using the test *appropriately*. All tests make some assumptions about the data, and if those assumptions are in fact not true for the data, using that test is not appropriate. We already mentioned one assumption for linear models - the relationship must be linear. Two more important assumptions to be aware of are  
+  * the residuals must be approximately normally distributed  
+  * the variability around the fitted line should be constant across the spectrum of the outcome variable (there should not be low variability in the low values and high variability in the high values, for example).  
+  
+Analysts should check these assumptions before accepting the results of a linear model. We will not go into more detail about that here.  
+
+## Linear models in practice
+
+Use the Lowe_2019 paper to answer the questions in the following quiz.  
+
+**QUIZ** - to be created
+
+
+
+
+
+
+
+

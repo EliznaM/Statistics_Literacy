@@ -1,0 +1,147 @@
+# Describing uncertainty
+
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Outcomes
+
+  * Explain random error  
+  * Understand how p-values and confidence intervals relate back to the sampling distribution and probability  
+  * Interpret p-values associated with estimates from statistical tests  
+  * Interpret confidence intervals associated with estimates from statistical tests  
+  * Explain type 1 error  
+  * Explain type 2 error  
+  * Explain the problem with multiple hypothesis testing   
+  * Name multiple testing correction methods  
+  
+:::
+
+## 95% Confidence interval and p-value
+
+This section draws on some of the concepts introduced in the sampling distribution sections. From that section, it was clear that when we do an experiment, using a *sample*, our goal is to estimate certain characteristics of a *population*. We calculate the mean weight of a sample of 40 frogs, for example, but really we are interested in the mean weight of *all* frogs of that species (the population). It should be clear to you that the mean weight for the whole population is not going to be exactly the same as the weight we calculated for the sample. But we can use the information we gathered from the sample of 40 frogs, to estimate a range for the mean, within which we think the population mean most likely falls. In fact, we even try to quantify the probability that the population mean falls within that specified range.  
+
+We looked at the sampling distribution, its mean and the 2.5th and 97.5th percentiles and we learned that 5% of the data in the sampling distribution falls outside of those two percentiles, while 95% of the data fall within them. When we report the mean of the sampling distribution, along with the range from the 2.5th to the 97.5th percentile, we can say that if you do many experiments (like our thought experiment of catching 40 frogs, on 1000 different occasions), then for 95% of those experiments, the mean will fall within the range we specified. Therefore we think our mean, along with this 95% range, is a good estimate of what the *population* mean is. We call that range (between the 2.5th and 97.5th percentile of the sampling distribution), the 95% confidence interval (CI). 
+
+Recall that in the sampling distribution section, we learned that instead of doing the thought experiment of 1000 studies to create the sampling distribution, we can use a theoretical distribution, the *normal distribution* in its place. We therefore do not have to actually calculate the 2.5th and 97.5th percentiles of the sampling distribution, but we use the *known* properties of the normal distribution to calculate 95% confidence intervals. You should remember for the Measures of centrality and spread section, that 95% of the data in a normal distribution, falls within -1.96 and 1.96 SDs from the mean.  
+
+We then use the mean and *standard error (SE)* from our sample of 40 frogs, to calculate the 95% CI with this formula upper = mean + 1.96 x SE and lower = mean - 1.96 x SE. 
+
+::: {.column-margin}
+
+The standard error is similar to the standard deviation, but its formula is   
+SE = mean/square root of n.
+
+:::
+
+Reporting the 95% CI along with our estimate of the population mean, is our attempt to represent the *uncertainty* of our estimate. It should make intuitive sense that if we say the population mean is between 30 and 40, there is much more uncertainty, than if we say the population mean is between 32 and 34. The width of the 95% CI represents how uncertain we are about the estimate.    
+
+In a similar way, the p-value represents the uncertainty about hypothesis test results and it can also be derived from a sampling distribution. Recall that a p-value of 0.03 for a difference test, can be interpreted as the probability that the same difference, or a difference even more extreme, could have been detected by random chance alone. That is to say that if the the group allocation (for example the difference in a measured protein between pneumonia cases and non-pneumonia controls) in truth, had no association with the values of the protein, the probability of measuring the difference that was measured, is 3%.  We consider that quite a low probability in this case and therefore we would say this p-value is statistically significant, because it is below 0.05 (which is a common threshold pre-specified for statistical significance). We would conclude that there is in fact a difference between the two groups (we would reject the null hypothesis that there is no difference).  
+
+## Types of error
+
+The sampling distribution demonstrates to us that there is *random error* in our measurements. For most things that we measure in experiments, it is highly unlikely that many individuals will have exactly the same value. Even measuring something in the same individual over time, will usually produce different measurements. Taking the same measurement in 1000 different experiments, then calculating the mean of each experiment and plotting it, produces the sampling distribution and demonstrates the *random error* inherent in the phenomenon that is measured.  Some things may vary much more than others.  
+
+We can usually not distinguish between random error and "real" variation associated with a specific characteristic of a population, or an intervention that was applied to one group, but not another. Yet, those are the differences we are actually interested in. Therefore random error can cause difficulty for us in designing studies and interpreting results.  
+
+We generally accept that just by random chance alone (i.e. through no real association between our measurements and some characteristic), we will find statistically significant differences in 5% of experiments, if we repeated the same experiment many times. We would call that a false positive result. But we have no way of knowing whether our positive result was a false or a true positive, because we don't know the true relationship in the population of interest (if we knew the truth, we would not be doing the experiment!). The best we can do is to *quantify the uncertainty* (or the random error) by providing p-values and/or confidence intervals which make the probability of getting the result by random chance alone, explicit.
+
+We call the case where we obtained a false positive result, type I error. As we stated before, we cannot distinguish between a true and a false positive result, but we set a threshold for the probability of obtaining a false positive result, by pre-specifying a threshold for statistical significance. This is called alpha and most often 0.05 is used. This means that we accept up to a 5% chance of getting a false positive test, as a low enough probability to not reject the null hypothesis. But if the probability of a false positive test goes above 5% (i.e. the probability of obtaining this result or something more extreme is 10% or 20%), we do not reject the null hypothesis, because we consider that probability to be unacceptably high.  
+
+The opposite can also happen. We can have a false negative result, where we detected no association, when in truth there is an association in the population. Again, we cannot know when our result is a false or a true negative. We call this type II error.  
+
+In the same way that we try to manage type I error, by pre-specifying a level for alpha, above which we will not reject the null hypothesis (therefore "protecting" against too many false positives), we also try to manage type II error, mainly by having a large enough samle size. Sample size calculations can be done to determine the number of observations that one would need to detect a difference of a specific size, with a specified "power". Power pertains to the probability of finding a false negative result and we generally tolerate a larger probability of 10 or 20% here. Power in that case is specified as 80% or 90% to detect a difference of a specified size. 
+
+The table below demonstrates the types of error we have been discussing.
+
+```{r}
+
+ 	
+tribble(~Truth, ~`Test result: reject null hypothesis`, ~`Test result: fail to reject null hypothesis`,
+"Null hypothesis is true", 	"Type I error", 	"Good decision",
+"Alternative hypothesis is true", 	"Good decision", 	"Type II error") |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+## The impact of sample size
+
+The ability to detect a difference of a specific size, between two groups, if such a difference really exists, depends on the sample size and the variance in the variable that is measured. A smaller sample size typically has a larger variance, which makes the overlap between the distributions of the two groups larger, as demonstrated in the plots below. On the x-axis of each, is the variable in which we want to detect a difference. The orange dotted lines are the means for the two groups.  Plot A has a sample size of 200, while plot B has a sample size of 20. You should be able to see that the difference in means for the two plots are very similar, but the overlap between the distributions is larger in the second plot. It will be harder for a difference test to detect the difference in the second plot, even though the size of the difference is similar for both scenarios. The only ways to improve the situation, is to enlarge the sample size, so that the variance decreases, or to settle for only being able to detect a larger difference, which will decrease the overlap by moving the two means further away from each other. The problem with the second approach is that many times we are not sure what size difference we are looking for, so if the sample size is too small to detect a smaller difference, we cannot claim that there is no difference, only that our sample size was too small to detect a smaller difference.    
+
+
+```{r}
+
+set.seed(93434345)
+plotdta <- tibble(pneumonia_case  = c(rep(1, 100), rep(0, 100)),
+       protein_1 = sample(rnorm(200)),
+       protein_2 = c(sample(rnorm(100, mean = 20, sd = 5)),
+                     sample(rnorm(100, mean = 32, sd = 5))),
+       protein_3 = c(sample(rnorm(100, mean = 300, sd = 6)),
+                     sample(rnorm(100, mean = 304, sd = 6))))
+
+x <- plotdta |> 
+  group_by(pneumonia_case) |> 
+  summarise(mn = mean(protein_2))
+
+p1 <- plotdta |> 
+  ggplot(aes(protein_2, group = pneumonia_case))+
+  geom_density()+
+  geom_vline(xintercept = x$mn[1], linetype = 2, linewidth = 1,
+             colour = themeCols$hex[2])+
+  geom_vline(xintercept = x$mn[2], linetype = 2, linewidth = 1,
+             colour = themeCols$hex[2])+
+  annotate("text", x = x$mn[2], y = 0.08, label = "Group A")+
+  annotate("text", x = x$mn[1], y = 0.08, label = "Group B")+
+  annotate("text", x = sum(x$mn[1], x$mn[2])/2, y = 0.015, label = "overlap", colour = 
+             themeCols$hex[2])
+
+set.seed(49577)
+x <- ceiling(nrow(plotdta)/2)
+x <- c(sample(size = 10, x = 1:x), sample(size = 10, x = (x+1):nrow(plotdta)))
+
+plotdta <- plotdta[x,]
+
+x <- plotdta |> 
+  group_by(pneumonia_case) |> 
+  summarise(mn = mean(protein_2),
+            sd = sd(protein_2))
+
+
+p2 <- plotdta |> 
+  ggplot()+
+  geom_density(data = plotdta, 
+               aes(protein_2, group = pneumonia_case))+
+  geom_vline(xintercept = x$mn[1], linetype = 2, linewidth = 1,
+             colour = themeCols$hex[2])+
+  geom_vline(xintercept = x$mn[2], linetype = 2, linewidth = 1,
+             colour = themeCols$hex[2])+
+  annotate("text", x = x$mn[2], y = 0.08, label = "Group A")+
+  annotate("text", x = x$mn[1], y = 0.08, label = "Group B")+
+  annotate("text", x = sum(x$mn[1], x$mn[2])/2, y = 0.015, label = "overlap", colour = 
+             themeCols$hex[2])
+  
+
+ggpubr::ggarrange(p1, p2, labels = c("A", "B"),
+                  ncol = 1, nrow = 2)
+
+```
+
+This topic can be discussed in much more detail with practical examples, but we will not do that here. 
+
+## Multiple testing
+
+One more important topic to discuss around quantifying uncertainty and type I and II error, is when multiple hypothesis tests are performed in an experiment. Due to new technology, it has become possible for us to measure thousands of analytes from the tissue samples of patients, for example. We can measure hundreds or thousands of proteins or RNA molecules in blood specimens. Often we want to test each one of those measured analytes for a difference between two groups, like the pneumonia cases and non-pneumonia controls of before. This means doing thousands of hypothesis tests. As we discussed before, for every hypothesis test we accept some threshold, usually 0.05, indicating the probability of false positives that we will tolerate. If we did 100 tests on completely random data (i.e. there is truly no associations between the variables we are testing), we would expect 5 tests to be positive, just by random chance. The number of false positives escalates quickly when we are doing thousands of tests. If we measure 14 000 genes and perform difference tests for each one, we would expect 700 false positives. Even though that still amounts to only 5%, the actual number of false positives has become unacceptable. We want to "protect" ourselves against getting so many false positive results by *correcting for multiple testing*. This is a fairly standard procedure in some fields where thousands of hypothesis tests are routinely done. We will not explain the methods here, but the principle is basically to adjust every p-value by some method, so that the p-values which are likely from false positive results, would no longer be statistically significant by the pre-specified cut-off (alpha). The Bonferroni correction and the Benjamini-Hochberg correction are two methods that are commonly used and you may come across them while reading papers. 
+

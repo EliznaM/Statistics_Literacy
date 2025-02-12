@@ -1,0 +1,287 @@
+# Classification
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Outcomes
+
+  * Interpret a logistic regression result 
+  * Interpret sensitivity, specificity and area-under-the-curve results from logistic regression analysis    
+
+:::
+
+## Logistic regression
+
+In the linear models section, we explored models to represent a linear association between a continuous outcome variable and one or more predictors (which could be continuous or categorical).  Now we will think of the specific case where the outcome variable is binary, i.e. it has only two categories. Again, we are interested in a relationship between the outcome variable and predictors, but this time, we will use logistic regression. The result a logistic regression model produces is quite different from linear models.
+
+Imagine we want to explore the associations between a number of proteins that can be measured in blood, and whether or not a person has a particular disease. We take blood from each patient and measure three proteins of interest. Then we want to see if there is an association between these proteins and whether or not a patient has pneumonia. Another way to phrase it, is that we want to see whether the three proteins can *classify* a patient as having pneumonia, or not.  
+
+Part of the output of a logistic regression model is a probability (between 0 and 1) for every individual to be a case (i.e. have pneumonia), or not. But like with linear models, there is also a coefficient for each predictor. The interpretation of the coefficients are however different for logistic regression. 
+
+Below is the output for a logistic regression model for the pneumonia example. 
+
+```{r}
+
+set.seed(95)
+logreg_dta <- tibble(pneumonia_case  = c(rep(1, 25), rep(0, 25)),
+       protein_1 = sample(rnorm(50)),
+       protein_2 = c(sample(rnorm(25, mean = 20, sd = 5)),
+                     sample(rnorm(25, mean = 26, sd = 5))),
+       protein_3 = c(sample(rnorm(25, mean = 300, sd = 6)),
+                     sample(rnorm(25, mean = 304, sd = 6))))
+
+```
+
+
+```{r echo=TRUE}
+                   
+fit <- glm(pneumonia_case ~ protein_1 + protein_2 + protein_3,
+    data = logreg_dta)
+
+```
+
+
+```{r}
+
+broom::tidy(fit) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+# broom::glance(fit)
+
+
+```
+
+The p-value can be interpreted as for linear models - when it is below 0.05, the predictor is significantly associated with the outcome. The coefficients themselves must be transformed to odds and then odds ratios to be interpreted. We will not discuss that further here, but if you are interested you can read more here[].  
+
+## Classification
+
+We will focus on another way to interpret logistic regression models, which pertains to the accuracy of a model to predict the class (pneumonia case or non-pneumonia control) of the outcome variable for each individual.  
+
+Below is the probability output for 10 of the 50 individuals from the model above. In the class column is the true class of each individual (pneumonia case = 1, non-pneumonia control = 0) and in the probability column is the model estimate of the probability that an individual is a case. 
+
+```{r}
+
+prob_dta <- tibble(class = logreg_dta$pneumonia_case,
+       probability = fit$fitted.values) 
+
+prob_dta |> 
+  slice(c(1:5, 45:50)) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+We can plot the probabilities per class like below. The dotted horizontal line indicates a probability of 0.5.
+
+```{r}
+
+prob_dta |> 
+  ggplot(aes(factor(class), probability))+
+  geom_boxplot()+
+  geom_jitter()+
+  geom_hline(yintercept = 0.5, linetype = 2, linewidth = 1, colour = themeCols$hex[2])+
+  labs(x = "class")
+
+```
+
+As you can see, the probability scores for cases and controls overlap, meaning that the model was not able to perfectly classify them.
+
+If we decided that a probability score 0.5 or higher signifies a case, we can create table A below. In the left column, labelled "Class", is the true class of the participants. In the two columns to the right, are the predicted classes. Table B below shows the interpretation of each cell.  
+
+```{r}
+
+prob_dta |> 
+  mutate(prediction = if_else(probability >= 0.5, "case", "control"),
+         across(class, ~if_else(.x == 1, "case", "control"))) |> 
+  count(class, prediction) |> 
+  pivot_wider(names_from = prediction, values_from = n) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"',
+        caption = "A") |>
+  kable_styling(full_width = FALSE, position = "left")
+
+
+tribble(
+  ~class, ~case, ~control,
+  "case",   "true pos", "false neg",
+  "control",   "false pos", "true neg"
+) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"',
+        caption = "B") |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+From the table we can calculate *true positives* and *true negatives* (where the predicted class and real class correspond), and *false positives* and *false negatives* (where the prediction was wrong), as depicted in table B. 
+
+From this table we can compute a few important metrics of classification.  
+
+  * Sensitivity = true positives / total cases   
+  * Specificity = true negatives / total controls    
+  * Positive predictive value = true positives / all positives     
+  * Negative predictive value = true negatives / all negatives    
+  
+These metrics are used to evaluate the usefulness of the classification for the situation. An in-depth discussion is beyond the scope of this section, but you can read more here[]. From the table and formulas above you should be able to appreciate that sensitivity and specificity are closely related. A high sensitivity generally means that there are few false negatives, while a high specificity means that there are few false positives. It is hard for tests to achieve both those things, and there is always a trade-off. If you want fewer false negatives, you usually have to tolerate a few more false positives and vice versa. Study the tables above to understand why this is the case. 
+
+## The Receiver operating characteristic curve
+
+Hopefully you were wondering a bit about the probability score cut-off of 0.5 that we chose. How did we decide to choose that? Could we have used a different cut-off?  We will now introduce the receiver operating characteristic (ROC) curve.
+
+::: {.column-margin}
+
+You can read more about these curves and how they got their name here[https://pmc.ncbi.nlm.nih.gov/articles/PMC6022965/#bibr1-2192568218778294].
+
+:::
+
+```{r}
+
+res_roc <- pROC::roc(prob_dta, response = class, predictor = probability)
+
+plotdta <- tibble(thresh = res_roc$thresholds,
+       sens = res_roc$sensitivities,
+       spec = res_roc$specificities)
+
+x <- min(plotdta$thresh[plotdta$thresh != "-Inf"], na.rm = TRUE)
+plotdta$thresh[plotdta$thresh == "-Inf"] <- x - 0.1*x
+
+x <- max(plotdta$thresh[plotdta$thresh != "Inf"], na.rm = TRUE)
+plotdta$thresh[plotdta$thresh == "Inf"] <- x + 0.1*x
+
+# make the probabilities < 0, zero
+
+plotdta$thresh[plotdta$thresh < 0] <- 0
+
+plotdta |> 
+  ggplot(aes(y = sens, x = 1 - spec))+
+  geom_path()+
+  geom_abline(linetype = 2)
+
+```
+
+A sample of the data that was used to create this plot is shown below.  
+
+```{r}
+
+plotdta |> 
+  slice(5:15) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+The *thresh* column is the probability scores produced by the logistic regression model. For each entry, the sensitivity and specificity are calculated, as if that probability score was used as the cut-off between cases and controls.  Before, we used 0.5 as an arbitrary threshold, but here, we use every possible cut-off between 0 and 1, in turn. Once we have the calculations, we can optimise either sensitivity or specificity (depending on the context of the classification problem) by using the cut-off that gives the best sensitivity, for example, while still retaining an acceptable specificity. The ROC curve demonstrates these sensitivity and specificity combinations, at each cut-off of the probability score. Each step (the "corner" where a horizontal and vertical segment of the line meet) in the graph, represents a specific cut-off, and the corresponding sensitivity and specificity can be read off from the axes. Note that the x-axis inverts the specificity. 
+
+A second useful thing that can be calculated from the ROC analysis, is the area-under-the-curve (AUC). This refers to the area under the ROC curve and gives an overall value to how well the model correctly classified cases from controls. Perfect classification would produce an AUC of 1, while a model which is no better than a coin flip (i.e. random chance) will have an AUC of around 0.5. The plots below demonstrate a very good model in A and a poor model in B.
+
+```{r}
+set.seed(95)
+logreg_dta <- tibble(pneumonia_case  = c(rep(1, 25), rep(0, 25)),
+                     protein_1 = sample(rnorm(50)),
+                     protein_2 = c(sample(rnorm(25, mean = 20, sd = 6)),
+                                   sample(rnorm(25, mean = 25, sd = 6))),
+                     protein_3 = c(sample(rnorm(25, mean = 300, sd = 6)),
+                                   sample(rnorm(25, mean = 315, sd = 6))))
+
+
+fit1 <- glm(pneumonia_case ~ protein_2 + protein_3,
+           data = logreg_dta)
+
+prob_dta1 <- tibble(class = logreg_dta$pneumonia_case,
+                   probability = fit1$fitted.values) 
+
+
+res_roc1 <- pROC::roc(prob_dta1, response = class, predictor = probability)
+auc1 <- pROC::auc(res_roc1)
+plotdta <- tibble(thresh = res_roc1$thresholds,
+                  sens = res_roc1$sensitivities,
+                  spec = res_roc1$specificities)
+
+x <- min(plotdta$thresh[plotdta$thresh != "-Inf"], na.rm = TRUE)
+plotdta$thresh[plotdta$thresh == "-Inf"] <- x - 0.1*x
+
+x <- max(plotdta$thresh[plotdta$thresh != "Inf"], na.rm = TRUE)
+plotdta$thresh[plotdta$thresh == "Inf"] <- x + 0.1*x
+
+# make the probabilities < 0, zero
+
+plotdta$thresh[plotdta$thresh < 0] <- 0
+
+p1 <- plotdta |> 
+  ggplot(aes(y = sens, x = 1 - spec))+
+  geom_path()+
+  geom_abline(linetype = 2)+
+  annotate("text", x = 0.75, y = 0.2, label = glue::glue("AUC: {auc1}"))
+
+
+# ---------------
+
+fit1 <- glm(pneumonia_case ~ protein_1,
+            data = logreg_dta)
+
+prob_dta1 <- tibble(class = logreg_dta$pneumonia_case,
+                    probability = fit1$fitted.values) 
+
+
+res_roc1 <- pROC::roc(prob_dta1, response = class, predictor = probability)
+auc1 <- pROC::auc(res_roc1)
+
+plotdta <- tibble(thresh = res_roc1$thresholds,
+                  sens = res_roc1$sensitivities,
+                  spec = res_roc1$specificities)
+
+x <- min(plotdta$thresh[plotdta$thresh != "-Inf"], na.rm = TRUE)
+plotdta$thresh[plotdta$thresh == "-Inf"] <- x - 0.1*x
+
+x <- max(plotdta$thresh[plotdta$thresh != "Inf"], na.rm = TRUE)
+plotdta$thresh[plotdta$thresh == "Inf"] <- x + 0.1*x
+
+# make the probabilities < 0, zero
+
+plotdta$thresh[plotdta$thresh < 0] <- 0
+
+p2 <- plotdta |> 
+  ggplot(aes(y = sens, x = 1 - spec))+
+  geom_path()+
+  geom_abline(linetype = 2)+
+  annotate("text", x = 0.75, y = 0.2, label = glue::glue("AUC: {auc1}"))
+
+ggpubr::ggarrange(p1, p2, labels = c("A", "B"))
+```
+
+```{r}
+
+
+
+```
+
+## ROC curves in practice
+
+Use the Mutavhatsindi_2024 paper to answer the following quiz questions. 
+
+**QUIZ** - to be done
+
+
+## Other classification methods
+
+Logistic regression is not the only method available to classify observations into classes, using predictors. Many statistical learning and machine learning methods have been developed for classification, and some of them can handle classification of more than two categories. These methods can generally also be divided into *supervised* and *unsupervised* methods. Supervised methods are used in the case where the classes are known, as in the logistic regression example above. The model learns from the data with known classes, and can then be applied to new data for which the classes are not known, to predict the classes.  
+In the case of unsupervised classification, the classes are unknown, i.e. we don't even know whether there are different classes in the data. These methods put together observations that are similar into groups and separates observations that are different into other groups.  It is then up to an analyst to discover whether these groups are truly different classes and what the most important features are that distinguish them.  An example in healthcare where one might use an unsupervised method, is if we suspect that there are two very different immune responses to SARS-CoV2 in people with moderate disease, for example. We could measure many different immune markers in the blood of people with moderate disease and apply an unsupervised classification method to the data, to see whether two distinct groups form.  If two distinct groups form, we could investigate further which variables are most different between the groups and potentially discover that one group's immune system mainly responds with T-cells, while the other group tend to have a more dominant B-cell response (this is a simple fictional example - no such difference has been discovered!).
+
+
+We will not discuss other classification methods further here, but you can read more here[]. 
+
+

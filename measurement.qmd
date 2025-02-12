@@ -1,0 +1,75 @@
+# Variation and measurement
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Learning outcomes
+
+* Explain why researchers are interested in variation  
+* Give examples of types of measurements  
+* Explain what measurement error is  
+* Explain accuracy and precision  
+
+:::
+
+## We study variation!
+
+Revisit the abstracts from the previous chapter (Kampman_2023, Luetkemeyer_2023, Hall_2023 and Chen_2023) and read the research question you wrote down for each.  In each case, the researchers were interested in *differences* (variation!) between different groups or times or conditions.  We want to study *changes* that happen because of certain exposures or interventions or with a period of time passing.  In the biological sciences, the changes we care about are usually *biological* changes, like changes in the immune response to a pathogen, or change in symptoms or bacterial load in response to a drug, or changes in drug efficacy due to variation in the pathogen's genome. This is why the research question is so important to define - we should understand exactly which variation it is that we are interested in, because in order to *study* it, we have to *measure* it. And as you will find out during the course of your scientific career, *measuring* different types of biological phenomena can get very complex. 
+
+Watch this video about Illumina sequencing-by-synthesis and ask yourself, what is *actually* being measured during the process to determine the nucleotide sequence? Nucleotides do not actually have the letters "A", "C", "G" or "T" printed on them!  We are also not taking out each single nucleotide and looking at it under some very powerful microscope to see what it is.  We are measuring something that is *bound* to each nucleotide, but even then we are not directly measuring that bound molecule... What are we *actually* measuring during the process?
+
+{{< video https://www.youtube.com/watch?v=fCd6B5HRaZ8 >}}
+
+You need to appreciate that many technologies do not *directly* measure the molecule you are interested in, but in fact measures some *proxy* of it, like in the case of Illumina sequencing.  We are not looking at the *actual* nucleotide under a microscope and noting down which one of the four candidates it is, but we measure *fluorescence*, emitted by a fluorescent marker bound to the nucleotide.  Therefore, there is some error rate associated with all measurements, in part because the technologies we use to measure molecules, add several layers (like the fluorescent marker, and the fluorescence itself and the camera that detects the fluorescence) on top of what we are actually interested in measuring. Illumina reports on the expected error rates of base calling (the process of identifying which nucleotide was added to the sequence by interpreting the fluorescence signal), so that researchers can understand what the level of uncertainty for their results are.  
+
+::: {.column-margin}
+
+If *proxy* is an unfamiliar word to you, read about its meaning [here](https://dictionary.cambridge.org/dictionary/english/proxy).
+
+:::
+
+::: {.column-margin}
+
+See Illumina's discussion of error rates [here](https://www.illumina.com/science/technology/next-generation-sequencing/plan-experiments/quality-scores.html).
+
+:::
+
+
+After sequencing, in the data pre-processing steps of sequencing experiments, another step is *alignment* to a reference genome.  Here, an additional error rate comes into play, when a sequence can match a section of the reference genome, perfectly, or only partially.  Here again, we usually record the alignment accuracy, so that we have some notion of the uncertainty of our results.  
+
+::: {.column-margin}
+
+Our measurements will never be 100% accurate according to the objective truth. Because we very rarely know the objective truth of a measurement, our estimates of error rates are usually based on simulation studies where we in a sense "create" the objective truth for the experiment. We will not cover simulation here, but feel free to read more about it, if you are interested.  
+
+:::
+
+What you should have concluded so far, is that:  
+
+* Researchers in biology (that includes you!) are interested in biological variation.  
+* They specify a specific biological variation they are interested in in a *research question*.  This guides which *measurements* they must take, because if you want to *study* something, you have to *measure* it.  
+* Measurement can involve very complex technologies, with many hundreds or thousands of steps, before capturing an observation.  
+* Measurement is sometimes *indirect*, i.e. they do not directly measure the molecule of interest, but some proxy, like the fluorescence emitted by a molecule *bound* to the molecule of interest.  
+* The presence of many steps in a workflow that aims to measure a specific molecule, and the *indirectness* of many measurements, introduce *error* into the data.  
+
+## "Unwanted" variation
+
+Error in the sense that we are using it here, does not mean that anyone is necessarily doing something wrong (although one can certainly take some precautions to reduce error as much as possible).  Introducing some error into data is usually practically unavoidable. Error is also just another form of variation, like the biological variation we are aiming to study. But the difference with error is that we are *not interested* in this variation, and it can *interfere* with our results about the variation we are actually interested in. In that sense it is *unwanted*, but largely unavoidable.    
+
+Look at the picture below, and imagine these researchers are busy with an experiment.  Blood was drawn from a female patient at a peripheral clinic, into a tube with some reagents to prevent clotting, and was then manually labelled with the patient's study ID number and time of blood draw.  It was then brought to the laboratory by a research assistant - a 30 minute drive. At the laboratory it was received by another research assistant, who documented the time of arrival, and then applied a study protocol for specimen preparation to it, which involved adding some reagents and splitting the specimen into several aliquots, (each manually labelled with new specimen IDs) which were then stored in a -80 degree Celsius freezer.  The researchers depicted in the photo then retrieved one of the aliquots, thawed it, and added reagents, according to a study protocol for the specific assay they were doing, and documented the results in a standard data capture form.  Some sources of variability and/or error have been highlighted in the picture.  Can you think of even more sources of variation on a specimen's journey from being collected, until data analysis has been done and results are reported?  
+
+![](img/nlm_measure_annotated.svg)
+
+
+::: {.column-margin}
+
+This image is from the Digital Collections of the National Library of Medicine's
+*Images from the History of Medicine* and can be viewed, along with many others, [here](https://collections.nlm.nih.gov/catalog/nlm:nlmuid-101541114-img).
+
+:::
+
+
+
+
+## Accuracy and precision
+
+Read the Wikipedia article on accuracy and precision [here](https://en.wikipedia.org/wiki/Accuracy_and_precision), and complete the quiz to test your understanding.  
+

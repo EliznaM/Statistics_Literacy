@@ -38,6 +38,7 @@ book:
     - part: inference.qmd
       chapters:
         - sampling_distro.qmd
+        - sampling_distro2.qmd
         - diff_tests.qmd
         - corr_lm.qmd
         - classify.qmd
@@ -46,6 +47,8 @@ book:
       chapters:
         - resampling.qmd
         - learning.qmd
+        - dim_reduce.qmd
+        - advanced_viz.qmd
     
 
 bibliography: references.bib
@@ -53,6 +56,7 @@ bibliography: references.bib
 format:
   html:
     theme: united
+    fig-cap-location: top
 execute: 
   echo: false
   warning: false

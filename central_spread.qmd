@@ -1,0 +1,233 @@
+# Measures of centrality and spread
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Outcomes
+
+  * Calculate the mean and median for a continuous variable.  
+  * Define the range and interquartile range of a continuous variable. 
+  * Define and calculate variance and standard deviation. 
+  * Interpret a box and whisker plot. 
+  * Describe the shape of distributions that are symmetric, right skewed, left skewed, unimodal, bimodal, multimodal, or uniform.  
+  * Define the normal distribution by the values of its mean and standard deviation.  
+  * Annotate a histogram of the normal distribution with its mean, multiples of its standard deviation and the proportion of data contained within different ranges of the standard deviation.  
+  * Interpret different standard deviations around a mean and its relation to the precision of an estimate.  
+  * Describe standardisation of a numeric variable.  
+ 
+:::
+
+Now that we have discussed types of data and ways to visualise data, we will move on to ways to describe data using summary statistics. A study in which a number of variables were measured on a 100 participants, likely will produce a spreadsheet with rows and columns, where the observations of each measurement, for each participant were captured. If you have ever seen a spreadsheet like that, you will appreciate that it is hard to come to any conclusions about the experiment by looking at the "raw" data (i.e. the individual numbers in a spreadsheet). Usually, we need to make summaries and visualisations of the data, relevant to the scientific questions we are trying to answer. 
+
+One way to summarise numeric data, is through measures of centrality and spread. We touched on this before, briefly. Measures of centrality represent where the bulk of the data can be found. If the mean age of a group of people is 30 years, we would expect that most people's age is relatively close to 30. Measures of spread, indicate how much variability there is.  
+
+## Definitions
+
+Important measures of centrality and spread that you should know the definitions of are:  
+
+ * Mean  
+ * Median 
+ * Mode  
+ * Standard deviation (SD)    
+ * Variance  
+ * Range  
+ * Interquartile range (IQR)     
+
+We will not define these here, it is up to you to familiarise yourself with the definitions and how to calculate these.  
+
+## The box-and-whisker plot
+
+We have encountered the box-and-whisker plot (box plot for short) before. It is a very valuable plot to represent the distribution of numeric data. On the plot below, which features represent the median, the interquartile range, the range and the minimum and maximum in the data? What percentage of the data is represented by the box? What percentage of the data falls outside the box?
+
+```{r}
+
+set.seed(9303)
+plotdta <- tibble(A = rnorm(200))
+
+plotdta |> 
+  ggplot(aes("", A))+
+  geom_boxplot()
+
+```
+
+The dots at the top and bottom of the whiskers are called *outliers*. There are different definitions for what constitutes an outlier, but a common definition (and the definition used in this plot) is values that are more than 1.5 IQRs away from the 25th and 75th percentiles. If you investigated the questions above, you would have found that the top line of the box is the 75th percentile and the bottom line is the 25th percentile. The height of the box, therefore is the IQR. If a value is 2.5 times the height of the box, away from the median, that observation is considered an outlier, and will be represented as a dot beyond the whisker.  
+
+Now consider the three boxplots below. List which differences and similarities you observe between them.  
+
+```{r}
+
+set.seed(72735)
+plotdta <- tibble(A = rnorm(200),
+                  B = rnorm(200)^2,
+                  C = rnorm(200, sd = 3)) |> 
+  pivot_longer(c(A,B,C))
+
+plotdta |> 
+  ggplot(aes(name, value))+
+  geom_boxplot()
+
+
+```
+
+Their medians are similar. A and C are symmetrically distributed (the top and bottom halves of the box and whiskers are similar in size). B is assymetrically distributed, with a long "tail" at the top. Since the dark line in the middle represents the median, we can see that the bottom 50% of the data fits into a very small range on the y-axis, while the top 50% of the data spreads out over a larger range. 
+
+Look at the histograms below. Which histogram corresponds with A, B and C above?
+
+```{r}
+x <- nrow(plotdta)
+
+plotdta |> 
+  mutate(name2 = rep(c("E", "D", "F"), x/3)) |> 
+  ggplot(aes(value))+
+  geom_histogram()+
+  facet_wrap(~name2)
+
+
+```
+
+## Distributions 
+
+Box plots and histograms are useful plots to show the *distribution* of numeric variables. A distribution is defined by parameters, such as the mean, standard deviation, median, IQR. There are many theoretical distributions which are defined by other parameters than the ones listed here, but we will not discuss those.  
+
+An important distribution that is often used or referred to, is the standard normal distribution. It is defined as having a mean of 0 and a SD of 1 and is symmetrical. The distributions A and E in the plots above, are standard normal distributions. Many statistical concepts use the principles of the normal distribution, most importantly, its symmetry and its spread (the fact that the SD is equal to 1).  
+
+Because the SD of the normal distribution is 1, a very useful property is that percentiles of the normal distribution can be expressed as multiples of its SD. 68 % of the data that generates a normal distribution, lie between -1 and 1 SDs from the mean.  95% of the data lie between -1.96 SDs and 1.96 SDs. Therefore, 1 SD deviation below the mean, corresponds to the 16th percentile ((100 - 68)/2), while 1 SD above the mean, corresponds to the 84th percentile (100 - (32/2)), so that 68% (84 - 16) of the data lie between those two percentiles.  In the same way, 95% of the data lie between the 2.5th and 97.5th, or -1.96 and 1.96 SDs from the mean. 
+
+```{r}
+
+set.seed(74437)
+plotdta <- tibble(A = rnorm(500))
+
+x <- quantile(plotdta$A, probs = c(0.16, 0.84, 0.025, 0.975))
+m <- mean(plotdta$A)
+txsz <- 3
+
+plotdta |> 
+  ggplot(aes(A))+
+  geom_density()+
+  geom_vline(xintercept = m, linetype = 2, colour = themeCols$hex[2])+
+  geom_vline(xintercept = x[1], linetype = 2, colour = themeCols$hex[1])+
+  geom_vline(xintercept = x[2], linetype = 2, colour = themeCols$hex[1])+
+  geom_vline(xintercept = x[3], linetype = 2, colour = themeCols$hex[1])+
+  geom_vline(xintercept = x[4], linetype = 2, colour = themeCols$hex[1])+
+  annotate("text", y = 0.42, x = m, label = "Mean", size = txsz)+
+  annotate("text", y = 0.42, x = x[1], label = "16th Percentile", size = txsz)+
+  annotate("text", y = 0.42, x = x[2], label = "84th Percentile", size = txsz)+
+  annotate("text", y = 0.4, x = x[3], label = "2.5th Percentile", size = txsz)+
+  annotate("text", y = 0.4, x = x[4], label = "97.5th Percentile", size = txsz)
+  
+  
+
+```
+You will likely see some people rounding the SD multiples, to make it easier to remember. In this simplified rule, 68%, 95% and 99.7% of the data lie between 1, 2 and 3 SDs from the mean, respectively.  
+
+It is useful to compare the distribution of your data to the normal distribution, in terms of whether the data is distributed symmetrically, and how wide its spread is (i.e. the standard deviation). We would describe the distributions below as A = normal, B = right skewed (long "tail" to the right), C = left skewed (long "tail" to the left) and D = symmetrical, wide (it is wider than a normal distribution).  
+
+```{r}
+
+set.seed(72735)
+plotdta <- tibble(A = rnorm(200),
+                  B = rnorm(200)^2,
+                  C = -rnorm(200)^2,
+                  D = rnorm(200, sd = 3)) |> 
+  pivot_longer(c(A,B,C, D))
+
+p1 <- plotdta |> 
+  ggplot(aes(value))+
+  geom_histogram()+
+  facet_wrap(~name, nrow = 1)
+
+p2 <- plotdta |> 
+  ggplot(aes(name, value))+
+  geom_boxplot()+
+  facet_wrap(~name, scales = "free_x", nrow = 1)
+
+ggpubr::ggarrange(p1, p2, nrow = 2)
+
+
+```
+Distributions can also be stranger than these and have more than one peak or no peak at all.  The distributions below can be described as A = uniform (mostly flat with no distinct peaks), B = bimodal (as opposed to unimodal, when there is only one peak) and C = multimodal. 
+
+```{r}
+set.seed(586576)
+plotdta <- tibble(A = runif(200, min = 1, max = 2),
+                  B = c(rnorm(100), rnorm(100, mean = 10)),
+                  C = c(rnorm(66), rnorm(66, mean = 20), rnorm(68, mean = 30)))
+
+p1 <- plotdta |> 
+  ggplot(aes(A))+
+  geom_density()
+
+p2 <- plotdta |> 
+  ggplot(aes(B))+
+  geom_density()
+
+p3 <- plotdta |> 
+  ggplot(aes(C))+
+  geom_density()
+
+ggpubr::ggarrange(p1, p2, p3, labels = c("A", "B", "C"))
+
+```
+
+## Variability and precision
+
+At the start of this chapter you were required to revise what the standard deviation and variance are. You would have discovered that the square of the SD is the variance. Both therefore are ways to describe how widely the data are spread apart, or how narrowly it is distributed. Again, the normal distribution with its SD of 1, serves as a good comparison of whether data is spread more widely or more narrowly than the normal distribution. Data that is highly variable will have a large standard deviation and variance.  
+
+When we summarise a numeric variable by reporting its mean and standard deviation, we would say that an estimate with a smaller SD is more *precise* than an estimate with a larger associated SD. A more precise estimate is usually more useful and a larger sample size usually gives a more precise estimate.  Some types of data are inherently more variable and will have larger standard deviations around the mean, than data that is inherently less variable.   
+
+## Standardisation of numeric data
+
+We pointed out before that the normal distribution has the special property that its percentiles can be described as number of SDs from the mean. This is very useful, because if you know an observation within a normal distribution lies within 2 SDs from the mean, you know it is within the range of 95% of all the data, while if it lies beyond 3 SDs from the mean, it lies within the outside 0.3% of the data, and is therefore a rare observation in the distribution.  
+
+This property is however only true of the normal distribution.  When you measure something for your experiment, it is highly unlikely that it will be perfectly normally distributed (i.e. have a mean of 0 and a SD of 1). There is however a clever way to transform any numeric variable into a normal distribution, so that we can use its properties to describe our data.  
+
+We will first do an exercise to demonstrate the principle.  Do the following calculations on the numbers in the table below.   
+
+ * Calculate the mean of column A.  
+ * Calculate the SD of column A.  
+ * Subtract the mean from each observation in column A, and then divide your answer by the SD.
+ * Write down the new number for each observation in column B.  
+ * Calculate the mean and SD for column B.  
+ 
+```{r}
+
+tmp <- tibble(A = round(rnorm(10, mean = 20, sd = 4), 2),
+       B = "") 
+
+tmp |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+# tmp |> 
+#   mutate(C = (A - mean(A))/sd(A)) |> 
+#   summarise(mean = mean(C),
+#             sd = sd(C))
+
+```
+ 
+You should find that the mean of column B is equal or very close to 0 and the SD equal or very close to 1. This should sound familiar, as these are the properties of the normal distribution.  We know that variable A did not have a standard normal distribution, because when you calculated the mean and SD for A, they were not equal to 0 and 1, respectively.  Therefore, subtracting the mean from each observation and then dividing by the SD, transformed variable A into B, which has those two properties of the normal distribution.  We call the new observations in B, z-scores.  Each observation is now the multiple of SDs that the observation is away from the mean (which is 0).  
+
+It is a clever way to transform the data, because essentially we don't change the order of the observations or the spread. We just turned them into z-scores, which are very useful in specific cases.  
+
+One context where z-scores are useful, is in comparing the weight or height of individuals, both human or animals. Rather than comparing the actual weights, converting each individual's weight to a z-score makes it easy to immediately understand where it fits into the spread of the population. The population mean will be 0, and therefore if an individual's weight is -1, it is 1 SD below the population mean, or if it is 3, it is 3 SDs above. Combining this, with the knowledge that 99.7% of the data in a normal distribution lie within 3 SDs, we also deduce that this individual's weight is highly unusual, compared to the rest of the population. Some statistical methods also require data to be standardised before performing the test. Usually the reason for this is to put variables that were measured on very different scales, on the same scale, because variables with very high numbers will have a bigger influence on the result than those on smaller scales.  
+
+Finally, it is important to understand that data that was standardised, will have the properties of a normal distribution in that the mean is 0 and the SD is 1, but the distribution will not necessarily be symmetrical. Therefore, to standardise a variable, does not make it normally distributed. In addition, very confusingly, you can also *normalise* a variable, which means to change its scale to range from 0 to 1. That can also be very useful, but we will not discuss it further, here. 
+
+
+
+
+
+
+

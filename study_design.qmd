@@ -1,0 +1,89 @@
+# Study design
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+## Outcomes
+
+* Give examples of research questions  
+* Classify a study as observational or experimental and explain why  
+* Explain whether the study's results can be generalized to the population and whether they suggest correlation or causation between the variables studied  
+* Explain the difference between random sampling and random assignment  
+* Identify explanatory variables and response variables  
+* Identify important principles of experimental design and recognize their purposes: control any possible confounders, randomize into treatment and control groups, replicate by using a sufficiently large sample or repeating the experiment, and block any variables that might influence the response  
+* Discuss the importance of selecting appropriate controls  
+
+:::
+
+## Research question 
+
+Read the abstracts of Kampman_2023, Luetkemeyer_2023, Hall_2023 and Chen_2023 and in each case, extract the information listed below:  
+
+* Who or what is the population of interest?  
+* What is the exposure or intervention under investigation?  
+* Are different conditions, exposures or interventions compared in the study?  
+* What is the outcome of interest and how is it measured?  
+* Are measurements done at different time points?  
+
+From the information you extracted from each abstract, formulate the research question for each study.  
+
+**SOMEHOW UPLOADED, ANONYMISED AND MADE VISIBLE TO EVERYONE**
+
+Focusing on Chen_2023 only, look at the examples of datasets below.  Which one do you think best represents the data collection step for the study?
+
+::: {layout=[1,2,1]}
+
+![A](img/chen2023_data_ex1.png)
+
+![B](img/chen2023_data_ex2.png)
+
+![C](img/chen2023_data_ex3.png)
+
+:::
+
+
+## Types of studies
+
+Read **Thiese_2014** and complete the quiz below to test your own understanding.  
+
+QUIZ
+
+## Explanatory and response variables
+
+Thinking back to the studies for which you previously formulated research questions, you should recall that each study was investigating relationships between different variables.  In Chen_2023, researchers were looking for genetic variants, or clinical characteristics, that were associated with TB treatment outcomes, in people with drug-sensitive M.tb disease. Look at the example dataset B above.  The variable called *Treatment outcome* is the outcome of interest - the one they are trying to find more information about.  They want to explain which factors have an influence on the treatment outcome of the participants in the study.  This variable, which they are trying to understand better, is called the *response* variable, *outcome* variable or *dependent* variable.    
+
+The researchers also collected data from some other variables, which you can see in dataset B.  They collected those because they suspected that those variables influence the response variable, i.e. that changes in these variables may cause a different treatment outcome.  For example, if the M.tb strain a patient was infected with, had a specific genomic variant, that may have made them more likely to have a poor treatment outcome ("failure" in the dataset).  These variables that are investigated for their influence on the response variable, are called *explanatory* variables, or *independent* variables.  
+Now, for each of the 4 abstracts you read before, complete the quiz below about response and explanatory variables.  
+
+QUIZ
+
+## Confounders
+
+Read **Yan_2020**.  Take note of the following terms that appear in the paper and make sure you understand what they mean:  
+
+* a priori  
+* post hoc  
+* bias  
+* confounder  
+* randomisation  
+* stratified randomisation  
+* outcome of interest  
+
+QUIZ with true false examples of confounders
+
+
+Short narrated powerpoint on NB principles of study design
+(refer back to this video in type 1 and 2 errors)
+
+
+

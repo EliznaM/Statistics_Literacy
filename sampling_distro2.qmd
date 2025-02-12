@@ -1,0 +1,103 @@
+# The sampling distribution Part 2
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+## Outcomes
+
+  * Explain how a sampling distribution is constructed from sample data  
+  * Explain what a probability distribution is  
+  * Explain area-under-the-curve  
+  * Understand the conceptual link between a sampling distribution from data and theoretical distributions like the normal distribution and t-distribution  
+  * Understand the central limit theorem conceptually  
+
+:::
+
+In the previous section, we covered how a sampling distribution is constructed from sample data and explained that the sampling distribution is a probability distribution. Now we will define the "area-under-the-curve".  
+
+Below is the sampling distribution we created in the previous section.  
+
+```{r}
+
+set.seed(3405)
+plotdta <- tibble(mean_wt = rnorm(1000, mean = 34, sd = 3.5),
+       mean_pop = mean(mean_wt),
+       q2.5 = quantile(mean_wt, probs = 0.025),
+       q97.5 = quantile(mean_wt, probs = 0.975))
+
+d <- tibble(dens_x = density(plotdta$mean_wt)$x,
+       dens_y = density(plotdta$mean_wt)$y) 
+
+p1 <- ggplot()+
+  geom_density(data = plotdta,aes(mean_wt) , fill = themeCols$hex[1], colour = NA)+
+  geom_vline(xintercept = plotdta$mean_pop, colour = "black")+
+  geom_vline(xintercept = plotdta$q2.5, linetype = 2, colour = "grey70")+
+  geom_vline(xintercept = plotdta$q97.5, linetype = 2, colour = "grey70")+
+  annotate("text", x = plotdta$mean_pop, 
+           y = 0.12, label = round(plotdta$mean_pop, 2))+
+  annotate("text", x = plotdta$q2.5, 
+           y = 0.12, label = round(plotdta$q2.5, 2))+
+  annotate("text", x = plotdta$q97.5, 
+           y = 0.12, label = round(plotdta$q97.5, 2))
+
+
+p2 <- ggplot()+
+  geom_density(data = plotdta,aes(mean_wt) , fill = themeCols$hex[1], colour = NA)+
+  geom_area(data = d, aes(y = dens_y, x = ifelse(dens_x < plotdta$q2.5[1], dens_x, 0)), fill = themeCols$hex[2])+
+  geom_vline(xintercept = plotdta$mean_pop, colour = "black")+
+  geom_vline(xintercept = plotdta$q2.5, linetype = 2, colour = "grey70")+
+  geom_vline(xintercept = plotdta$q97.5, linetype = 2, colour = "grey70")+
+  annotate("text", x = plotdta$mean_pop, 
+           y = 0.12, label = round(plotdta$mean_pop, 2))+
+  annotate("text", x = plotdta$q2.5, 
+           y = 0.12, label = round(plotdta$q2.5, 2))+
+  annotate("text", x = plotdta$q97.5, 
+           y = 0.12, label = round(plotdta$q97.5, 2))+
+ coord_cartesian(xlim = c(24, 50))
+
+  
+ggpubr::ggarrange(p1, p2, labels = c("A", "B"))
+  
+  
+  
+```
+
+The whole dark grey area of the curve of plot A represents a probability of 1, i.e. all possible observations of the population.  The probability that the weight of an individual from the population of interest is somewhere along the x-axis of the whole sampling distribution, is 1, i.e. a 100% probability.  This grey area is also called the area-under-the-curve, and that area therefore is always equal to 1.  
+
+As we discussed before, the probability for any value to fall below the 2.5th percentile of the distribution, is 2.5%.  What we are really doing when we say that, is calculating the brown area of plot B, between the extreme left-hand side of the plot and the dotted grey line that represents the 2.5th percentile.  That area is 2.5% of the whole area-under-the-curve.  In the same way, 2.5% of the data that makes up the sampling distribution, falls within that area, and the probability of any observation to fall within that area, is 2.5%.  
+
+Now we will briefly look at the Central Limit Theorem.  
+
+::: {.column-margin}
+
+For an in-depth discussion, read *Zhang_2022*, which you will find in the resources folder.    
+
+:::
+
+The Central Limit Theorem (CLT) has a broad definition and implications, but we will focus here only on how it speaks to the sampling distribution of the mean.  Simply put, the theorem states that the sampling distribution will tend toward being normally distributed as the sample size increases.  So, if many studies were done, and the mean for some variable calculated every time, the distribution made up of all those means, will tend to be normally distributed.  
+
+There will of course be exceptions, but because the CLT *usually* holds, we have been using its principles in many statistical tests, to "replace" the sampling distribution, with theoretical distributions.  Instead of doing the thought experiment we did before, and pretending we do many studies through the resampling method, we use a theoretical distribution to stand in for the sampling distribution we could have created as before.  We can do this, because we can predict that the sampling distribution would be normally distributed if the sample size is large enough.  
+
+This concept of using a theoretical distribution, rather than creating a unique sampling distribution for every dataset, is one of the most central and important concepts in statistics. Examples of theoretical distributions used in statistical tests that you will come across, are the normal distribution, the t-distribution, the binomial distribution and the negative binomial distribution.  These distributions each have specific characteristics that the statistical tests associated with them, utilise to provide estimates and the error(uncertainty) associated with the test results. 
+
+In the t-test for example, instead of using the sampling distribution generated from your own dataset (as in the plots above), and calculating a specific area of the plot to find out what the probability is for values to be below a certain cut-off, the t-distribution is used and the probability is obtained from it.  
+
+It is important to note that there are different branches of statistics and what we discussed in this section particularly applies to *frequentist* statistics. Other branches include resampling statistics and Bayesian statistics and you will encounter these when you read scientific papers.   
+
+Watch the video to review the concepts we learned in this section. 
+
+INSERT VIDEO - to be created. 
+
+
+
+

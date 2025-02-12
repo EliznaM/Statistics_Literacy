@@ -1,0 +1,76 @@
+# Advanced visualisation
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(ComplexHeatmap)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+## Outcomes
+
+  * Interpret a heatmap
+  * Interpret a umap
+  * Interpret a volcano plot
+  * Interpret a Manhattan plot
+  * Interpret a Circos plot
+  
+:::
+
+
+## Heatmaps
+
+```{r}
+
+dta <- read_rds("rds/data_1.rds")
+
+# create some relationships in dta
+
+nrs_strain <- dta |> 
+  count(strain)
+
+x <- rnorm(nrs_strain$n[nrs_strain$strain == "A52"], mean = 5, sd = 0.5)
+dta$immune_prot_A[dta$strain == "A52"] <- dta$immune_prot_A[dta$strain == "A52"] + x
+
+x <- rnorm(nrs_strain$n[nrs_strain$strain == "G879"], mean = 3, sd = 0.8)
+dta$immune_prot_A[dta$strain == "G879"] <- dta$immune_prot_A[dta$strain == "G879"] + x
+
+# dta |> 
+#   count(town, strain)
+
+
+
+
+mx1 <- dta |> 
+  select(contains("immu")) |> 
+  mutate(across(everything(), ~scale(.x))) |> 
+  as.matrix()
+
+row.names(mx1) <- dta$study_id
+
+mx2 <- dta |> 
+  select(!contains("immu"), -height, -weight, -age, -study_id) |> 
+  as.matrix()
+
+row.names(mx1) <- dta$study_id
+
+hm1 <- Heatmap(mx1)
+hm2 <- Heatmap(mx2)
+
+draw(hm1 + hm2)
+
+```
+
+
+
+
+
+
+

@@ -1,0 +1,264 @@
+# Difference tests
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+## Outcomes
+
+  * State null and alternative hypotheses for difference tests
+  * Interpret results from parametric and non-parametric difference tests for continuous variables
+  * Be aware of statistical tests for differences in proportions  
+  * Distinguish between statistical significance and practical significance
+
+:::
+
+## Parametric difference tests
+
+It is very common in our scientific studies to look for differences between groups.  In a clinical trial, there may be group 1 who gets treatment A and group 2, who gets treatment B, and we would like to test whether treatment A or treatment B is better for relieving the swelling after a fracture.  We will therefore measure the swelling somehow, and compare the mean swelling in group 1 to the mean swelling in group 2 with a statistical test. 
+
+We will discuss some of those tests now and also link back to the discussion on the sampling distribution and theoretical distributions like the t-distribution.  
+
+Let us start again with a thought experiment, as an example and a visual representation of what we are trying to achieve with a statistical test for a difference between groups.  
+
+Imagine you have 40 mice in your lab that you can use in experimental studies.  Usually you would apply some intervention to one group of mice and another intervention to the other group and look for a difference between the groups, e.g. giving treatment A to one group and treatment B to the other, and looking for a difference in average weight between the groups.  In our thought experiment however, we are not going to apply any intervention.  We are just going to randomly assign each mouse to group A or group B and then weigh each one and record the weight.  
+
+For the random assignment, we will put each mouse ID (the ID is printed on a metal tag on the ear, or tattooed on the tail like in the picture below) into a bag and draw them out at random.  We draw out one ID at a time, and assign the first to group A the second to group B, the third to group A and so on, until all 40 mouse IDs have been randomly assigned to a group.  
+
+![](img/mouse_ear_tag.png)
+
+::: {.column-margin}
+
+The picture is from this paper:  Roughan, Johnny & Sevenoaks, Tatum. (2018). Welfare and Scientific Considerations of Tattooing and Ear Tagging for Mouse Identification. Journal of the American Association for Laboratory Animal Science: JAALAS. 58. 10.30802/AALAS-JAALAS-18-000057. 
+
+:::
+
+Now we weigh each mouse and record the weight.  Then we calculate the mean weight for group A and B separately.  And finally, we calculate the mean difference in weight between group A and group B, by subtracting group B from group A.  We record the difference in a table like the one below. This was "study 1".   
+
+```{r}
+
+tibble(study = c(1, 2, 3),
+       weight_diff = c(3, 3.5, 2.7)) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+
+Then we repeat the whole process again for "study 2" - we draw the IDs from the bag to get a random assignment to group A or B for each mouse, and so on, until we finally record the difference in mean weight for the second experiment.  And in our thought experiment (where time and money doesn't matter!), we do this 1000 times, so that we have the difference in mean weight for 1000 different random samples.  As before, when we created a sampling distribution, we plot our results, like below.  
+
+```{r}
+
+set.seed(809798)
+plotdta <- tibble(Experiment_nr = 1:1000,
+       Weight_difference = rnorm(1000))
+
+m_diff <- mean(plotdta$Weight_difference)
+sdpos <- sd(plotdta$Weight_difference)
+
+sdneg <- -sd(plotdta$Weight_difference)
+
+plotdta |> 
+  ggplot(aes(Weight_difference))+
+  geom_density(fill = themeCols$hex[1], alpha = 0.7, colour = NA)+
+  geom_vline(xintercept = m_diff)+
+  geom_vline(xintercept = sdpos, linetype = 2, colour = themeCols$hex[2])+
+  geom_vline(xintercept = sdneg, linetype = 2, colour = themeCols$hex[2])
+
+```
+
+As promised by the Central Limit Theorem, our sampling distribution is a normal distribution.  You can also see that the mean of the distribution is around zero (the black line), and the standard deviation around 1 (the two dotted lines).  
+
+Now remember that we just randomly assigned mice to either group A or B.  There was no intervention or anything that could have caused a weight difference between the groups.  So we would expect the weight difference to be zero or close to zero for every one of our 1000 samples.  Indeed, we've seen that the mean of all the differences of all the samples is close to zero.  But we also see that sometimes the weight difference is as much as one or even two standard deviations away from zero.  So, even though there was no intervention to cause a weight difference, just by random chance, we don't always detect a weight difference of zero, but sometimes even a weight difference as large as 2 standard deviations away from the mean.  
+
+As discussed before, the sampling distribution is a probability distribution, and the probability of any observation occurring within a certain range of the sampling distribution, is calculated by calculating the area under the curve for that range.  Therefore, we can calculate the probability of an observation occurring in the areas on either the left or right side of the plot, which are 2 or more standard deviations away from the mean, and which are filled in the plot below.   
+
+```{r}
+
+d <- tibble(dens_x = density(plotdta$Weight_difference)$x,
+       dens_y = density(plotdta$Weight_difference)$y) 
+
+wd_sd <- sd(plotdta$Weight_difference)
+
+
+ggplot()+
+  geom_density(data = plotdta,aes(Weight_difference) , fill = themeCols$hex[1], colour = NA)+
+  geom_area(data = d, aes(y = ifelse(dens_x < -2*wd_sd, dens_y,NA), 
+                          x = ifelse(dens_x < -2*wd_sd, dens_x, NA)), fill = themeCols$hex[2])+
+  geom_area(data = d, aes(y = ifelse(dens_x > 2*wd_sd, dens_y,NA), 
+                          x = ifelse(dens_x > 2*wd_sd, dens_x, NA)), fill = themeCols$hex[2])
+  
+```
+
+Now we will link back to some of the things we learned in the sampling distribution section.  Because of the Central Limit Theorem, the sampling distribution approximates a normal distribution.  One of the properties of a normal distribution is that it is symmetrical.  You will remember that before, we calculated percentiles (the 2.5th or the 97.5th) to work out the probability of an observation occurring inside a certain area.  In the plot above, rather than calculating percentiles, we calculated 2 x the standard deviation.  
+
+If we plot the percentiles we calculated before, on the plot above, you will see that 2 standard deviations, and the 2.5th and 97.5th percentiles (the dotted lines) are very close to each other. 
+
+```{r}
+
+q2.5 <- quantile(plotdta$Weight_difference, probs = 0.025)
+q97.5 <- quantile(plotdta$Weight_difference, probs = 0.975)
+
+ggplot()+
+  geom_density(data = plotdta,aes(Weight_difference) , fill = themeCols$hex[1], colour = NA)+
+  geom_area(data = d, aes(y = ifelse(dens_x < -2*wd_sd, dens_y,NA), 
+                          x = ifelse(dens_x < -2*wd_sd, dens_x, NA)), fill = themeCols$hex[2])+
+  geom_area(data = d, aes(y = ifelse(dens_x > 2*wd_sd, dens_y,NA), 
+                          x = ifelse(dens_x > 2*wd_sd, dens_x, NA)), fill = themeCols$hex[2])+
+geom_vline(xintercept = q2.5, linetype = 2, colour = "grey70")+
+  geom_vline(xintercept = q97.5, linetype = 2, colour = "grey70")+
+  annotate("text", x = q2.5, 
+           y = 0.12, label = round(q2.5, 2))+
+  annotate("text", x = q97.5, 
+           y = 0.12, label = round(q97.5, 2))
+
+```
+
+This is because, for a *normal distribution*, 2.5% of the data fall below the mean minus 1.96 x the standard deviation.  The 2.5th percentile = mean minus 1.96 x the standard deviation. And 2.5% of the data fall above the mean plus 1.96 x the standard deviation.  The 97.5th percentile = mean + 1.96 x the standard deviation. 
+
+Like we said before, although we could create a new sampling distribution for every new dataset, because we assume the sampling distribution to be normally distributed (thanks to the Central Limit Theorem), and because we know the relationship between percentiles (and therefore probabilities of an observation occurring below or above certain values) and the standard deviation, we can use a normal distribution (a theoretical distribution), rather than having to generate a sampling distribution from our data.  
+
+Now we will get to how we use it in difference tests.  
+
+Recall that at the start of this section, we created a sampling distribution for the difference in weight between mice from group A and B.  We randomly assigned mice to the groups, and there was no intervention or conditions that would lead us to expect any weight difference between group A and B.  So we expected the mean of the sampling distribution to be zero.  We can also now call this distribution the *null* distribution.  By that, we mean that under the "null" condition of this experiment (the situation where there was no intervention that could influence the weights of mice, and we expected no true difference in the mean weight of the groups), this is the distribution of mean weight differences that you would find by chance, if you did this null experiment hundreds or thousands of times. 
+
+
+However, we saw that just by random chance, sometimes the mean difference in weights between group A and B is as large as 2 standard deviations.  Because of the relationship we saw above, between approximately 2 standard deviations (1.96 to be precise) and the percentiles (2.5th and 97.5th) of the normal distribution, we know that the probability of an observation occurring more than 2 standard deviations away from the mean, to the left or the right, is 2.5% + (1 - 97.5%) = 5%.  The probability, under the null distribution, of an observation to occur that far away from the mean, is 5% or less.   
+
+We can convert this idea of the null distribution into what we call the null hypothesis.  For a difference test in the context of the mouse experiment we have been talking about, the null hypothesis would state that there is no difference in weight between the two groups.  In the case of our thought experiment, we know that the null hypothesis is true, because there was no intervention applied that could have altered the weight of one of the groups of mice.  There usually is an alternative hypothesis to the null hypothesis, and this usually states that there is a difference between the groups.  
+
+Imagine now a mouse experiment, where you are testing whether a specific drug causes changes in weight in mice.  You give group A the drug and group B a placebo, while otherwise treating the two groups exactly the same. After 14 days you weigh each mouse and produce data that looks like the table below. 
+
+```{r}
+
+tibble(ID = c("m1", "m2", "m3", "m4"),
+       Treatment = c("A", "A", "B", "B"),
+       weight_change = c(5, 3, 3, 1)) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+You do this not for only 4 mice, like in the table, but for 20 mice in each group, 40 in total.  After weighing each mouse, you calculate the mean weight change (over 14 days) per group, then you calculate the difference between the group means and find that the mean weight for group A was 3 grams higher than for group B.  
+
+Now you have to decide whether this difference that you found, is really because of the drug that group A received, or whether in fact the drug had no effect at all, and the difference we see is just because of random chance, like in our thought experiment before.  This is where the null distribution we looked at before (which is a normal distribution in this case), will help us.  We can calculate the probability to find a difference between the groups, as extreme as 3 grams, or even more extreme, if the drug had no effect at all.  Another way to say that is, we can find the probability of obtaining such an extreme difference between the groups, or even more extreme, if the null hypothesis is true (i.e. there really is no difference between the groups).
+
+If we plot the difference of 3 grams that you found in your experiment, on the null distribution of before, the result looks like the plot below.  
+
+```{r}
+
+q2.5 <- quantile(plotdta$Weight_difference, probs = 0.025)
+q97.5 <- quantile(plotdta$Weight_difference, probs = 0.975)
+diff <- 3
+
+ggplot()+
+  geom_density(data = plotdta,aes(Weight_difference) , fill = themeCols$hex[1], colour = NA)+
+  geom_area(data = d, aes(y = ifelse(dens_x < -2*wd_sd, dens_y,NA), 
+                          x = ifelse(dens_x < -2*wd_sd, dens_x, NA)), fill = themeCols$hex[2])+
+  geom_area(data = d, aes(y = ifelse(dens_x > 2*wd_sd, dens_y,NA), 
+                          x = ifelse(dens_x > 2*wd_sd, dens_x, NA)), fill = themeCols$hex[2])+
+geom_vline(xintercept = diff, linetype = 2, colour = "grey70")
+  # geom_vline(xintercept = q97.5, linetype = 2, colour = "grey70")+
+  # annotate("text", x = q2.5, 
+  #          y = 0.12, label = round(q2.5, 2))+
+  # annotate("text", x = q97.5, 
+  #          y = 0.12, label = round(q97.5, 2))
+
+```
+
+Because we retained the fill colour for the areas of the plot representing a 5% probability that any observation fall within them (we calculated this before), we can immediately see that the difference of 3 grams that you found, falls within that 5% area.  The probability of obtaining a difference as extreme as 3 grams, or even more extreme, is less than 5%. We would consider this a small probability and would likely conclude that the drug therefore must have had some effect on the weight of the mice in group A, who received it.  
+
+:::  {.column-margin}
+
+It is essential that you can identify data types, as discussed in the "What is data?" section.  Revise that section now if you are not sure why weight is a continuous numeric variable. 
+
+:::
+
+This is the fundamental concept behind the t-test, which is commonly used in statistics to determine whether there is a statistically significant difference between the means of a *continuous numeric* variable, of two groups.  Assuming the null hypothesis is true, we calculate the probability of finding a difference as extreme or more extreme as the difference we found, and if that probability is very low, we conclude that the null hypothesis therefore is very unlikely to be true in our situation (i.e. the difference was most likely not just due to random chance, but due to some condition or intervention that is different between the groups). 
+
+Because we are working with probabilities here, we are never 100% sure that the drug caused the weight change in group A.  We realise that there is still a small chance that the null hypothesis is actually true and that the result we got, was just by random chance.  
+
+Your next question, of course, should be, what probability is considered to be very low?  It seems like we would need a cut-off to decide on statistical significance. That cut-off is called alpha. As you read papers, you will discover that the majority of the time, scientists set alpha at 0.05 (5%).  With setting alpha at 0.05, they are saying that they understand that 5% of the time, the result may be a false positive (the null hypothesis is actually true, yet in their sample a difference was found). The value chosen for alpha, represents the risk of getting a false positive result, that you are willing to take.  In most situations, you would not want to take a risk of greater than 5%.  In some situations, you would want the risk to be even smaller, like 1%, or 0.1%.  As you develop in your science career, you will come across those situations.   
+
+The heading of this section is *parametric* difference tests. What is meant by that?  We have been talking about the sampling distribution and the fact that usually it is normally distributed. Therefore, instead of generating a sampling distribution for every new dataset we work with, we use a theoretical distribution, like the normal distribution (or a t distribution or a binomial distribution, etc.).  Theoretical distributions have *parameters* that describe them.  For the normal distribution, the parameters are the mean and standard deviation.  The fact that *parametric* statistical tests rely on theoretical distributions, described by *parameters*, is why the tests are called *parametric*.  They are distinguished from *non-parametric* tests, which are parameter-free, because they do not rely on theoretical distributions.  For the same reason, i.e. parametric tests rely on theoretical distributions, every parametric statistical test has a set of conditions that your data must meet, to ensure that it is a valid use of the test.  If your data in some way violates the assumptions implicit when relying on a certain theoretical distribution, then use of that test is not valid, and often it is necessary to use a non-parametric test in such a case.  
+
+## Non-parametric difference tests
+
+This section will not cover non-parametric tests in as much detail as the parametric tests.  As mentioned, these tests do not rely on theoretical distributions, but are often rank-based.  Rather than using the actual values of observations, these tests convert each observation to its rank (when all observations are sorted from lowest to highest value), and determines whether one group consists of observations with a higher rank than the other group. It evaluates that question by taking the sum of the ranks in the one group and comparing it to the sum of the ranks in the other group.  It is more complicated than that, but we will not go into more detail here.  
+These tests do also generate p-values and the concept is the same as described above.  The p-value represents the probability that the result you found, could have been produced by random chance only, not by the phenomenon you are studying. 
+
+## Interpreting results of difference tests
+
+Time to look at some papers again.  In each of the papers listed below, look in the *Methods* section for which statistical tests were used.  Note the use of t-tests or Wilcoxon rank sum tests (also called Mann-Whithney-U tests).  Then go to the *Results* section and find the results of those tests.  
+
+  *  Chen_2024  
+  *  Sam_20218  
+  *  Sudarsan_2021  
+  *  Ou_Yang_2023  
+
+
+Complete the quiz below by interpreting the results you found.  
+
+----QUIZ to be created----
+
+## Differences in proportions
+
+As we pointed out earlier, understanding data types is very important, because it determines which visualisation techniques and statistical tests to use.  So far in this section, the examples were focused on weight, a continuous numeric variable.  We may be interested in differences in categorical data however. As in the mouse experiment from earlier, we may not be interested in the mean weight difference between the groups, but just in how many mice lost any amount of weight.  The data will look like the table below.
+
+```{r}
+
+tmp <- tibble(id = c("m1", "m2", "m3", "m4", "m5", "m6"),
+       group = c("A", "B", "A", "B", "A", "B"),
+       lost_weight = c("yes", "yes", "no", "no", "yes", "no")) 
+
+tmp |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+```
+
+We can then compare the proportion of mice per group, that lost weight, like this:
+
+```{r}
+
+tmp |> 
+  group_by(group) |> 
+  count(name = "total") |> 
+  inner_join(tmp |> 
+               group_by(group, lost_weight) |> 
+               count()) |> 
+  mutate(proportion = n/total) |> 
+  select(group, lost_weight, proportion) |> 
+  distinct() |> 
+  pivot_wider(names_from = lost_weight, values_from = proportion) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+```
+
+Our question now is whether there is a statistically significant difference between the proportions per group.  The principle is the same as before - if we repeated this study 1000 times, just by random chance, there will be times when the proportions of the groups differ from each other quite a lot.  So we need to find the probability that the difference in proportion in our study, was by random chance only.  That is what the p-value represents.  For the difference in proportions, we can use a Fisher exact test, or a Chi-squared test.  We are not going to discuss those here, but if you are interested you can search the internet and read more about them.
+
+## More on the null hypothesis
+
+We will now briefly return to the null hypothesis discussed before. When we state that the null hypothesis is that there is no difference between the groups, we mean that if the true situation is like the first thought experiment we did in this section, where we created the null distribution, then whatever difference we see in our study, is just by chance.  We then test this null hypothesis by calculating the probability that the difference is by chance (by using a theoretical distribution, the t-distribution in the case of a t-test), which is the p-value.  If we set alpha (the theshold for when we will consider something to be statistically significant) to 0.05, and we find that the p-value obtained in our study is below 0.05, we conclude that the probability that our result was by chance alone is very low, and therefore we think there is a real difference.  When this happens, we say that we *reject the null hypothesis*.  
+If the opposite happens, and our p-value is greater than 0.05, we conclude that the probability that our results were found just by chance is quite large and we *do not reject the null hypothesis*.  We never say that we accept the null hypothesis, but only that we do not reject it.  We always assume that the null hypothesis is true, and then conduct our study to find evidence that it is not.  If we don't find that evidence (i.e. our p-value is greater than 0.05), it doesn't mean that we have conclusively proven that the null hypothesis is true, only that in our one study, we didn't find evidence against it. 
+
+Watch the video below for a discussion on what it means when you find results that are not statistically significant.  
+
+VIDEO - to be created. 
+
+## Statistical significance and practical significance
+
+Finally, a note on finding statistically significant differences that are meaningless in practice.  Imagine you were studying two groups of people who were put on two different diets for weight loss for three months.  After three months you evaluate the weight loss in each group and find that the mean weight loss in group A was 1 kg more than the weight loss in group B.  Let's say your p-value was 0.04, so the results are statistically significant.  This can happen if you have a very large sample size.  You can find a really small difference to be statistically significant, even though in practice, it isn't really a difference that matters.  In this case, we wouldn't recommend one diet over another because it seems to cause 1 kg more weight loss over three months.  That is not a practically significant result.  You have to always think critically about the result you found.  Even if it was statistically significant, does it really practically matter?   
+

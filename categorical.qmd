@@ -1,0 +1,148 @@
+# Categorical data
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+Read the abstract for Chen_2023.  Below is an example of a subset of variables that they were collecting in their study.  
+
+```{r}
+set.seed(567)
+chen <- tibble(patient_ID = c(paste0("ID", 1:15)),
+               treatment_outcome = sample(c("cured", "failed"), 15, replace = TRUE),
+               sex = sample(c("male", "female"), 15, replace = TRUE),
+               age = sample(19:65, 15, replace = TRUE))
+
+chen |> 
+  kable(caption = "Table 5.1", table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+
+```
+
+As you can see, treatment_outcome and sex are categorical variables, while age is numeric.  
+
+To summarise categorical variables, we can make a frequency table, and calculate what proportion of the total number of observations each category in the categorical variable, represents.  
+
+::: {.column-margin}
+
+Recall that in a dataset where there is one or more rows for each participant, and different columns for different characteristics or measurements for each participant, we call the rows, *observations*, and the columns, *variables*. 
+
+:::
+
+The frequency table looks like this:  
+
+```{r}
+
+chen |> 
+  count(name = "total") |> 
+  bind_cols(chen |> 
+              count(sex)) |> 
+  pivot_wider(names_from = sex, values_from = n) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+  
+```
+
+Calculate the proportion of males and females for yourself.  Check your answer by ensuring that the two proportions add up to 1.  
+
+Often we are interested in two or more groups, for example, what proportion of females had a poor treatment outcome.  Construct the table you would need to answer that question.  (You can click the triangle to reveal the answer, but try it for yourself first!)
+
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answer
+
+```{r}
+
+chen |> 
+  count(sex, name = "total") |> 
+  inner_join(chen |> 
+               count(sex, treatment_outcome)) |> 
+  pivot_wider(names_from = treatment_outcome, values_from = n) |> 
+  select(sex, cured, failed, total) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+  
+```
+ 
+:::
+
+Often we want to plot these types of results.  A common way to do that, is to create a bar plot.  
+
+```{r}
+#| fig-width: 4
+
+plotdta <- chen |> 
+  count(sex, name = "total") |> 
+  inner_join(chen |> 
+               count(sex, treatment_outcome))
+
+plotdta |> 
+  ggplot(aes(sex, n, fill = sex))+
+  geom_col()+
+  scale_fill_manual(values = themeCols$hex)
+
+```
+
+::: {.column-margin}
+
+How many variables from Table 5.1 are represented in this plot?  
+
+:::
+
+If we wanted to plot sex and treatment outcome, there are at least four different ways to represent the same data. Some plots may communicate the message one wants to convey, better than others. Study the plots below and think about what each plot emphasises, and how they differ from each other.   
+
+```{r}
+
+p1 <- plotdta |> 
+  ggplot(aes(sex, n, fill = treatment_outcome))+
+  geom_col()+
+  scale_fill_manual(values = themeCols$hex)
+
+p2 <- plotdta |> 
+  ggplot(aes(sex, n, fill = treatment_outcome))+
+  geom_col(position = "dodge")+
+  scale_fill_manual(values = themeCols$hex)
+  
+p3 <- plotdta |> 
+  ggplot(aes(fill = sex, y = n, x = treatment_outcome))+
+  geom_col(position = "dodge")+
+  scale_fill_manual(values = themeCols$hex)
+
+p4 <- plotdta |> 
+  ggplot(aes(sex, n, fill = sex))+
+  geom_col()+
+  scale_fill_manual(values = themeCols$hex)+
+  facet_wrap(~treatment_outcome)
+
+ggpubr::ggarrange(p1, p2, p3, p4)
+
+```
+
+Look at the plot from [Our World in Data](https://ourworldindata.org/) below and draw the structure of the table from which this plot was likely created. (Tip:  there are at least 4 variables)
+
+![](img/OWiD_wars_bar.png)
+
+::: {.column-margin}
+
+This plot was accessed in April 2024, and could be found [here](https://ourworldindata.org/war-and-peace#explore-data-on-armed-conflict-and-war) at that time.  
+
+:::
+
+Do the same for the plot below.  This is also a bar graph, even though the orientation is different from the plots earlier in this chapter.  
+
+![](img/OWiD_species_bar.png)
+
+::: {.column-margin}
+
+This plot was accessed in April 2024, and could be found [here](https://ourworldindata.org/biodiversity#interactive-charts-on-biodiversity) at that time.  
+
+:::
+

@@ -1,0 +1,116 @@
+# Numeric data
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+We will continue using the abstract from Chen_2023.  Below is the example of a subset of variables that they were collecting in their study, which we used in the previous chapter.  
+
+```{r}
+set.seed(567)
+chen <- tibble(patient_ID = c(paste0("ID", 1:15)),
+               treatment_outcome = sample(c("cured", "failed"), 15, replace = TRUE),
+               sex = sample(c("male", "female"), 15, replace = TRUE),
+               age = sample(19:65, 15, replace = TRUE))
+
+chen |> 
+  kable(caption = "Table 5.1", table.attr = 'data-quarto-disable-processing="true"') |>
+  kable_styling(full_width = FALSE, position = "left")
+
+```
+
+We will now focus on the *age* variable.  
+
+To summarise numeric variables, we usually calculate a *measure of centrality* and a *measure of spread*.  This gives a representation of where most of the data can be found (the measure of centrality) and how far it spreads out in both directions, from the center (the measure of spread). 
+
+::: {.column-margin}
+
+Measures of centrality:  Mean, median
+
+Measures of spread:  Standard deviation, interquartile range, range
+
+:::
+
+The summary statistics for age look like this:  
+
+```{r}
+
+chen |> 
+ summarise(mean = mean(age),
+           standard_deviation = sd(age),
+           median = median(age),
+           interquartile_range = str_flatten(quantile(chen$age, 
+                                                      probs = c(0.25, 0.75)),
+                                             collapse = "-")) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') |>
+    kable_styling(full_width = FALSE, position = "left")
+  
+  
+```
+
+Numeric variables can be represented in a number of ways that aim to emphasise where the bulk of the data is situated (measure of centrality) and how it is spread out in either direction from there.  Two closely related plots are histograms and density plots.  
+
+```{r}
+plotdta <- tibble(normal = rnorm(1000))
+
+p1 <- plotdta |> 
+  ggplot(aes(normal))+
+  geom_density(fill = "grey70", colour = "grey70")
+
+p2 <- plotdta |> 
+  ggplot(aes(normal))+
+  geom_histogram()
+
+ggpubr::ggarrange(p1, p2)
+
+```
+
+::: {.column-margin}
+
+Density plots employ *density functions* to smooth out the curve that you see on the histogram.  That will not be explained here, but you can read more about it [here](https://statisticsbyjim.com/probability/probability-density-function/) if you are interested.
+
+:::
+
+You already encountered another very useful plot for numeric variables - the boxplot.  Here we will use it slightly differently, in combination with a categorical variable, to compare the numeric variable between two groups.  
+
+For the Chen_2023 example data that we have been looking at, we can make the plot below.  
+
+```{r}
+
+chen |> 
+  ggplot(aes(treatment_outcome, age, colour = treatment_outcome))+
+  geom_boxplot()+
+  scale_colour_manual(values = themeCols$hex)
+
+```
+
+Sometimes density plots can also be useful for such comparisons.  The same data can make the plot below.  
+
+```{r}
+
+chen |> 
+  ggplot(aes(age, colour = treatment_outcome, fill = treatment_outcome))+
+  geom_density(alpha = 0.5)+
+  scale_fill_manual(values = themeCols$hex)+
+  scale_colour_manual(values = themeCols$hex)
+
+```
+
+Look at the plot from [Our World in Data](https://ourworldindata.org/) below and draw the structure of the table from which this plot was likely created. (Tip:  there are at least 5 variables)  Note the ones that are numeric and the ones that are categorical.  
+
+![](img/OWiD_healthspend.png)
+
+::: {.column-margin}
+
+This plot was accessed in April 2024, and could be found [here](https://ourworldindata.org/financing-healthcare) at that time.  
+
+:::
+

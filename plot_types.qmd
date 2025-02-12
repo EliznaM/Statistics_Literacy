@@ -1,0 +1,279 @@
+# Types of plots
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+## Outcomes
+
+* Interpret a box plot  
+* Interpret a histogram  
+* Interpret a bar plot  
+* Interpret a scatter plot  
+* Choose the appropriate plot to visualise the desired features of the data  
+
+:::
+
+## Box plots
+
+The figure below is from Chen_2023 and the caption provided is:  
+*Gene expression from RNA-seq (log2FPKM) of Rv2164c under drug pressure and hypoxia.* Read the paper to understand the context for this plot.  
+
+![](img/chen2023_boxplot.png)
+
+::: {.column-margin}
+
+Add ref
+
+:::
+
+When evaluating and discussing plots, it is best to follow a systematic approach.  There is more than one way, but the steps below is a good start.  
+
+* What type of plot is it?  
+  *In this case, box plots.*  
+* Describe the axes of the plot.  What variable is represented on the x-axis and what variable on the y-axis?  
+  *The exposure status is on the x-axis - whether the culture was exposed to drug or hypoxia, or not.  Gene expression is on the y-axis.*
+* Describe the legend, if present.  What do the different colours represent?    
+  *The dots are coloured for the exposure status.*  
+* What does the different elements on the plot (e.g. boxes, dots, lines) represent?  
+  *Here, each dot represents a separate culture, and the boxes represent the summary of the data, with the central line being the median, the range between the top and bottom of the box showing the interquartile range and the whiskers extending for the range of the data.*   
+* What is the main question the plot aims to answer?  
+  *In this case cultures with and without exposure to drugs or hypoxia are portrayed to show differences in the gene expression level of Rv2164c, under the different conditions.*  
+* What is the main message (results or meaning) of the plot?  
+  *Statistically significant differences in gene expression were seen for Isoniazid, Rifampicin and hypoxia, but not Ethambutol.*  
+  
+Your turn to interpret the next plot.  It will be very good practice to write down your answer according to the systematic approach above.  
+
+This figure is from Kotliar_2020 and the caption provided is:  *CyTOF intensity of HLA-DR protein in antigen-presenting cells. Boxes: median and interquartile range; whiskers: 2.5th and 97.5th percentiles. Colored stars
+indicate significant decreases from baseline (rank-sum test p < 0.05) with color corresponding to stage.*   
+
+![](img/kotliar2020_box plot.png)
+
+::: {.column-margin}
+
+Add ref
+
+:::
+
+
+## Dot plots
+
+
+![](img/liu2023_dotplots.png)
+
+The image above is from Liu_2023 and the caption provided is: *Serum soluble CD163 (sCD163) concentrations and circulating monocyte changes in Ebola virus (EBOV)–exposed monkeys. A, Significant increases in serum sCD163 concentrations at day 6 after EBOV exposure and at the terminal day (T). B, Flow cytometry and hematology show significant increases in total circulatory CD3−CD14−CD20−CD11c−CD163+ cells at 3, 4, and 5 days after exposure. C, There were no significant differences in the CD3−CD14−CD20−CD163−CD11c+ population during disease progression. 1 asterisk P < .05; 2 asterisks P < .01; 3 asterisks P < .001.*  
+
+The caption should ideally have described what each dot and each red line represents, as well as which statistical test's p-values are reported.  In this case, each dot represents a monkey in the study, and the horizontal red lines are the mean expression of the marker displayed on the y-axis. The vertical red lines are most probably the standard deviation of the mean.  The way to interpret the significance bars (the horizontal black lines at the top of each plot), is to read the values on the x-axis, that align with the left extreme end and right extreme end of the significance bar.  These are the comparison groups, while the number of stars indicates the significance level, as described in the figure caption.  
+
+## Histograms
+
+Think back to the pages that covered categorical and numeric data and remember that some plots were introduced there.  You should now recognise that different plots are appropriate for different types of data.  We use specific plots to represent categorical data and others for numeric data.  So far in this chapter, the plots have all been for numeric data.  Histograms are also used for numeric data and they are very interesting if you spend a bit of time with them.  
+Different types of plots are differently suited to represent specific characteristics of data.  Histograms are especially good for showing the *distribution* of a variable, i.e. where most of the data lies as well as how spread out or clumped together it is around certain values.  Look at the plots below and describe the distribution for each.
+
+```{r}
+set.seed(90)
+
+plotdta <- tibble(A = rnorm(1000, 0, sd = 2),
+       B = rnorm(1000, 0, sd = 0.5)) |> 
+  pivot_longer(everything())
+
+plotdta |> 
+  ggplot(aes(value, fill = name))+
+  geom_histogram(binwidth = 0.5)+
+  facet_wrap(~name)+
+  scale_fill_manual(values = themeCols$hex)
+
+```
+
+Can you see that the variables have the same mean (around 0), but very different spreads?  Also note that the y-axis is labelled "count".  What is being counted?
+
+Look at the two plots below.  They are of the same variable, but the plot is drawn differently in each case.  What are the differences that you see?
+
+```{r}
+
+p1 <- plotdta |> 
+  filter(name == "A") |> 
+  ggplot(aes(value))+
+  geom_histogram(binwidth = 3, fill = themeCols$hex[1])+
+  labs(title = "A")
+
+p2 <- plotdta |> 
+  filter(name == "A") |> 
+  ggplot(aes(value))+
+  geom_histogram(binwidth = 0.5, fill = themeCols$hex[2])+
+  labs(title = "B")
+
+p3 <- plotdta |> 
+  filter(name == "A") |> 
+  ggplot(aes(value))+
+  geom_histogram(binwidth = 0.1, fill = themeCols$hex[3])+
+  labs(title = "C")
+
+ggpubr::ggarrange(p1, p2, p3, nrow = 1)
+
+```
+
+The main difference is that there are few bars in plot A, more in plot B and even more in plot C, yet the data is the same.  Another name for the bars, are *bins*.  Think of it as a bin (like a container) that you can throw balls into.  Imagine the data that is plotted, was produced by drawing balls with numbers on them from a bag (a bit like in a lottery when the winning numbers are announced).  For plot A, there are five bins (bars).  Each time you draw a ball, you check the number printed on it and then throw it into one of the bins.  The plot below shows the 5 bins more clearly.  If the number is between -7.5 and -4.5, the ball goes into the leftmost bin. If it is between -4.5 and -1.5, it goes into the bin second from the left, and so on.  The bin grows taller the more balls (numbers) you throw into it.  
+
+```{r}
+p1 +
+  geom_vline(xintercept = -4.5, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -1.5, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = 1.5, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = 4.5, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -7.5, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = 7.5, colour = "red", linewidth = 2)+
+  scale_x_continuous(breaks = c(-7.5, -4.5, -1.5, 1.5, 4.5, 7.5))
+
+```
+
+Can you see that the width of the bins in plot A is 3, whereas the width of the bins in plot B below is 0.5 (Only a few of the bins are indicated with the red lines). This explains why the bins in plot A are much taller than the bins in plot B, and why plot B gives a more detailed view of the distribution.  The width of the bins in plot C is even smaller, and therefore we have a very granular view of the data in that case. 
+
+```{r}
+
+p2 +
+  geom_vline(xintercept = -0.25, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -0.75, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -1.25, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -1.75, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -2.25, colour = "red", linewidth = 2)+
+  geom_vline(xintercept = -2.75, colour = "red", linewidth = 2)+
+  scale_x_continuous(breaks = seq(-4.75, 4.75, by = 1))
+
+
+```
+
+Histograms are also useful to show whether the data distribution is symmetrical.  Look at the plots below and describe the differences between their symmetry.  
+
+```{r}
+
+set.seed(548)
+plotdta <- tibble(A = rnorm(1000, 0, 1),
+       B = c(rnorm(400, 0, 1), rlnorm(600, 3,1)),
+       C = c(rnorm(800, 2, 1), -rlnorm(200, 0, 1))) 
+
+p1 <- plotdta |> 
+  ggplot(aes(A ))+
+  geom_histogram(binwidth = 0.2, fill = themeCols$hex[1])+
+  labs(title = "A")
+
+p2 <- plotdta |> 
+  ggplot(aes(B ))+
+  geom_histogram(binwidth = 5, fill = themeCols$hex[2])+
+  labs(title = "B")
+
+p3 <- plotdta |> 
+  ggplot(aes(C ))+
+  geom_histogram(binwidth = 0.5, fill = themeCols$hex[3])+
+  labs(title = "C")
+
+ggpubr::ggarrange(p1, p2, p3, nrow = 1)
+
+
+```
+
+Hopefully you can see that plot A is fairly symmetrical, whereas plots B and C are skewed to the right and left, respectively (B has a long "tail" to the right, and C has a long "tail" to the left). We will describe these characteristics of distributions more in the section on describing data.  
+
+
+## Scatter plots
+
+Like all the plots before in this chapter, scatter plots are also used for numeric data and specifically for showing the relationship between two variables.  Think of children and the relationship between their age and their height.  You probably expect their height to increase with their age, right?  There is a positive correlation between children's age and height.  The relationship may be linear (both variables increase on a constant scale, e.g. one variable increases by 1 unit, then the other increases by 3 units, across the range of both variables), or non-linear (e.g. exponential - one variable doubles every time the other increases by 1 unit).  Look at the plots below.  Which plot shows no relationship, which shows a linear relationship and which shows an exponential relationship?
+
+```{r}
+
+plotdta <- tibble(X = rnorm(500, 10,1),
+       Y1 = rnorm(500, 0, 0.5) + X,
+       Y2 = (X^4 + rnorm(500, 3, 3))/10000,
+       Y3 = rnorm(500, 0, 1))
+
+
+p1 <- plotdta |> 
+  ggplot(aes(X, Y3))+
+  geom_point(colour = themeCols$hex[1])+
+  coord_fixed()+
+  labs(title = "A")
+
+p2 <- plotdta |> 
+  ggplot(aes(X,Y2))+
+  geom_point(colour = themeCols$hex[1])+
+  coord_fixed()+
+  labs(title = "B")
+
+p3 <- plotdta |> 
+  ggplot(aes(X, Y1))+
+  geom_point(colour = themeCols$hex[1])+
+  coord_fixed()+
+  labs(title = "C")
+
+ggpubr::ggarrange(p1,p2,p3, nrow = 1)
+
+
+```
+
+## Bar plots
+
+Up to now we have looked at plots to represent numeric data.  Now we will look at bar plots, which are used to represent categorical data.  Think of a study testing a vaccine for some disease.  The investigators are interested in three study outcomes - participants who remain healthy, those who develop mild disease and those who develop severe disease during the study.  The outcome group that each participant belongs to, is a categorical variable.  We can plot the outcomes of interest in the vaccinated and unvaccinated groups, with bar plots.  
+
+```{r}
+
+plotdta <- tibble(Outcome_group = rep(c("Healthy", "Mild disease", "Severe disease"), 2),
+       Number = c(44, 113, 21, 96, 30, 3),
+       Vaccination_status = c(rep("Unvaccinated", 3), rep("Vaccinated", 3))) 
+
+plotdta |> 
+  ggplot(aes(Outcome_group, Number, fill = Outcome_group))+
+  geom_col()+
+  facet_wrap(~Vaccination_status)+
+  scale_fill_manual(values = themeCols$hex)
+
+
+```
+Which two categorical variables are represented in the plot?
+
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answer
+Outcome group and vaccination status.
+
+:::
+
+Instead of having two panels as in the plot above, two categorical variables can also be represented on the same plot, like in the plot below from Chen_2023.  Describe the plot below following the systematic approach we introduced at the start of this chapter.  It will benefit you to write down your description. 
+
+
+![](img/chen_2023_barplot.png)  
+
+Stacked bar plots are a specific type of barplot showing percentage on the y-axis, and then instead of having bars for each category of the variable next to each other on the x-axis, like in the previous two plots, all the categories are *stacked* on top of each other. Notice that every bar adds up to 100%.  This plot does not show actual number of participants in each group.  Below is the plot from the imagined vaccine trial, as a stacked bar plot. Do you think this type of plot makes it easier or more difficult to see differences between groups? 
+
+```{r}
+
+plotdta |> 
+  group_by(Vaccination_status) |> 
+  summarise(total = sum(Number)) |> 
+  inner_join(plotdta |> 
+  group_by(Vaccination_status, Outcome_group) |> 
+  summarise(n = sum(Number))) |> 
+  mutate(Percentage = n/total*100) |> 
+  ggplot(aes(Vaccination_status, Percentage , fill = Outcome_group))+
+  geom_col(position = "stack")+
+  scale_fill_manual(values = themeCols$hex)
+
+
+```
+
+Complete the quiz below to make sure you have a good grasp of the plots we discussed.  
+
+QUIZ
+
+
+
+  
+
+
