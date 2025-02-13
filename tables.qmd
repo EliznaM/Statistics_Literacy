@@ -1,3 +1,129 @@
-# Tables
+# Summarise categorical data
 
-Coming soon
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Outcomes
+
+  * Summarise categorical variables by creating appropriate frequency tables and contingency tables.  
+  * Use bar plots appropriately to visualise categorical variables.  
+ 
+:::
+
+In the same way that there is a need to summarise numerical data, to be able to make conclusions, we need to summarise categorical variables. Below is a snippet from a table in Kampmann_2023. It shows the gestational age categories and numbers (and percentages) of patients from the vaccinated group, belonging to each.   
+
+![](img/kampmann_tbl_snip.png)
+This frequency table is simple to understand. Calculate the total number of patients included in the categories.  What did you discover? What may be reasons for that?  
+
+If we wanted to know how the gestational age categories compared between males and females, a sample of the "raw" data we would need would look like the table below. (This is fictional data, not the actual data from Kampmann_2023.)
+
+```{r}
+
+set.seed(4647)
+plotdta <- tibble(gestational_age = sample(c("24_to_<28_wk", "28_to_<34_wk", "34_to_<37_wk", "37_to_<42_wk", ">42_wk"),
+                                3568, prob = c(0.1, 0.6, 5, 93.7, 0.6),
+                                replace = TRUE),
+       sex = sample(c("male", "female"), 3568, replace = TRUE))
+
+plotdta |> 
+  slice(1:10) |> 
+  kable(
+    # table.attr = 'data-quarto-disable-processing="true"'
+    ) %>%
+  kable_styling(full_width = FALSE, position = "left")
+  
+
+```
+
+To answer our question we need to summarise the two variables in a contingency table (or two-way table) like the one below. 
+
+```{r}
+
+plotdta |> 
+  count(gestational_age, sex) |> 
+  pivot_wider(names_from = sex, values_from = n) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') %>%
+  kable_styling(full_width = FALSE, position = "left")
+  
+```
+
+This table is also fairly simple, but can become quite confusing when you start having to answer questions about it.  Answer the following questions about the table above.  
+
+  * What is the total number of females?
+  * What is the total number of patients in the >42 weeks category?
+  * What percentage of males are in the 28 to <34 weeks category?
+  * What percentage of those in the 34 to <37 weeks category, are female?
+  
+::: {.callout-note collapse="true" appearance="simple"}
+## Expand to see the answers
+
+You would have discovered that you need the *column totals* and the *row totals* to answer the questions. 
+
+```{r}
+
+tmp <- plotdta |> 
+  count(gestational_age, sex) |> 
+  pivot_wider(names_from = sex, values_from = n) |> 
+  mutate(total = female + male)
+
+tmp |> 
+  bind_rows(tibble(gestational_age = "total",
+                   female = sum(tmp$female),
+                   male = sum(tmp$male),
+                   total = sum(tmp$total))) |> 
+  kable(table.attr = 'data-quarto-disable-processing="true"') %>%
+  kable_styling(full_width = FALSE, position = "left")
+  
+  
+
+```
+ 
+What is the total number of females?  
+1829  
+
+What is the total number of patients in the >42 weeks category?  
+25  
+
+What percentage of males are in the 28 to <34 weeks category?  
+10/1739*100 = 0.58%  
+
+What percentage of those in the 34 to <37 weeks category, are female?  
+78/171*100 = 45.61%  
+
+The last two questions can be confusing, because you must carefully select the correct total to calculate the percentage.  
+ 
+:::
+
+The data can also be visualised with a bar plot. Below we demonstrate two different plots from the same data. What is the difference? Why would you choose one over the other?    
+
+```{r}
+
+plotdta$gestational_age <- factor(plotdta$gestational_age, 
+                                  levels = c("24_to_<28_wk", "28_to_<34_wk", "34_to_<37_wk", "37_to_<42_wk", ">42_wk"))
+
+p1 <- plotdta |> 
+  count(sex, gestational_age) |> 
+  ggplot(aes(gestational_age, n, fill = sex))+
+  geom_col(position = "dodge")+
+  scale_fill_manual(values = themeCols$hex)
+
+p2 <- plotdta |> 
+  count(sex, gestational_age) |> 
+  ggplot(aes(fill = gestational_age, y = n, x = sex))+
+  geom_col(position = "dodge")+
+  scale_fill_manual(values = c(themeCols$hex, themeCols$hex))
+
+ggpubr::ggarrange(p1, p2, ncol = 2, labels = c("A", "B"))
+
+```

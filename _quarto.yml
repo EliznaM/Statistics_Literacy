@@ -57,6 +57,7 @@ format:
   html:
     theme: united
     fig-cap-location: top
+    html-table-processing: none
 execute: 
   echo: false
   warning: false

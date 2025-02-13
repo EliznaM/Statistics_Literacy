@@ -1,3 +1,156 @@
 # Probability
 
-coming soon
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+## Outcomes
+
+  * Able to define probability, independence and conditional probability.  
+  * Able to name examples of probability distributions and their underlying assumptions.   
+ 
+:::
+
+We will now discuss *probability* conceptually. Many statistics textbooks and other resources discuss probability in detail and you can consult those if you are interested in more in-depth information.  Here, we will only introduce a few important concepts.  
+
+::: {.callout-note collapse="false" appearance="simple"}
+The probability of an outcome is the proportion of times the outcome would occur if the
+random phenomenon could be observed an infinite number of times. 
+
+:::
+
+::: {.column-margin}
+
+This definition was taken from the OpenIntro statistics book *Introductory Statistics for the Life and Biomedical Sciences*, which you can find [here](https://openintro.org/book/biostat/).
+
+:::
+
+The simplest way to demonstrate the definition above, is to think about flipping a coin and calling heads or tails.  
+
+::: {layout-ncol=2}
+
+![](img/coin-toss.gif){width=20%}
+
+As in the gif, if you were to flip a coin thousands of times, what proportion of those flips will be heads? Most people intuitively know the answer is 0.5. We know this, because there are only two options, and because we know the coin is going to be flipped. We also know that the outcome is random - the outcome of the coin flip does not depend on the day of the week, the gender of the person flipping the coin or the oil price in the world.  
+
+:::
+
+::: {.column-margin}
+
+If a coin is about to be flipped, the probability of getting heads, is 0.5. If we were not sure that the coin will be flipped though, the probability of getting heads is different, because there is now also a probability of the coin being flipped or not! As you can see, things can get interesting. See later for *conditional probabilities*. 
+
+:::
+
+::: {layout-ncol=2}
+
+Now think of an elite basketball player. When that player aims at the hoop, shoots and scores, the event is not random at all. That elite player practised for many hours to become excellent at putting the ball through the hoop. The *probability* of the event happening is much higher than 0.5 (otherwise the player would not be considered an elite player!). 
+
+![](img/hoop.gif){width=20%}
+:::
+
+These are simple examples, but things get more complicated. For coin flips and basketball scores, we know the possible outcomes and the main factors that may or may not influence the outcomes. For something like developing cancer, for example, it is much more complex. In a healthy, young person who develops cancer in the absence of known risk factors (e.g. smoking or known associated genetic variants), we would think of the process as random (because we don't yet understand it well enough to come to any other conclusion). But even though there is only two possible outcomes (developing cancer, or *not* developing cancer) and it is random, exactly like a coin flip, you know intuitively that the probability associated with this event happening is not 0.5. If it was, 50% of all healthy young people would develop cancer! Rather, we think of the probability of the event happening in terms of what we have observed about healthy young people developing cancer. If 1 in 10000 healthy young people globally develops cancer yearly(this is not the true estimate), the probability of a healthy young person to develop cancer, is 0.01%. We still think of the event as random, but the probability is very different from a coin flip, and we would call it *rare*.     
+
+As we discussed in the previous sections, statistics is a way to quantify uncertainty. Probability provides the framework for statistics. In statistics, we are always thinking about how *probable* it is that we could have obtained our result by random chance alone. If the event we are thinking about can easily be obtained by chance alone, like getting heads on a single coin flip, we won't jump to conclusions too quickly about our study results. In the same way, if we obtained cancer statistics for the population of several cities, and found that 1 in 10000 young people had had a cancer diagnosis in the last year, in all those cities, we would not be surprised. The results were what we expected, based on what we know about the global cancer rate. If however, for one of the cities, we found that 10 in 10000 young people had had a cancer diagnosis in the last year, we would think hard about the probability that just by random chance, that city's young people get so much cancer. Rather, we would wonder whether living in that city is somehow associated with a greater probability of getting cancer. These are the types of probabilities that statistics tries to quantify.  
+
+## Independence and conditional probability
+
+Let's briefly return to the coin flips. If I flip a coin and my friend flips a coin at the same time, does my friend's outcome depend on  whether I get heads or tails? We intuitively know that it doesn't. The two results are *independent* of each other. This means, the probability of getting a certain outcome, does not depend on another factor. However, in the cancer example, if we investigated the association between smoking and cancer, we would find that the probability of a cancer diagnosis, is *not* independent of smoking status. We might find that *conditional* (depending) on smoking status, the probability of a cancer diagnosis is higher (in smokers) or lower (in non-smokers). This is called conditional probability.  
+
+The concepts of independence and conditional probability is also used in statistics all the time, to investigate whether factors and outcomes are associated with each other. 
+
+## Probability distributions
+
+::: {layout-ncol=2}
+
+Finally, we will briefly discuss probability distributions. There is more detail about this in the section on the sampling distribution, later.  Imagine you have a container filled with many black and white plastic balls (black and white in equal number), as depicted in the picture. You close your eyes, draw out 10 balls, and then (with your eyes open again!), count and record how many black balls you have. Then you put the balls back in the container. You repeat this whole process 100 times, so that you end up with 100 values.
+
+![](img/plast_balls.png)
+
+:::
+
+When you plot your numbers in a histogram, you get the plot below. 
+
+```{r}
+
+set.seed(6346)
+
+tmp <- map(1:100,
+    ~tibble(outcome = sample(c(0,1), 10, replace = T),
+              set = .x)) |> 
+  bind_rows()
+
+p <- tmp |> 
+  group_by(set) |> 
+  summarise(nr_of_black = sum(outcome)) |> 
+  ggplot(aes(nr_of_black))+
+  geom_histogram(stat = "count")+
+  scale_x_continuous(breaks = seq(0, 10, by = 1))
+
+p
+
+```
+
+How many times did you retrieve 2 black balls?  How many times did you retrieve 4? What number of balls was retrieved most often? What do you notice about the answer to the last question?  
+
+There are *equal* numbers of white and black balls in the container, so the *probability* of drawing out a black ball, is the same as that of drawing out a white ball. Therefore, it makes sense that most often, equal numbers of white and black balls were drawn out, i.e. 5. It also makes sense that, only rarely were 1 or 2 black balls, or 8 or 9 black balls, drawn out, because drawing out 4, 5, or 6, is much more *probable*. 
+
+Recall that we are discussing *probability distributions*. The plot above shows a *distribution* and as we have been discussing, we can see from the plot, which outcomes were more, or less, *probable*.  Because it is easy to understand the system of drawing out black and white balls from a bag, and because it is easy and cheap to repeat the process many times, we can verify that the plot above is a good representation of what we would *generally* expect to happen when we use this system. In general, every time you complete the whole process described at the start of this section, you would expect to see a plot similar to the one above, with 4, 5 and 6, being the most frequent numbers of black balls retrieved. The system is therefore predictable - from our observations, we have a good idea of the probability of different outcomes.  
+
+Because the system is *predictable*, we can *model* it. In the next section, we will discuss what a model really is, but for now, let's think of it as a way to *describe* or *predict* a process.  
+
+Imagine now what will happen if we repeat the same process with the balls, as before, but instead of having equal amounts of black and white balls, we now have twice as many white balls as black balls.  Which of the following distributions best represent this new system?
+
+```{r}
+
+set.seed(607093)
+
+tmp <- map(1:100,
+    ~tibble(outcome = sample(c(0,1), 10, prob = c(0.66, 0.34), replace = T),
+              set = .x)) |> 
+  bind_rows()
+
+p1 <- tmp |> 
+  group_by(set) |> 
+  summarise(nr_of_black = sum(outcome)) |> 
+  ggplot(aes(nr_of_black))+
+  geom_histogram(stat = "count")+
+  scale_x_continuous(breaks = seq(0, 10, by = 1))
+
+
+tmp <- map(1:100,
+    ~tibble(outcome = sample(c(0,1), 10, prob = c(0.2, 0.8), replace = T),
+              set = .x)) |> 
+  bind_rows()
+
+p2 <- tmp |> 
+  group_by(set) |> 
+  summarise(nr_of_black = sum(outcome)) |> 
+  ggplot(aes(nr_of_black))+
+  geom_histogram(stat = "count")+
+  scale_x_continuous(breaks = seq(0, 10, by = 1))
+
+ggpubr::ggarrange(p2, p, p1, nrow = 1, labels = c("A", "B", "C"))
+
+```
+To answer the question, you had to calculate the probability of drawing a black ball in this new system. The probability is 1 in 3, because there is twice as many white balls in the bag. So, if you draw out 10 balls, you would expect 3 or 4 balls to be black. 
+
+Notice that we didn't have to actually go through the process to get to the answer. Because we understand the system, we *modeled* in our minds what would happen if we changed the probabilities. In this way, we can create distributions that are not as specific as the drawing balls out of a bag example, but which are generalisable to other similar examples. For example, we may know that 5% of people who take a certain medication, experience side-effects. Mathematicians created a *theoretical* distribution, called the *binomial distribution*, based on the known probability, and the knowledge they had from observing systems that work like drawing balls from a bag. The binomial distribution can be used to *model* the probability that a specific number of people will experience side-effects. If we tested the medication in a cohort of 100 people, what is the probability that 10 or more will experience side-effects? We can calculate this from the binomial distribution. 
+
+::: {.column-margin}
+
+We call these distributions *theorectical*, because they were not created with data from a once-off real world process, but based on a *theory* for how the process works. Theoretical distributions are described by *parameters*. In the case of the binomial distribution, the parameters are the number of trials (each time one ball is drawn would be a trial, in the previous example), and the probability of success (0.5 if there is an equal number of white and black balls).
+
+:::
+
+There are other theoretical distributions that are often used in statistics, e.g. the normal distribution, the t-distribution and the Poisson distribution.   
+
