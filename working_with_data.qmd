@@ -1,3 +1,6 @@
 # Working with data
 
+
+*Distinguish between description and inference in the context of working with data
+*Recognise the importance of reproducible data preparation and analysis
 Coming soon

@@ -1,3 +1,8 @@
 # Notes on file types
 
+
+*Understand that data can be stored in different types of files
+*Understand the strengths and limitations of a few example file types for storing different kinds of data
+
+
 Coming soon

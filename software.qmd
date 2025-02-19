@@ -1,3 +1,7 @@
 # Software for data management and analysis
 
+
+*Name examples of software applications for data collection, data storage and data analysis
+*Understand strengths and limitations of different applications for data collection, storage and reproducible analysis
+
 Coming soon
