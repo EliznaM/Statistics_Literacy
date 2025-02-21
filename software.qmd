@@ -1,6 +1,18 @@
 # Software for data management and analysis
 
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
 
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
 *Name examples of software applications for data collection, data storage and data analysis
 *Understand strengths and limitations of different applications for data collection, storage and reproducible analysis
 

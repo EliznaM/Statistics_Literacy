@@ -1,6 +1,58 @@
 # Working with data
 
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
 
-*Distinguish between description and inference in the context of working with data
-*Recognise the importance of reproducible data preparation and analysis
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
+  * Understand the role of data management in the research context.  
+  * Distinguish between description and inference in the context of working with data.  
+  * Recognise the importance of reproducible data preparation and analysis.  
+
+:::
+
+## Data management  
+
+In the context of research, we generate data to answer the questions we have about the phenomenon that we are studying. Data management processes need to be put in place to ensure the security and integrity of such data. Security refers to making sure sensitive data is stored with access control (password protected) and not shared in ways where the data can be leaked to parties who should not have access, e.g sharing data on external hard drives that are left unattended on your desk. Integrity refers to making sure the data is correct, by having processes that minimise errors, e.g. never copying and pasting data from one spreadsheet to another. Data management is a big topic, so we will not discuss it in more detail here, but it is worth establishing your own data management process when you work with data. Below are some aspects to consider.  
+
+  * Use a database whenever possible - databases were designed to store data and have many benefits over spreadsheets. Of course, when data is exported from a database, it ends up in a spreadsheet, but the original data remains unchanged in the database. If the original data is in a spreadsheet, the risk of modifying such data by accident (and without knowing!), is high.  
+  * Data sharing - make it a rule to not share spreadsheets via email, but share them on reputible password protected platforms like OneDrive, giving access permissions only to relevant people.  
+  * Version control - if data is stored or shared as a spreadsheet, give each version a number, which increments every time when something changes. Do not use words like "final" or other descriptive terms in the filename, because you will inevitably end up with a "final final" version, which makes the renders the word "final" meaningless.  
+  * Use code scripts to manipulate and analyse data.  This documents and tracks exactly how the data or data structure was changed, and all the steps can be reproduced at another time, or by another peson. In contrast, when using spreadsheet software to make new columns or remove rows, for example, there is no record of what was done to the data, and you yourself would not be able to reproduce the steps you took, even one week later.  
+  * Use sensible file saving practises. Do not save all files in a generic *Documents* folder. Create a folder (directory) system for separate projects and use the same hierarchy for all of them.  Below is an example of how you might structure a folder containing all your data analysis projects.  
+
+| -Documents
+|   - Analysis_projects  
+|       - TB_diagnostics  
+|           - data  
+|           - scripts  
+|           - reports  
+|           - images  
+|       - COVID19_vaccine  
+|           - data
+|           - scripts  
+|           - reports  
+|           - images  
+ 
+## Description and inference
+
+We generate research data because we want to answer our research questions. Usually, we gather data from a *sample*, e.g. a group of people who are being studied for the efficacy of a new COVID-19 vaccine. We usually then do two things with that data. We use summaries of it to *describe* the sample, e.g. the mean age of participants, and we use statistical tests to make *inferences* about the population of interest, e.g. all other people in the world to whom we would like to also give the new vaccine.     
+
+  
+  
+  
+  
+  
+  
+  
+
 Coming soon

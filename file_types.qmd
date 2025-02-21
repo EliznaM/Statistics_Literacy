@@ -1,6 +1,20 @@
 # Notes on file types
 
 
+```{r}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+themeCols <- tibble(cols = c("grey", "orange", "green"),
+                    hex = c("#5F6062", "#C98C53", "#C9DCB3"))
+
+theme_set(theme_minimal())
+
+```
+
+::: {.callout-tip collapse="false" appearance="simple"}
+
 *Understand that data can be stored in different types of files
 *Understand the strengths and limitations of a few example file types for storing different kinds of data
 
