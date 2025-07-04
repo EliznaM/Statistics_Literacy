@@ -1,3 +1,24 @@
+---
+title: "Statistics Literacy Chapter 17"
+author: "Elizna Maasdorp"
+subtitle: "March / April 2025"
+format: 
+  html:
+    embed-resources: true
+    page-layout: full
+    fig-width: 24
+    fig-height: 18
+    html-table-processing: none
+editor: source
+editor_options: 
+  chunk_output_type: console
+execute: 
+  echo: false
+  warning: false
+  error: false
+highlight-style: nord
+---
+
 # The sampling distribution Part 2
 
 ```{r}
