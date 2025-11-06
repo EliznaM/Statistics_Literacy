@@ -54,16 +54,14 @@ Focusing on Chen_2023 only, look at the examples of datasets below.  Which one d
 
 ## Types of studies
 
-Read **Thiese_2014** and complete the quiz below to test your own understanding.  
-
-QUIZ
+Read **Thiese_2014** and complete the quiz at the end of this section to test your own understanding.  
 
 ## Explanatory and response variables
 
 Thinking back to the studies for which you previously formulated research questions, you should recall that each study was investigating relationships between different variables.  In Chen_2023, researchers were looking for genetic variants, or clinical characteristics, that were associated with TB treatment outcomes, in people with drug-sensitive M.tb disease. Look at the example dataset B above.  The variable called *Treatment outcome* is the outcome of interest - the one they are trying to find more information about.  They want to explain which factors have an influence on the treatment outcome of the participants in the study.  This variable, which they are trying to understand better, is called the *response* variable, *outcome* variable or *dependent* variable.    
 
 The researchers also collected data from some other variables, which you can see in dataset B.  They collected those because they suspected that those variables influence the response variable, i.e. that changes in these variables may cause a different treatment outcome.  For example, if the M.tb strain a patient was infected with, had a specific genomic variant, that may have made them more likely to have a poor treatment outcome ("failure" in the dataset).  These variables that are investigated for their influence on the response variable, are called *explanatory* variables, or *independent* variables.  
-Now, for each of the 4 abstracts you read before, complete the quiz below about response and explanatory variables.  
+Now complete the quiz below about response and explanatory variables.  
 
 QUIZ
 
