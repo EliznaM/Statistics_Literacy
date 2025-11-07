@@ -1,3 +1,5 @@
 # What is a model?
 
-coming soon
+Watch the video to stimulate your thoughts on what a statistical model really is. 
+
+<https://youtu.be/X79iHkdy6tY>

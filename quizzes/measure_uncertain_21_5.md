@@ -1,3 +1,6 @@
+
+QUIZ FOR DESCRIBING UNCERTAINTY, 21.5  
+
 ### Random Error and Sampling Distribution
 
 1. What is random error in statistical estimation?  

@@ -1,3 +1,7 @@
 # Visualising data
 
-Coming soon
+It is not difficult to appreciate the value of data visualisation.  Explore the 
+two resources below to be inspired.  
+
+*  Information is Beautiful  <https://informationisbeautiful.net/>    
+*  Our World in Data <https://ourworldindata.org/>  

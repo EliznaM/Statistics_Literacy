@@ -1,24 +1,3 @@
----
-title: "Statistics Literacy Chapter 17"
-author: "Elizna Maasdorp"
-subtitle: "March / April 2025"
-format: 
-  html:
-    embed-resources: true
-    page-layout: full
-    fig-width: 24
-    fig-height: 18
-    html-table-processing: none
-editor: source
-editor_options: 
-  chunk_output_type: console
-execute: 
-  echo: false
-  warning: false
-  error: false
-highlight-style: nord
----
-
 # The sampling distribution Part 2
 
 ```{r}
@@ -117,7 +96,11 @@ It is important to note that there are different branches of statistics and what
 
 Watch the video to review the concepts we learned in this section. 
 
-INSERT VIDEO - to be created. 
+<https://youtu.be/ozgd7tLFVw4> 
+
+Now complete the quiz to test your understanding.  
+
+QUIZ: quizzes/samp_distro_part2_17.md
 
 
 

@@ -125,7 +125,7 @@ tibble(sample_1 = c("f1", "f1", "f1", "f2", "f4", "..."),
   
 Watch this video to see the concepts visually. 
 
-INSERT VIDEO (to be created)
+<https://youtu.be/2cTdBbNLVBI>  
 
 Now back to our sampling distribution.  We have one study with 40 frogs and we are now going to use random *resampling with replacement*, to pretend that we have 1000 studies.  Like before, with our thought experiment, we will end up with data from 1000 samples of 40 frogs, but this time, the data is based on real life data, which we generated in our one frog study.  It is not as good as actually having 1000 different studies, but it is better than having only one.  
 

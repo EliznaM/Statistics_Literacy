@@ -1,7 +1,5 @@
 # Preface {.unnumbered}
 
-coming soon
-
 ```{r}
 library(tidyverse)
 library(palmerpenguins)
@@ -9,3 +7,5 @@ library(knitr)
 library(kableExtra)
 
 ```
+
+

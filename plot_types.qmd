@@ -268,9 +268,14 @@ plotdta |>
 
 ```
 
-Complete the quiz below to make sure you have a good grasp of the plots we discussed.  
 
-QUIZ
+
+## Quiz
+
+Complete the quiz below to make sure you have a good grasp of the plots we discussed.    
+
+QUIZ:  quizzes/plots_13_6.md
+  
 
 
 

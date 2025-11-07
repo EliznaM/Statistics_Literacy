@@ -309,11 +309,83 @@ When using statistical tests, we always have to be aware of whether we are using
   
 Analysts should check these assumptions before accepting the results of a linear model. We will not go into more detail about that here.  
 
-## Linear models in practice
+## Linear models in practice part 1
 
-Use the Lowe_2019 paper to answer the questions in the following quiz.  
+Complete the following quiz.  
 
-**QUIZ** - to be created
+QUIZ:  quizzes/linregr_19_4.md  
+
+## Linear models in practice part 2
+
+Read the Methods and Results section 3.1 (including figure 2) from Clancy 2023, 
+and the discussion below, which explains how the edgeR R package performs 
+differential gene expression.    
+
+edgeR analyzes RNA-seq data by modeling the number of reads (counts) for each 
+gene and comparing them between two groups, such as treatment vs control, 
+or ill vs healthy.
+
+It uses three main ideas:  
+
+-  A theoretical distribution to model count data    
+-  One linear model per gene to determine association between gene expression   
+and experimental condition (ill vs healthy)     
+-  Multiple-testing correction to control the absolute number of false   
+positives obtained when analysing thousands of genes (testing thousands of hypothesis)    
+
+Statistical Model: The Negative Binomial Distribution  
+
+RNA-seq data are counts, and these counts vary by random chance, but also because
+of thousands of biological processes in a variety of cells, as well as for 
+technical reasons, based on how we isolate and measure the number of transcripts.
+This means that gene expression is not well represented by the normal distribution,
+which we will often use as a proxy of the sampling distribution, to do statistics. 
+Instead of the normal distribution, edgeR uses a distribution called the 
+negative binomial, which can handle this extra variability. The assumption 
+therefore is that the sampling distributions we could construct if we did thousands
+of gene expression experiments and plotted each gene's mean expression in its own
+sampling distribution, would follow a negative binomial distribution and we base
+calculations for the probability of observing the model coefficients we get, by 
+random chance alone, on that distribution.    
+
+What is dispersion?  
+
+Dispersion is a measure of how much the counts vary from sample to sample 
+beyond what you would expect from random noise. This is similar to what we know 
+as variance, but in differential gene expression, it is called dispersion, for
+the reasons explained above - the variation is not only because of random chance.   
+
+Linear Models in edgeR  
+
+edgeR uses generalized linear models (GLMs) to describe the experimental design. 
+It is called generalised, because instead of using the normal distribution, as 
+simple linear regression does, it can use a different underlying distribution, 
+in this case, the negative binomial. The concept is however the same, as a simple
+linear regression.    
+
+Each gene gets its own model, and edgeR tests whether the model shows evidence 
+of conditions being associated with the gene expression of that gene, i.e. the 
+mean gene expression for the ill group is higher than the mean expression for
+the healthy group, for the particular gene.   
+
+Hypothesis Testing  
+
+For each gene, edgeR tests whether group differences are bigger than what 
+would be expected from the estimated dispersion. The tests generate a p-value 
+for each gene.    
+
+Multiple-Testing Correction    
+
+Because tens of thousands of genes are tested at once, some will appear 
+significant by random chance alone. edgeR corrects this using the 
+Benjamini–Hochberg False Discovery Rate (FDR). Genes with FDR < 0.05 
+are commonly considered significant. This ensures that the list of “significant”
+genes is reliable.   
+
+Now answer the questions about the paper in the quiz below.    
+
+QUIZ:  quizzes/linregr_19_5.md  
+
 
 
 

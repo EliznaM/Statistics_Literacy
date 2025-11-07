@@ -16,7 +16,7 @@ theme_set(theme_minimal())
 ::: {.callout-tip collapse="false" appearance="simple"}
 ## Learning outcomes
 
-List outcomes for topic here
+Identify different data types.  
 
 :::
 
@@ -119,10 +119,6 @@ tibble('Data type' = c("categorical", "", "numeric", ""),
   
 ```
 
-::: {.callout-warning appearance="simple"}
 
-Data types is a fundamental concept to understand for working with data. Complete quiz 1 to test your own understanding. 
-
-:::
 
 

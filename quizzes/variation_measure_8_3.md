@@ -1,4 +1,6 @@
 
+QUIZ FOR STUDY DESIGN, 8.3 Accuracy and precision  
+
 1. **Which statement best defines accuracy in the context of scientific measurements?**
 a) How close repeated measurements are to each other
 b) How close the average of measurements is to the true or accepted value  X

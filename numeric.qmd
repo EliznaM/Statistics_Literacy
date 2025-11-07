@@ -114,3 +114,10 @@ This plot was accessed in April 2024, and could be found [here](https://ourworld
 
 :::
 
+## Quiz
+
+Complete the quiz below to test your understanding of data types.  
+
+quizzes/data_types_6_1.md  
+
+

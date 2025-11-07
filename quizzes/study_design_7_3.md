@@ -1,4 +1,6 @@
 
+QUIZ FOR STUDY DESIGN, 7.3 Variables
+
 Study the information provided about the paper below.
 
 ![alt text](paper_cheating.png)
@@ -34,13 +36,21 @@ means of transport
 
 2. Choose all the correct statements from the list below, based on Table 3. 
 
-a) There is a statistically significant difference between the percentage of white outcomes in the CT vs the RT groups.
-b) If most children did not cheat, one would expect the confidence interval for the estimate of percentage white outcomes to contain 50%. 
-c) There is no statistically significant difference between the percentage of white outcomes in the CT vs the RT groups in children 8 years or below.
-d) If most children did not cheat, one would expect the confidence interval for the estimate of percentage white outcomes to contain 5%. 
-e) The results statistically support the statement "Girls who are told not to cheat, cheat less than boys who are told not to cheat".
-f)The results statistically support the statement "Boys who were told not to cheat, were less likely to report a white outcome".
-g)The results statistically support the statement "Both girls who were told not to cheat, and those who were not instructed about cheating, reported more white outcomes, than would be expected by chance".
+a) There is a statistically significant difference between the percentage of 
+white outcomes in the CT vs the RT groups.
+b) If most children did not cheat, one would expect the confidence interval 
+for the estimate of percentage white outcomes to contain 50%. 
+c) There is no statistically significant difference between the percentage 
+of white outcomes in the CT vs the RT groups in children 8 years or below.
+d) If most children did not cheat, one would expect the confidence interval 
+for the estimate of percentage white outcomes to contain 5%. 
+e) The results statistically support the statement "Girls who are told not 
+to cheat, cheat less than boys who are told not to cheat".
+f)The results statistically support the statement "Boys who were told not to 
+cheat, were less likely to report a white outcome".
+g)The results statistically support the statement "Both girls who were told 
+not to cheat, and those who were not instructed about cheating, reported more 
+white outcomes, than would be expected by chance".
 h) The outcome or explanatory variable is cheating.
 i) The outcome or explanatory variable is percentage white outcomes.
 j) The outcome or explanatory variable is assigned group (CT or RT).

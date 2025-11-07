@@ -202,15 +202,12 @@ These tests do also generate p-values and the concept is the same as described a
 
 Time to look at some papers again.  In each of the papers listed below, look in the *Methods* section for which statistical tests were used.  Note the use of t-tests or Wilcoxon rank sum tests (also called Mann-Whithney-U tests).  Then go to the *Results* section and find the results of those tests.  
 
-  *  Chen_2024  
   *  Sam_20218  
   *  Sudarsan_2021  
   *  Ou_Yang_2023  
 
-
-Complete the quiz below by interpreting the results you found.  
-
-----QUIZ to be created----
+Complete the quiz at the end of this section, which will refer to some 
+of these papers.   
 
 ## Differences in proportions
 
@@ -256,9 +253,14 @@ If the opposite happens, and our p-value is greater than 0.05, we conclude that 
 
 Watch the video below for a discussion on what it means when you find results that are not statistically significant.  
 
-VIDEO - to be created. 
+<https://youtu.be/UsbZK_lxyio>  
 
 ## Statistical significance and practical significance
 
 Finally, a note on finding statistically significant differences that are meaningless in practice.  Imagine you were studying two groups of people who were put on two different diets for weight loss for three months.  After three months you evaluate the weight loss in each group and find that the mean weight loss in group A was 1 kg more than the weight loss in group B.  Let's say your p-value was 0.04, so the results are statistically significant.  This can happen if you have a very large sample size.  You can find a really small difference to be statistically significant, even though in practice, it isn't really a difference that matters.  In this case, we wouldn't recommend one diet over another because it seems to cause 1 kg more weight loss over three months.  That is not a practically significant result.  You have to always think critically about the result you found.  Even if it was statistically significant, does it really practically matter?   
+
+
+## QUIZ
+
+quizzes/diff_tests_18_7.md  
 

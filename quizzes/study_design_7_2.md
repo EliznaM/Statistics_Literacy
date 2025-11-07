@@ -1,5 +1,5 @@
 
-STUDY DESIGN, 7.2 Types of studies
+QUIZ FOR STUDY DESIGN, 7.2 Types of studies
 
 1. **Which of the following best describes a confounding variable in an experimental study?**
     - a) A variable that is manipulated by the researcher
@@ -38,9 +38,6 @@ STUDY DESIGN, 7.2 Types of studies
     - b) Cross-sectional study   X
     - c) Cohort study
     - d) Randomized controlled trial
-
-
-
 
 8. **Which of the following is a defining feature of an experimental study, but not an observational study?**
     - a) Use of large sample sizes
@@ -99,7 +96,11 @@ STUDY DESIGN, 7.2 Types of studies
    - f) If the student who conducted the survey, created a poll on a social media platform to gather the data, it is considered random sampling.  F
    - g) If the student who conducted the survey, asked students who were customers at a campus ice cream shop, to answer questions about sleep, it would be considered random sampling.  F
 
-18. **Cats on YouTube. Suppose you want to estimate the percentage of videos on YouTube that are cat videos. It is impossible for you to watch all videos on YouTube so you use a random video picker to select 1000 videos for you. You find that 2% of these videos are cat videos. State TRUE or FALSE for each of the following statements about observations, variables, sample statistics, or population parameters.**
+18. **Cats on YouTube. Suppose you want to estimate the percentage of videos on YouTube 
+that are cat videos. It is impossible for you to watch all videos on YouTube so you 
+use a random video picker to select 1000 videos for you. You find that 2% of these 
+videos are cat videos. State TRUE or FALSE for each of the following statements about
+observations, variables, sample statistics, or population parameters.**
 
     - a) The 2% of sampled videos on YouTube that are cat videos is the population parameter. F
     - b) The percentage of all videos on YouTube that are cat videos is the population parameter. T
@@ -117,7 +118,19 @@ STUDY DESIGN, 7.2 Types of studies
     - k) All cat videos on YouTube is a variable. F
 
 
-19. **Vitamin supplements. To assess the effectiveness of taking large doses of vitamin C in reducing the duration of the common cold, researchers recruited 400 healthy volunteers from staff and students at a university. A quarter of the patients were assigned a placebo, and the rest were evenly divided between 1g Vitamin C, 3g Vitamin C, or 3g Vitamin C plus additives to be taken at onset of a cold for the following two days. All tablets had identical appearance and packaging. The nurses who handed the prescribed pills to the patients knew which patient received which treatment, but the researchers assessing the patients when they were sick did not. No statistically discernible differences were observed in any measure of cold duration or severity between the four groups, and the placebo group had the shortest duration of symptoms. (Audera et al. 2001)  For each of the following statements, state whether it is TRUE or FALSE.**
+19. **Vitamin supplements. To assess the effectiveness of taking large doses of 
+vitamin C in reducing the duration of the common cold, researchers 
+recruited 400 healthy volunteers from staff and students at a university. 
+A quarter of the patients were assigned a placebo, and the rest were evenly
+divided between 1g Vitamin C, 3g Vitamin C, or 3g Vitamin C plus additives 
+to be taken at onset of a cold for the following two days. All tablets had 
+identical appearance and packaging. The nurses who handed the prescribed pills 
+to the patients knew which patient received which treatment, but the researchers 
+assessing the patients when they were sick did not. No statistically discernible 
+differences were observed in any measure of cold duration or severity between 
+the four groups, and the placebo group had the shortest duration of 
+symptoms. (Audera et al. 2001)  For each of the following statements, state 
+whether it is TRUE or FALSE.**
 
     - a) This was an observational study.  F
     - b) The explanation for the answer in a) is that no differences were observed between the groups.   F

@@ -17,7 +17,7 @@ Revisit the abstracts from the previous chapter (Kampman_2023, Luetkemeyer_2023,
 
 Watch this video about Illumina sequencing-by-synthesis and ask yourself, what is *actually* being measured during the process to determine the nucleotide sequence? Nucleotides do not actually have the letters "A", "C", "G" or "T" printed on them!  We are also not taking out each single nucleotide and looking at it under some very powerful microscope to see what it is.  We are measuring something that is *bound* to each nucleotide, but even then we are not directly measuring that bound molecule... What are we *actually* measuring during the process?
 
-{{< video https://www.youtube.com/watch?v=fCd6B5HRaZ8 >}}
+<https://www.youtube.com/watch?v=fCd6B5HRaZ8>  
 
 You need to appreciate that many technologies do not *directly* measure the molecule you are interested in, but in fact measures some *proxy* of it, like in the case of Illumina sequencing.  We are not looking at the *actual* nucleotide under a microscope and noting down which one of the four candidates it is, but we measure *fluorescence*, emitted by a fluorescent marker bound to the nucleotide.  Therefore, there is some error rate associated with all measurements, in part because the technologies we use to measure molecules, add several layers (like the fluorescent marker, and the fluorescence itself and the camera that detects the fluorescence) on top of what we are actually interested in measuring. Illumina reports on the expected error rates of base calling (the process of identifying which nucleotide was added to the sequence by interpreting the fluorescence signal), so that researchers can understand what the level of uncertainty for their results are.  
 
@@ -72,4 +72,8 @@ This image is from the Digital Collections of the National Library of Medicine's
 ## Accuracy and precision
 
 Read the Wikipedia article on accuracy and precision [here](https://en.wikipedia.org/wiki/Accuracy_and_precision), and complete the quiz to test your understanding.  
+
+QUIZ: quizzes/variation_measure_8_3.md  
+
+
 

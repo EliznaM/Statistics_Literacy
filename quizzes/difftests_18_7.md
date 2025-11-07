@@ -1,6 +1,9 @@
+
+QUIZ FOR DIFFERENCE TESTS, 18.7
+
 ### Null and Alternative Hypotheses for Difference Tests
 
-1.  Which of the following correctly states the null hypothesis for testing if two population means differ?\
+1.  Which of the following correctly states the null hypothesis for testing if two population means differ?
 
 ![](q1.png)  answer = B
 

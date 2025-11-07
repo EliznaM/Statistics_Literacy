@@ -1,6 +1,6 @@
 # Optional:  Bias
 
-Bias is an important topic, but it will not be covered in depth here.  If you are interested, read the resources below:  
+Bias is an important topic, but it will not be covered in depth here.  
+If you are interested, read the Wikipedia article below:  
 
-* Add  
-* Add  
+<https://en.wikipedia.org/wiki/Bias_(statistics)>  

@@ -1,4 +1,6 @@
 
+QUIZ FOR SAMP DISTRO, 17 Sampling distribution part 2  
+
 1. How is a sampling distribution constructed from sample data?  
 A) By plotting all individual data points in one sample  
 B) By taking many random samples and plotting the distribution of a chosen statistic (e.g., the sample mean) from these samples  X

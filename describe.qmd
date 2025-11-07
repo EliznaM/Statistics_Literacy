@@ -1,3 +1,5 @@
 # Describing data
 
-Coming soon
+In a given experiment we may be measuring hundreds of things in hundreds of individuals. In a gene expression experiment, for example, we will have count data for thousands of genes in each sample. We produce a count file, which will have genes as rows and samples as columns. The table containing this information will therefore have thousands of rows and as many columns as the samples in the experiment.  
+
+It should be fairly obvious that it will not benefit you much to stare at such a table if you wanted to understand something about how genes are expressed in different groups of individuals. Instead, we need to summarise and describe the data in a way that is more digestible. This is typically done using summary statistics and visualisations.  

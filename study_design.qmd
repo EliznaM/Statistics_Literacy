@@ -37,8 +37,6 @@ Read the abstracts of Kampman_2023, Luetkemeyer_2023, Hall_2023 and Chen_2023 an
 
 From the information you extracted from each abstract, formulate the research question for each study.  
 
-**SOMEHOW UPLOADED, ANONYMISED AND MADE VISIBLE TO EVERYONE**
-
 Focusing on Chen_2023 only, look at the examples of datasets below.  Which one do you think best represents the data collection step for the study?
 
 ::: {layout=[1,2,1]}
@@ -54,7 +52,9 @@ Focusing on Chen_2023 only, look at the examples of datasets below.  Which one d
 
 ## Types of studies
 
-Read **Thiese_2014** and complete the quiz at the end of this section to test your own understanding.  
+Read **Thiese_2014** and complete the quiz to test your own understanding.  
+
+QUIZ: quizzes/study_design_7_2.md  
 
 ## Explanatory and response variables
 
@@ -63,7 +63,7 @@ Thinking back to the studies for which you previously formulated research questi
 The researchers also collected data from some other variables, which you can see in dataset B.  They collected those because they suspected that those variables influence the response variable, i.e. that changes in these variables may cause a different treatment outcome.  For example, if the M.tb strain a patient was infected with, had a specific genomic variant, that may have made them more likely to have a poor treatment outcome ("failure" in the dataset).  These variables that are investigated for their influence on the response variable, are called *explanatory* variables, or *independent* variables.  
 Now complete the quiz below about response and explanatory variables.  
 
-QUIZ
+QUIZ: quizzes/study_design_7_3.md
 
 ## Confounders
 
@@ -77,11 +77,9 @@ Read **Yan_2020**.  Take note of the following terms that appear in the paper an
 * stratified randomisation  
 * outcome of interest  
 
-QUIZ with true false examples of confounders
+Watch this video for an overview of important concepts for this topic. 
 
-
-Short narrated powerpoint on NB principles of study design
-(refer back to this video in type 1 and 2 errors)
+<https://youtu.be/A8Apv2JML34>
 
 
 
