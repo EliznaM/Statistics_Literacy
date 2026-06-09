@@ -8,4 +8,4 @@ library(kableExtra)
 
 ```
 
-
+This book is a living document on statistical literacy. It will probably go through iterations to improve and clarify.  
