@@ -30,12 +30,6 @@ The figure below is from Chen_2023 and the caption provided is:
 
 ![](img/chen2023_boxplot.png)
 
-::: {.column-margin}
-
-Add ref
-
-:::
-
 When evaluating and discussing plots, it is best to follow a systematic approach.  There is more than one way, but the steps below is a good start.  
 
 * What type of plot is it?  
@@ -56,14 +50,7 @@ Your turn to interpret the next plot.  It will be very good practice to write do
 This figure is from Kotliar_2020 and the caption provided is:  *CyTOF intensity of HLA-DR protein in antigen-presenting cells. Boxes: median and interquartile range; whiskers: 2.5th and 97.5th percentiles. Colored stars
 indicate significant decreases from baseline (rank-sum test p < 0.05) with color corresponding to stage.*   
 
-![](img/kotliar2020_box plot.png)
-
-::: {.column-margin}
-
-Add ref
-
-:::
-
+![](img/kotliar2020_boxplot.png)
 
 ## Dot plots
 
@@ -274,7 +261,7 @@ plotdta |>
 
 Complete the quiz below to make sure you have a good grasp of the plots we discussed.    
 
-QUIZ:  quizzes/plots_13_6.md
+[QUIZ](quizzes/plots_13_6.md)
   
 
 

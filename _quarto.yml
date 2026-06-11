@@ -58,6 +58,7 @@ format:
     theme: united
     fig-cap-location: top
     html-table-processing: none
+    embed-resources: true
 execute: 
   echo: false
   warning: false

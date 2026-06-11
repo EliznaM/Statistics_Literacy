@@ -262,5 +262,5 @@ Finally, a note on finding statistically significant differences that are meanin
 
 ## QUIZ
 
-quizzes/diff_tests_18_7.md  
+[Quiz](quizzes/difftests_18_7.md)   
 

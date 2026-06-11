@@ -1,12 +1,4 @@
 # Inference
 
-::: {.callout-tip collapse="false" appearance="simple"}
-## Outcomes
-
-* 
-*
-*
-
-:::
-
-Coming soon
+This section is where the previous discussions on samples and populations come into play again. 
+Inference is how we draw conclusions about a population based on sample data. 

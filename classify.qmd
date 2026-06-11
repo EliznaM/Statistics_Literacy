@@ -282,6 +282,6 @@ Logistic regression is not the only method available to classify observations in
 In the case of unsupervised classification, the classes are unknown, i.e. we don't even know whether there are different classes in the data. These methods put together observations that are similar into groups and separates observations that are different into other groups.  It is then up to an analyst to discover whether these groups are truly different classes and what the most important features are that distinguish them.  An example in healthcare where one might use an unsupervised method, is if we suspect that there are two very different immune responses to SARS-CoV2 in people with moderate disease, for example. We could measure many different immune markers in the blood of people with moderate disease and apply an unsupervised classification method to the data, to see whether two distinct groups form.  If two distinct groups form, we could investigate further which variables are most different between the groups and potentially discover that one group's immune system mainly responds with T-cells, while the other group tend to have a more dominant B-cell response (this is a simple fictional example - no such difference has been discovered!).
 
 
-We will not discuss other classification methods further here, but you can read more here[]. 
+We will not discuss other classification methods further here, but you can read more [here](https://www.statlearning.com/). 
 
 

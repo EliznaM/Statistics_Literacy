@@ -100,7 +100,7 @@ Watch the video to review the concepts we learned in this section.
 
 Now complete the quiz to test your understanding.  
 
-QUIZ: quizzes/samp_distro_part2_17.md
+[QUIZ](quizzes/samp_distro_part2_17.md)
 
 
 

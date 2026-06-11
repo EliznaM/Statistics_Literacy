@@ -107,7 +107,7 @@ The last two questions can be confusing, because you must carefully select the c
 
 The data can also be visualised with a bar plot. Below we demonstrate two different plots from the same data. What is the difference? Why would you choose one over the other?    
 
-```{r}
+```{r fig.width=16, fig.dpi=96}
 
 plotdta$gestational_age <- factor(plotdta$gestational_age, 
                                   levels = c("24_to_<28_wk", "28_to_<34_wk", "34_to_<37_wk", "37_to_<42_wk", ">42_wk"))
@@ -116,14 +116,16 @@ p1 <- plotdta |>
   count(sex, gestational_age) |> 
   ggplot(aes(gestational_age, n, fill = sex))+
   geom_col(position = "dodge")+
-  scale_fill_manual(values = themeCols$hex)
+  scale_fill_manual(values = themeCols$hex)+
+  theme(legend.position = "bottom", text = element_text(size = 14))
 
 p2 <- plotdta |> 
   count(sex, gestational_age) |> 
   ggplot(aes(fill = gestational_age, y = n, x = sex))+
   geom_col(position = "dodge")+
-  scale_fill_manual(values = c(themeCols$hex, themeCols$hex))
+  scale_fill_manual(values = c(themeCols$hex, themeCols$hex))+
+  theme(legend.position = "bottom", text = element_text(size = 14))
 
-ggpubr::ggarrange(p1, p2, ncol = 2, labels = c("A", "B"))
+ggpubr::ggarrange(p1, p2, ncol = 2, labels = c("A", "B"), widths = c(2,1))
 
 ```

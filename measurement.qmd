@@ -73,7 +73,7 @@ This image is from the Digital Collections of the National Library of Medicine's
 
 Read the Wikipedia article on accuracy and precision [here](https://en.wikipedia.org/wiki/Accuracy_and_precision), and complete the quiz to test your understanding.  
 
-QUIZ: quizzes/variation_measure_8_3.md  
+[QUIZ](quizzes/variation_measure_8_3.md)  
 
 
 

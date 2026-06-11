@@ -149,5 +149,5 @@ One more important topic to discuss around quantifying uncertainty and type I an
 
 Complete the following quiz to test your understanding.  
 
-QUIZ:  quizzes/measure_uncertain_21_5.md  
+[QUIZ](quizzes/measure_uncertain_21_5.md)  
 

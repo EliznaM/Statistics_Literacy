@@ -313,7 +313,7 @@ Analysts should check these assumptions before accepting the results of a linear
 
 Complete the following quiz.  
 
-QUIZ:  quizzes/linregr_19_4.md  
+[QUIZ](quizzes/linregr_19_4.md)  
 
 ## Linear models in practice part 2
 
@@ -384,7 +384,7 @@ genes is reliable.
 
 Now answer the questions about the paper in the quiz below.    
 
-QUIZ:  quizzes/linregr_19_5.md  
+[QUIZ](quizzes/linregr_19_5.md)  
 
 
 

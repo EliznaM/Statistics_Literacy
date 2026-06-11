@@ -43,16 +43,13 @@ In the context of research, we generate data to answer the questions we have abo
 |           - reports  
 |           - images  
  
+ 
+
+```{r}
 ## Description and inference
-
-We generate research data because we want to answer our research questions. Usually, we gather data from a *sample*, e.g. a group of people who are being studied for the efficacy of a new COVID-19 vaccine. We usually then do two things with that data. We use summaries of it to *describe* the sample, e.g. the mean age of participants, and we use statistical tests to make *inferences* about the population of interest, e.g. all other people in the world to whom we would like to also give the new vaccine.     
-
-  
-  
-  
-  
-  
-  
+# 
+# We generate research data because we want to answer our research questions. Usually, we gather data from a *sample*, e.g. a group of people who are being studied for the efficacy of a new COVID-19 vaccine. We usually then do two things with that data. We use summaries of it to *describe* the sample, e.g. the mean age of participants, and we use statistical tests to make *inferences* about the population of interest, e.g. all other people in the world to whom we would like to also give the new vaccine.    
+# Coming soon
+```
   
 
-Coming soon
