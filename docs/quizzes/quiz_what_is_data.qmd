@@ -1,0 +1,68 @@
+---
+title: "title"
+author: "Elizna Maasdorp"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format: 
+  html:
+    embed-resources: true
+    page-layout: full
+    fig-width: 24
+    fig-height: 18
+    toc: true
+    toc-depth: 2
+editor: source
+editor_options: 
+  chunk_output_type: console
+execute: 
+  echo: false
+  warning: false
+  error: false
+---
+
+<style>
+
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+  
+</style>
+
+
+12. **Smoking habits of UK residents.** A survey was conducted to study the smoking habits of 1,691 UK residents.
+    Below is a data frame displaying a portion of the data collected in this survey.
+    A blank cell indicates that data for that variable was not available for a given respondent.
+    
+    
+    20. **Stressed out in an elevator.** In a study evaluating the relationship between stress and muscle cramps, half the subjects are randomly assigned to be exposed to increased stress by being placed into an elevator that falls rapidly and stops abruptly and the other half are left at no or baseline stress.
+
+    a.  What type of study is this?
+    
+    
+    10. **Efficacy of COVID-19 vaccine on adolescents, study components.** Results of a Phase 3 trial announced in March 2021 show that the Pfizer-BioNTech COVID-19 vaccine demonstrated 100% efficacy and robust antibody responses on 12 to 15 years old adolescents with or without prior evidence of SARS-CoV-2 infection.
+    In this trial 2,260 adolescents were randomly assigned to two groups: one group got the vaccine (n = 1,131) and the other got a placebo (n = 1,129).
+    While 18 cases of COVID-19 were observed in the placebo group, none were observed in the vaccine group.[^_01-ex-data-hello-6]
+    [@Pfizer:2021]
+
+
+8.  **Sinusitis and antibiotics.** Researchers studying the effect of antibiotic treatment for acute sinusitis compared to symptomatic treatments randomly assigned 166 adults diagnosed with acute sinusitis to one of two groups: treatment or control.
+    Study participants received either a 10-day course of amoxicillin (an antibiotic) or a placebo similar in appearance and taste.
+    The placebo consisted of symptomatic treatments such as acetaminophen, nasal decongestants, etc.
+    At the end of the 10-day period, patients were asked if they experienced improvement in symptoms.
+
+
+To determine whether acupuncture relieves migraine pain, researchers conducted a randomized controlled study where 89 individuals who identified as female diagnosed with migraine headaches were randomly assigned to one of two groups: treatment or control.
+    Forty-three (43) patients in the treatment group received acupuncture that is specifically designed to treat migraines.
+    Forty-six (46) patients in the control group received placebo acupuncture (needle insertion at non-acupoint locations).
+    Twenty-four (24) hours after patients received acupuncture, they were asked if they were pain free.
+    Results are summarized in the contingency table below.
+    
+    
+    
+    
+    3.  **Air pollution and birth outcomes, study components.** Researchers collected data to examine the relationship between air pollutants and preterm births in Southern California.
+    During the study air pollution levels were measured by air quality monitoring stations.
+    Specifically, levels of carbon monoxide were recorded in parts per million, nitrogen dioxide and ozone in parts per hundred million, and coarse particulate matter (PM$_{10}$) in $\mu g/m^3$.
+    Length of gestation data were collected on 143,196 births between the years 1989 and 1993, and air pollution exposure during gestation was calculated for each birth.
+    The analysis suggested that increased ambient PM$_{10}$ and, to a lesser degree, CO concentrations may be associated with the occurrence of preterm births.
+    [@Ritz+Yu+Chapa+Fruin:2000]
