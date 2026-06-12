@@ -1,0 +1,752 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistical Literacy",
+    "section": "",
+    "text": "Preface\nThis book is a living document on statistical literacy. It will probably go through iterations to improve and clarify.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "why_statistics.html",
+    "href": "why_statistics.html",
+    "title": "Why statistics?",
+    "section": "",
+    "text": "Human beings have been counting things for a long time. At some point, we realized that counting alone was not enough; we needed ways to summarize, analyze, and make sense of the data we collected. This realization led to the development of statistics as a formal discipline. We started using statistics for all sorts of things, from taking serious decisions to playing games. We gamble, follow sports, test the effectiveness of medicine and trace our own ancestry using statistics. We use it to understand systems and processes that can be measured, and many times, to predict how those systems and processes will behave in the future.\nAs with many things, statistics can be misused. People have used data to deliberately misrepresent the truth of a situation, or sometimes they have just done a poor job of handling it, and messed up their conclusions because of incompetence. Either way, anyone in science and research needs to have an understanding of the basic concepts of statistics, to be able to handle data responsibly and reproducibly.\nWe also have seen a transformation in data analysis, brought about by the availability of computing power, that could scarcely be imagined a few decades ago. Although many traditional statistical methods are still very useful, we now have access to a whole new set of techniques that can handle large and complex datasets, like machine learning and large language models. Even though these methods are new, and sometimes not transparent in how they work, they are still based on fundemental principles like probability theory, randomness and inference. Maybe especially because of the complexity and lack of transparency in some of these methods, it is important to have a solid understanding of the basics of statistics, to be able to critically evaluate the results they produce.",
+    "crumbs": [
+      "Why statistics?"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html",
+    "href": "diff_tests.html",
+    "title": "18  Difference tests",
+    "section": "",
+    "text": "18.1 Parametric difference tests\nIt is very common in our scientific studies to look for differences between groups. In a clinical trial, there may be group 1 who gets treatment A and group 2, who gets treatment B, and we would like to test whether treatment A or treatment B is better for relieving the swelling after a fracture. We will therefore measure the swelling somehow, and compare the mean swelling in group 1 to the mean swelling in group 2 with a statistical test.\nWe will discuss some of those tests now and also link back to the discussion on the sampling distribution and theoretical distributions like the t-distribution.\nLet us start again with a thought experiment, as an example and a visual representation of what we are trying to achieve with a statistical test for a difference between groups.\nImagine you have 40 mice in your lab that you can use in experimental studies. Usually you would apply some intervention to one group of mice and another intervention to the other group and look for a difference between the groups, e.g. giving treatment A to one group and treatment B to the other, and looking for a difference in average weight between the groups. In our thought experiment however, we are not going to apply any intervention. We are just going to randomly assign each mouse to group A or group B and then weigh each one and record the weight.\nFor the random assignment, we will put each mouse ID (the ID is printed on a metal tag on the ear, or tattooed on the tail like in the picture below) into a bag and draw them out at random. We draw out one ID at a time, and assign the first to group A the second to group B, the third to group A and so on, until all 40 mouse IDs have been randomly assigned to a group.\nNow we weigh each mouse and record the weight. Then we calculate the mean weight for group A and B separately. And finally, we calculate the mean difference in weight between group A and group B, by subtracting group B from group A. We record the difference in a table like the one below. This was “study 1”.\nstudy \n    weight_diff \n  \n \n\n  \n    1 \n    3.0 \n  \n  \n    2 \n    3.5 \n  \n  \n    3 \n    2.7\nThen we repeat the whole process again for “study 2” - we draw the IDs from the bag to get a random assignment to group A or B for each mouse, and so on, until we finally record the difference in mean weight for the second experiment. And in our thought experiment (where time and money doesn’t matter!), we do this 1000 times, so that we have the difference in mean weight for 1000 different random samples. As before, when we created a sampling distribution, we plot our results, like below.\nAs promised by the Central Limit Theorem, our sampling distribution is a normal distribution. You can also see that the mean of the distribution is around zero (the black line), and the standard deviation around 1 (the two dotted lines).\nNow remember that we just randomly assigned mice to either group A or B. There was no intervention or anything that could have caused a weight difference between the groups. So we would expect the weight difference to be zero or close to zero for every one of our 1000 samples. Indeed, we’ve seen that the mean of all the differences of all the samples is close to zero. But we also see that sometimes the weight difference is as much as one or even two standard deviations away from zero. So, even though there was no intervention to cause a weight difference, just by random chance, we don’t always detect a weight difference of zero, but sometimes even a weight difference as large as 2 standard deviations away from the mean.\nAs discussed before, the sampling distribution is a probability distribution, and the probability of any observation occurring within a certain range of the sampling distribution, is calculated by calculating the area under the curve for that range. Therefore, we can calculate the probability of an observation occurring in the areas on either the left or right side of the plot, which are 2 or more standard deviations away from the mean, and which are filled in the plot below.\nNow we will link back to some of the things we learned in the sampling distribution section. Because of the Central Limit Theorem, the sampling distribution approximates a normal distribution. One of the properties of a normal distribution is that it is symmetrical. You will remember that before, we calculated percentiles (the 2.5th or the 97.5th) to work out the probability of an observation occurring inside a certain area. In the plot above, rather than calculating percentiles, we calculated 2 x the standard deviation.\nIf we plot the percentiles we calculated before, on the plot above, you will see that 2 standard deviations, and the 2.5th and 97.5th percentiles (the dotted lines) are very close to each other.\nThis is because, for a normal distribution, 2.5% of the data fall below the mean minus 1.96 x the standard deviation. The 2.5th percentile = mean minus 1.96 x the standard deviation. And 2.5% of the data fall above the mean plus 1.96 x the standard deviation. The 97.5th percentile = mean + 1.96 x the standard deviation.\nLike we said before, although we could create a new sampling distribution for every new dataset, because we assume the sampling distribution to be normally distributed (thanks to the Central Limit Theorem), and because we know the relationship between percentiles (and therefore probabilities of an observation occurring below or above certain values) and the standard deviation, we can use a normal distribution (a theoretical distribution), rather than having to generate a sampling distribution from our data.\nNow we will get to how we use it in difference tests.\nRecall that at the start of this section, we created a sampling distribution for the difference in weight between mice from group A and B. We randomly assigned mice to the groups, and there was no intervention or conditions that would lead us to expect any weight difference between group A and B. So we expected the mean of the sampling distribution to be zero. We can also now call this distribution the null distribution. By that, we mean that under the “null” condition of this experiment (the situation where there was no intervention that could influence the weights of mice, and we expected no true difference in the mean weight of the groups), this is the distribution of mean weight differences that you would find by chance, if you did this null experiment hundreds or thousands of times.\nHowever, we saw that just by random chance, sometimes the mean difference in weights between group A and B is as large as 2 standard deviations. Because of the relationship we saw above, between approximately 2 standard deviations (1.96 to be precise) and the percentiles (2.5th and 97.5th) of the normal distribution, we know that the probability of an observation occurring more than 2 standard deviations away from the mean, to the left or the right, is 2.5% + (1 - 97.5%) = 5%. The probability, under the null distribution, of an observation to occur that far away from the mean, is 5% or less.\nWe can convert this idea of the null distribution into what we call the null hypothesis. For a difference test in the context of the mouse experiment we have been talking about, the null hypothesis would state that there is no difference in weight between the two groups. In the case of our thought experiment, we know that the null hypothesis is true, because there was no intervention applied that could have altered the weight of one of the groups of mice. There usually is an alternative hypothesis to the null hypothesis, and this usually states that there is a difference between the groups.\nImagine now a mouse experiment, where you are testing whether a specific drug causes changes in weight in mice. You give group A the drug and group B a placebo, while otherwise treating the two groups exactly the same. After 14 days you weigh each mouse and produce data that looks like the table below.\nID \n    Treatment \n    weight_change \n  \n \n\n  \n    m1 \n    A \n    5 \n  \n  \n    m2 \n    A \n    3 \n  \n  \n    m3 \n    B \n    3 \n  \n  \n    m4 \n    B \n    1\nYou do this not for only 4 mice, like in the table, but for 20 mice in each group, 40 in total. After weighing each mouse, you calculate the mean weight change (over 14 days) per group, then you calculate the difference between the group means and find that the mean weight for group A was 3 grams higher than for group B.\nNow you have to decide whether this difference that you found, is really because of the drug that group A received, or whether in fact the drug had no effect at all, and the difference we see is just because of random chance, like in our thought experiment before. This is where the null distribution we looked at before (which is a normal distribution in this case), will help us. We can calculate the probability to find a difference between the groups, as extreme as 3 grams, or even more extreme, if the drug had no effect at all. Another way to say that is, we can find the probability of obtaining such an extreme difference between the groups, or even more extreme, if the null hypothesis is true (i.e. there really is no difference between the groups).\nIf we plot the difference of 3 grams that you found in your experiment, on the null distribution of before, the result looks like the plot below.\nBecause we retained the fill colour for the areas of the plot representing a 5% probability that any observation fall within them (we calculated this before), we can immediately see that the difference of 3 grams that you found, falls within that 5% area. The probability of obtaining a difference as extreme as 3 grams, or even more extreme, is less than 5%. We would consider this a small probability and would likely conclude that the drug therefore must have had some effect on the weight of the mice in group A, who received it.\nThis is the fundamental concept behind the t-test, which is commonly used in statistics to determine whether there is a statistically significant difference between the means of a continuous numeric variable, of two groups. Assuming the null hypothesis is true, we calculate the probability of finding a difference as extreme or more extreme as the difference we found, and if that probability is very low, we conclude that the null hypothesis therefore is very unlikely to be true in our situation (i.e. the difference was most likely not just due to random chance, but due to some condition or intervention that is different between the groups).\nBecause we are working with probabilities here, we are never 100% sure that the drug caused the weight change in group A. We realise that there is still a small chance that the null hypothesis is actually true and that the result we got, was just by random chance.\nYour next question, of course, should be, what probability is considered to be very low? It seems like we would need a cut-off to decide on statistical significance. That cut-off is called alpha. As you read papers, you will discover that the majority of the time, scientists set alpha at 0.05 (5%). With setting alpha at 0.05, they are saying that they understand that 5% of the time, the result may be a false positive (the null hypothesis is actually true, yet in their sample a difference was found). The value chosen for alpha, represents the risk of getting a false positive result, that you are willing to take. In most situations, you would not want to take a risk of greater than 5%. In some situations, you would want the risk to be even smaller, like 1%, or 0.1%. As you develop in your science career, you will come across those situations.\nThe heading of this section is parametric difference tests. What is meant by that? We have been talking about the sampling distribution and the fact that usually it is normally distributed. Therefore, instead of generating a sampling distribution for every new dataset we work with, we use a theoretical distribution, like the normal distribution (or a t distribution or a binomial distribution, etc.). Theoretical distributions have parameters that describe them. For the normal distribution, the parameters are the mean and standard deviation. The fact that parametric statistical tests rely on theoretical distributions, described by parameters, is why the tests are called parametric. They are distinguished from non-parametric tests, which are parameter-free, because they do not rely on theoretical distributions. For the same reason, i.e. parametric tests rely on theoretical distributions, every parametric statistical test has a set of conditions that your data must meet, to ensure that it is a valid use of the test. If your data in some way violates the assumptions implicit when relying on a certain theoretical distribution, then use of that test is not valid, and often it is necessary to use a non-parametric test in such a case.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#parametric-difference-tests",
+    "href": "diff_tests.html#parametric-difference-tests",
+    "title": "18  Difference tests",
+    "section": "",
+    "text": "The picture is from this paper: Roughan, Johnny & Sevenoaks, Tatum. (2018). Welfare and Scientific Considerations of Tattooing and Ear Tagging for Mouse Identification. Journal of the American Association for Laboratory Animal Science: JAALAS. 58. 10.30802/AALAS-JAALAS-18-000057.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIt is essential that you can identify data types, as discussed in the “What is data?” section. Revise that section now if you are not sure why weight is a continuous numeric variable.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#non-parametric-difference-tests",
+    "href": "diff_tests.html#non-parametric-difference-tests",
+    "title": "18  Difference tests",
+    "section": "18.2 Non-parametric difference tests",
+    "text": "18.2 Non-parametric difference tests\nThis section will not cover non-parametric tests in as much detail as the parametric tests. As mentioned, these tests do not rely on theoretical distributions, but are often rank-based. Rather than using the actual values of observations, these tests convert each observation to its rank (when all observations are sorted from lowest to highest value), and determines whether one group consists of observations with a higher rank than the other group. It evaluates that question by taking the sum of the ranks in the one group and comparing it to the sum of the ranks in the other group. It is more complicated than that, but we will not go into more detail here.\nThese tests do also generate p-values and the concept is the same as described above. The p-value represents the probability that the result you found, could have been produced by random chance only, not by the phenomenon you are studying.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#interpreting-results-of-difference-tests",
+    "href": "diff_tests.html#interpreting-results-of-difference-tests",
+    "title": "18  Difference tests",
+    "section": "18.3 Interpreting results of difference tests",
+    "text": "18.3 Interpreting results of difference tests\nTime to look at some papers again. In each of the papers listed below, look in the Methods section for which statistical tests were used. Note the use of t-tests or Wilcoxon rank sum tests (also called Mann-Whithney-U tests). Then go to the Results section and find the results of those tests.\n\nSam_20218\n\nSudarsan_2021\n\nOu_Yang_2023\n\nComplete the quiz at the end of this section, which will refer to some of these papers.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#differences-in-proportions",
+    "href": "diff_tests.html#differences-in-proportions",
+    "title": "18  Difference tests",
+    "section": "18.4 Differences in proportions",
+    "text": "18.4 Differences in proportions\nAs we pointed out earlier, understanding data types is very important, because it determines which visualisation techniques and statistical tests to use. So far in this section, the examples were focused on weight, a continuous numeric variable. We may be interested in differences in categorical data however. As in the mouse experiment from earlier, we may not be interested in the mean weight difference between the groups, but just in how many mice lost any amount of weight. The data will look like the table below.\n\n\n\n \n  \n    id \n    group \n    lost_weight \n  \n \n\n  \n    m1 \n    A \n    yes \n  \n  \n    m2 \n    B \n    yes \n  \n  \n    m3 \n    A \n    no \n  \n  \n    m4 \n    B \n    no \n  \n  \n    m5 \n    A \n    yes \n  \n  \n    m6 \n    B \n    no \n  \n\n\n\n\n\nWe can then compare the proportion of mice per group, that lost weight, like this:\n\n\n\n \n  \n    group \n    no \n    yes \n  \n \n\n  \n    A \n    0.3333333 \n    0.6666667 \n  \n  \n    B \n    0.6666667 \n    0.3333333 \n  \n\n\n\n\n\nOur question now is whether there is a statistically significant difference between the proportions per group. The principle is the same as before - if we repeated this study 1000 times, just by random chance, there will be times when the proportions of the groups differ from each other quite a lot. So we need to find the probability that the difference in proportion in our study, was by random chance only. That is what the p-value represents. For the difference in proportions, we can use a Fisher exact test, or a Chi-squared test. We are not going to discuss those here, but if you are interested you can search the internet and read more about them.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#more-on-the-null-hypothesis",
+    "href": "diff_tests.html#more-on-the-null-hypothesis",
+    "title": "18  Difference tests",
+    "section": "18.5 More on the null hypothesis",
+    "text": "18.5 More on the null hypothesis\nWe will now briefly return to the null hypothesis discussed before. When we state that the null hypothesis is that there is no difference between the groups, we mean that if the true situation is like the first thought experiment we did in this section, where we created the null distribution, then whatever difference we see in our study, is just by chance. We then test this null hypothesis by calculating the probability that the difference is by chance (by using a theoretical distribution, the t-distribution in the case of a t-test), which is the p-value. If we set alpha (the theshold for when we will consider something to be statistically significant) to 0.05, and we find that the p-value obtained in our study is below 0.05, we conclude that the probability that our result was by chance alone is very low, and therefore we think there is a real difference. When this happens, we say that we reject the null hypothesis.\nIf the opposite happens, and our p-value is greater than 0.05, we conclude that the probability that our results were found just by chance is quite large and we do not reject the null hypothesis. We never say that we accept the null hypothesis, but only that we do not reject it. We always assume that the null hypothesis is true, and then conduct our study to find evidence that it is not. If we don’t find that evidence (i.e. our p-value is greater than 0.05), it doesn’t mean that we have conclusively proven that the null hypothesis is true, only that in our one study, we didn’t find evidence against it.\nWatch the video below for a discussion on what it means when you find results that are not statistically significant.\nhttps://youtu.be/UsbZK_lxyio",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#statistical-significance-and-practical-significance",
+    "href": "diff_tests.html#statistical-significance-and-practical-significance",
+    "title": "18  Difference tests",
+    "section": "18.6 Statistical significance and practical significance",
+    "text": "18.6 Statistical significance and practical significance\nFinally, a note on finding statistically significant differences that are meaningless in practice. Imagine you were studying two groups of people who were put on two different diets for weight loss for three months. After three months you evaluate the weight loss in each group and find that the mean weight loss in group A was 1 kg more than the weight loss in group B. Let’s say your p-value was 0.04, so the results are statistically significant. This can happen if you have a very large sample size. You can find a really small difference to be statistically significant, even though in practice, it isn’t really a difference that matters. In this case, we wouldn’t recommend one diet over another because it seems to cause 1 kg more weight loss over three months. That is not a practically significant result. You have to always think critically about the result you found. Even if it was statistically significant, does it really practically matter?",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "diff_tests.html#quiz",
+    "href": "diff_tests.html#quiz",
+    "title": "18  Difference tests",
+    "section": "18.7 QUIZ",
+    "text": "18.7 QUIZ\nQuiz",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Difference tests</span>"
+    ]
+  },
+  {
+    "objectID": "corr_lm.html",
+    "href": "corr_lm.html",
+    "title": "19  Correlation and linear regression",
+    "section": "",
+    "text": "19.1 Correlation\nIn our scientific experiments, we usually take measurements. In an earlier section, we were measuring the weight of frogs, for example. We could also have measured the total body length of the frogs and then we would have two continuous numeric variables. We may be interested in knowing if there was any relationship between weight and body length, i.e. if a frog has a longer body, does it weigh more? We could explore that visually in a scatter plot, which was introduced in a previous section. Looking at the plots below, where each dot represents a frog, it should be clear that as the length increases, the weight also increases, although the amount by which it increases seems to vary between frogs. Therefore, just by looking at the plots, it is obvious to us that there is an association between the two variables: when one increases, the other also increases. In plot B, we added a line to represent the association.\nWe call this association correlation, and we have a formula (which we won’t show and discuss here) to calculate a correlation coefficient, which can range between -1 and 1 and which represents the strength of the correlation. If the amount by which weight increased, with a 1cm increase in length, was exactly the same for every frog, we would have perfect correlation and a correlation coefficient of 1, as in the plots below. Each time, the length of a frog is exactly a sixth of its weight.\nAs you know from living in the universe, it is very rare for associations to be this perfect. There will be variation or error around our measurements, and therefore the observations will fall around the straight line on the plot, rather than on it. The closer the observations are to the line, on average, the stronger the relationship, represented in the correlation coefficient being closer to 1 (for a positive correlation) or -1 (for a negative correlation). The further away and all over the place the observations are, the weaker the relationship, represented in the correlation coefficient being close to zero.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Correlation and linear regression</span>"
+    ]
+  },
+  {
+    "objectID": "corr_lm.html#linear-models",
+    "href": "corr_lm.html#linear-models",
+    "title": "19  Correlation and linear regression",
+    "section": "19.2 Linear models",
+    "text": "19.2 Linear models\nHopefully, by now you have started to wonder how we know where to put the line? Which of the lines in the plot below is the best one?\n\n\n\n\n\n\n\n\n\nFrom mathematics at school, you should recall that we can graph a line to represent a relationship, and that such a line has a formula, which specifies the slope and intercept (where it cuts through the y-axis). The lines in the plot above all have different formulas. But which formula best represents the relationship between the two variables?\nThe general formula for a linear model is\ny = b + ax + e\nwhere b is the intercept, a is the slope and e is error.\nIf the correlation was perfect and all observations fell exactly on the line, e would be zero. But with the observations not falling exactly on the line, e is not zero and actually represents how far each observation, on average, is from the line. Therefore, what if we use these distances from the line, to decide which line is the best fit? If we can find the line that is on average the closest to each observation, so that we make e as small as possible for each observation, that would be the best line. See the error demonstrated in the plot below. Two points are circled and the grey lines stretching from it to the fitted line, represent the error, which we also call the residuals.\n\n\n\n\n\n\n\n\n\nIf you imagine drawing the residual line for each observation in the plot, it should make intuitive sense that the line which minimises all the residuals, is the line that best fits the data. This is the principle behind least squares regression, or what we generally call the simple linear regression model. This should also make it clearer to you that the correlation coefficients are closer to 1 or -1, when the observations are on average, closer to the line (i.e. the residuals are smaller).\nWhen we have done an experiment and taken several measurements of variables we were interested in, we can apply simple linear regression to test whether there are associations between specific variables. For example, if we were growing some microbe in media and wanted to see whether different concentrations of glucose was associated with the growth rate, we could potentially use a linear model. There is one important thing to check, though. Is the relationship actually linear? There are other ways that two variables can be associated, apart from a linear relationship. The plots below demonstrate an exponential relationship. In this case a linear model would not be appropriate (although in this case applying a logistic transformation to the data would be a workaround to still enable us to use a linear model).\n\n\n\n\n\n\n\n\n\nIf we are satisfied that the relationship is linear however, we would use statistical software to perform a linear regression. Let’s return to the frogs’ length and weight.\nWe would specify the dependent variable, or outcome variable (the y in the formula). In this case we hypothesise that the longer a frog is, the more it would weigh. Therefore weight is dependent on length, or length predicts weight to some extent. Weight is the dependent variable and length is the independent variable or predictor (the x in the formula).\nweight = a*length + e\nThe statistical software fits a linear model through the least squares method we discussed above - it finds the line that minimises the squares of the residuals, and then provides output that describes the formula and how well the model fit the data. The concept is the same as with the correlation coefficient of before. If the residuals are large, the model doesn’t fit the data very well and by implication, length doesn’t predict weight very well. Below is the output that R provides when using the lm() function.\n\nfit &lt;- lm(weight ~ length1, data = plotdta)\n\n\n\n\n \n  \n    term \n    estimate \n    std.error \n    statistic \n    p.value \n  \n \n\n  \n    (Intercept) \n    7.600681 \n    1.8999559 \n    4.000451 \n    0.0002177 \n  \n  \n    length1 \n    4.748023 \n    0.3269291 \n    14.523095 \n    0.0000000 \n  \n\n\n\n\n\nThe estimate column reports the model coefficients, i.e. the y and x of the formula. The formula of the model therefore, is y = 7.60 + 4.75x. We interpret this as follows: For every 1 unit increase in length, weight increases by 4.75 units. As you can see, we don’t generally use the intercept in the interpretation. Each coefficient has a p-value, and it represents the probability that the coefficient was the result of random chance, rather than the result of the association between weight and length.\nIf there is no association between the predictor and the outcome, the coefficient for that predictor will be close to zero and the p-value will be high, indicating that when the predictor increases (or decreases) by 1 unit, the outcome does not change much (the coefficient is practically zero). The model also has an overall p-value and metrics which represent how good the fit of the model is (i.e. how close the points are to the fitted line, or how small or large the residuals are).\n\n\n\n \n  \n    r.squared \n    adj.r.squared \n    p.value \n    df \n    logLik \n    AIC \n    BIC \n    deviance \n    df.residual \n    nobs \n  \n \n\n  \n    0.8146148 \n    0.8107526 \n    0 \n    1 \n    -87.35524 \n    180.7105 \n    186.4466 \n    96.38549 \n    48 \n    50 \n  \n\n\n\n\n\nWe generally would look at the adjusted R-squared and the p-value of the model to judge how well the model (the fitted line) describes the data. We usually interpret the R-squared as the “amount of variance in y, explained by the predictors”. The R-squared ranges between 0 and 1, with 0 being no association at all, and 1 being a perfect association. In this case, the R-squared of 0.81 means that length explains 81% of the variance in weight, which is a very strong association.\nClearly, however, it does not explain all of the variation. There remains error or uncertainty (unexplained variance). One way to try to reduce the unexplained variance, and therefore to understand the outcome variable better, is to add more predictors to the model. If there are other factors that we think can reasonably be associated with the outcome variable, we can create a multiple linear regression model, which includes multiple predictors. In the case of length and weight of frogs, we may think that sex also plays a role, and add that to the model. Each predictor will have a coefficient (a slope) in the model output, and a p-value. The conceptual formula for the model now looks like this, with a and b, representing the slopes or coefficients for length and sex.\nweight = alength + bsex + e\n\nfit &lt;- lm(weight ~ length1 + sex, data = plotdta)\n\n\n\n\n \n  \n    term \n    estimate \n    std.error \n    statistic \n    p.value \n  \n \n\n  \n    (Intercept) \n    7.8785985 \n    1.9262068 \n    4.0902142 \n    0.0001675 \n  \n  \n    length1 \n    4.6679399 \n    0.3386102 \n    13.7855856 \n    0.0000000 \n  \n  \n    sexm \n    0.3851916 \n    0.4154553 \n    0.9271554 \n    0.3585827 \n  \n\n\n\n\n\nWe see that in this case, the coefficient for sex is close to zero and the p-value is not significant, so there is no association with weight.\n\n\n\n \n  \n    r.squared \n    adj.r.squared \n    p.value \n    df \n    logLik \n    AIC \n    BIC \n    deviance \n    df.residual \n    nobs \n  \n \n\n  \n    0.8179445 \n    0.8101975 \n    0 \n    2 \n    -86.90213 \n    181.8043 \n    189.4524 \n    94.65429 \n    47 \n    50 \n  \n\n\n\n\n\nThe adjusted R-squared has also not improved substantially, so we would generally go back to the results from the first model. If the adjusted R-squared did however improve and it seemed like sex helped to explain more of the variance in weight, we would keep it in the model and report its results, rather than the first model.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Correlation and linear regression</span>"
+    ]
+  },
+  {
+    "objectID": "corr_lm.html#linear-model-assumptions",
+    "href": "corr_lm.html#linear-model-assumptions",
+    "title": "19  Correlation and linear regression",
+    "section": "19.3 Linear model assumptions",
+    "text": "19.3 Linear model assumptions\nWhen using statistical tests, we always have to be aware of whether we are using the test appropriately. All tests make some assumptions about the data, and if those assumptions are in fact not true for the data, using that test is not appropriate. We already mentioned one assumption for linear models - the relationship must be linear. Two more important assumptions to be aware of are\n* the residuals must be approximately normally distributed\n* the variability around the fitted line should be constant across the spectrum of the outcome variable (there should not be low variability in the low values and high variability in the high values, for example).\nAnalysts should check these assumptions before accepting the results of a linear model. We will not go into more detail about that here.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Correlation and linear regression</span>"
+    ]
+  },
+  {
+    "objectID": "corr_lm.html#linear-models-in-practice-part-1",
+    "href": "corr_lm.html#linear-models-in-practice-part-1",
+    "title": "19  Correlation and linear regression",
+    "section": "19.4 Linear models in practice part 1",
+    "text": "19.4 Linear models in practice part 1\nComplete the following quiz.\nQUIZ",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Correlation and linear regression</span>"
+    ]
+  },
+  {
+    "objectID": "corr_lm.html#linear-models-in-practice-part-2",
+    "href": "corr_lm.html#linear-models-in-practice-part-2",
+    "title": "19  Correlation and linear regression",
+    "section": "19.5 Linear models in practice part 2",
+    "text": "19.5 Linear models in practice part 2\nRead the Methods and Results section 3.1 (including figure 2) from Clancy 2023, and the discussion below, which explains how the edgeR R package performs differential gene expression.\nedgeR analyzes RNA-seq data by modeling the number of reads (counts) for each gene and comparing them between two groups, such as treatment vs control, or ill vs healthy.\nIt uses three main ideas:\n\nA theoretical distribution to model count data\n\nOne linear model per gene to determine association between gene expression\nand experimental condition (ill vs healthy)\n\nMultiple-testing correction to control the absolute number of false\npositives obtained when analysing thousands of genes (testing thousands of hypothesis)\n\nStatistical Model: The Negative Binomial Distribution\nRNA-seq data are counts, and these counts vary by random chance, but also because of thousands of biological processes in a variety of cells, as well as for technical reasons, based on how we isolate and measure the number of transcripts. This means that gene expression is not well represented by the normal distribution, which we will often use as a proxy of the sampling distribution, to do statistics. Instead of the normal distribution, edgeR uses a distribution called the negative binomial, which can handle this extra variability. The assumption therefore is that the sampling distributions we could construct if we did thousands of gene expression experiments and plotted each gene’s mean expression in its own sampling distribution, would follow a negative binomial distribution and we base calculations for the probability of observing the model coefficients we get, by random chance alone, on that distribution.\nWhat is dispersion?\nDispersion is a measure of how much the counts vary from sample to sample beyond what you would expect from random noise. This is similar to what we know as variance, but in differential gene expression, it is called dispersion, for the reasons explained above - the variation is not only because of random chance.\nLinear Models in edgeR\nedgeR uses generalized linear models (GLMs) to describe the experimental design. It is called generalised, because instead of using the normal distribution, as simple linear regression does, it can use a different underlying distribution, in this case, the negative binomial. The concept is however the same, as a simple linear regression.\nEach gene gets its own model, and edgeR tests whether the model shows evidence of conditions being associated with the gene expression of that gene, i.e. the mean gene expression for the ill group is higher than the mean expression for the healthy group, for the particular gene.\nHypothesis Testing\nFor each gene, edgeR tests whether group differences are bigger than what would be expected from the estimated dispersion. The tests generate a p-value for each gene.\nMultiple-Testing Correction\nBecause tens of thousands of genes are tested at once, some will appear significant by random chance alone. edgeR corrects this using the Benjamini–Hochberg False Discovery Rate (FDR). Genes with FDR &lt; 0.05 are commonly considered significant. This ensures that the list of “significant” genes is reliable.\nNow answer the questions about the paper in the quiz below.\nQUIZ",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Correlation and linear regression</span>"
+    ]
+  },
+  {
+    "objectID": "quant_uncertainty.html",
+    "href": "quant_uncertainty.html",
+    "title": "21  Describing uncertainty",
+    "section": "",
+    "text": "21.1 95% Confidence interval and p-value\nThis section draws on some of the concepts introduced in the sampling distribution sections. From that section, it was clear that when we do an experiment, using a sample, our goal is to estimate certain characteristics of a population. We calculate the mean weight of a sample of 40 frogs, for example, but really we are interested in the mean weight of all frogs of that species (the population). It should be clear to you that the mean weight for the whole population is not going to be exactly the same as the weight we calculated for the sample. But we can use the information we gathered from the sample of 40 frogs, to estimate a range for the mean, within which we think the population mean most likely falls. In fact, we even try to quantify the probability that the population mean falls within that specified range.\nWe looked at the sampling distribution, its mean and the 2.5th and 97.5th percentiles and we learned that 5% of the data in the sampling distribution falls outside of those two percentiles, while 95% of the data fall within them. When we report the mean of the sampling distribution, along with the range from the 2.5th to the 97.5th percentile, we can say that if you do many experiments (like our thought experiment of catching 40 frogs, on 1000 different occasions), then for 95% of those experiments, the mean will fall within the range we specified. Therefore we think our mean, along with this 95% range, is a good estimate of what the population mean is. We call that range (between the 2.5th and 97.5th percentile of the sampling distribution), the 95% confidence interval (CI).\nRecall that in the sampling distribution section, we learned that instead of doing the thought experiment of 1000 studies to create the sampling distribution, we can use a theoretical distribution, the normal distribution in its place. We therefore do not have to actually calculate the 2.5th and 97.5th percentiles of the sampling distribution, but we use the known properties of the normal distribution to calculate 95% confidence intervals. You should remember for the Measures of centrality and spread section, that 95% of the data in a normal distribution, falls within -1.96 and 1.96 SDs from the mean.\nWe then use the mean and standard error (SE) from our sample of 40 frogs, to calculate the 95% CI with this formula upper = mean + 1.96 x SE and lower = mean - 1.96 x SE.\nReporting the 95% CI along with our estimate of the population mean, is our attempt to represent the uncertainty of our estimate. It should make intuitive sense that if we say the population mean is between 30 and 40, there is much more uncertainty, than if we say the population mean is between 32 and 34. The width of the 95% CI represents how uncertain we are about the estimate.\nIn a similar way, the p-value represents the uncertainty about hypothesis test results and it can also be derived from a sampling distribution. Recall that a p-value of 0.03 for a difference test, can be interpreted as the probability that the same difference, or a difference even more extreme, could have been detected by random chance alone. That is to say that if the the group allocation (for example the difference in a measured protein between pneumonia cases and non-pneumonia controls) in truth, had no association with the values of the protein, the probability of measuring the difference that was measured, is 3%. We consider that quite a low probability in this case and therefore we would say this p-value is statistically significant, because it is below 0.05 (which is a common threshold pre-specified for statistical significance). We would conclude that there is in fact a difference between the two groups (we would reject the null hypothesis that there is no difference).",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Describing uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "quant_uncertainty.html#confidence-interval-and-p-value",
+    "href": "quant_uncertainty.html#confidence-interval-and-p-value",
+    "title": "21  Describing uncertainty",
+    "section": "",
+    "text": "The standard error is similar to the standard deviation, but its formula is\nSE = mean/square root of n.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Describing uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "quant_uncertainty.html#types-of-error",
+    "href": "quant_uncertainty.html#types-of-error",
+    "title": "21  Describing uncertainty",
+    "section": "21.2 Types of error",
+    "text": "21.2 Types of error\nThe sampling distribution demonstrates to us that there is random error in our measurements. For most things that we measure in experiments, it is highly unlikely that many individuals will have exactly the same value. Even measuring something in the same individual over time, will usually produce different measurements. Taking the same measurement in 1000 different experiments, then calculating the mean of each experiment and plotting it, produces the sampling distribution and demonstrates the random error inherent in the phenomenon that is measured. Some things may vary much more than others.\nWe can usually not distinguish between random error and “real” variation associated with a specific characteristic of a population, or an intervention that was applied to one group, but not another. Yet, those are the differences we are actually interested in. Therefore random error can cause difficulty for us in designing studies and interpreting results.\nWe generally accept that just by random chance alone (i.e. through no real association between our measurements and some characteristic), we will find statistically significant differences in 5% of experiments, if we repeated the same experiment many times. We would call that a false positive result. But we have no way of knowing whether our positive result was a false or a true positive, because we don’t know the true relationship in the population of interest (if we knew the truth, we would not be doing the experiment!). The best we can do is to quantify the uncertainty (or the random error) by providing p-values and/or confidence intervals which make the probability of getting the result by random chance alone, explicit.\nWe call the case where we obtained a false positive result, type I error. As we stated before, we cannot distinguish between a true and a false positive result, but we set a threshold for the probability of obtaining a false positive result, by pre-specifying a threshold for statistical significance. This is called alpha and most often 0.05 is used. This means that we accept up to a 5% chance of getting a false positive test, as a low enough probability to not reject the null hypothesis. But if the probability of a false positive test goes above 5% (i.e. the probability of obtaining this result or something more extreme is 10% or 20%), we do not reject the null hypothesis, because we consider that probability to be unacceptably high.\nThe opposite can also happen. We can have a false negative result, where we detected no association, when in truth there is an association in the population. Again, we cannot know when our result is a false or a true negative. We call this type II error.\nIn the same way that we try to manage type I error, by pre-specifying a level for alpha, above which we will not reject the null hypothesis (therefore “protecting” against too many false positives), we also try to manage type II error, mainly by having a large enough samle size. Sample size calculations can be done to determine the number of observations that one would need to detect a difference of a specific size, with a specified “power”. Power pertains to the probability of finding a false negative result and we generally tolerate a larger probability of 10 or 20% here. Power in that case is specified as 80% or 90% to detect a difference of a specified size.\nThe table below demonstrates the types of error we have been discussing.\n\n\n\n \n  \n    Truth \n    Test result: reject null hypothesis \n    Test result: fail to reject null hypothesis \n  \n \n\n  \n    Null hypothesis is true \n    Type I error \n    Good decision \n  \n  \n    Alternative hypothesis is true \n    Good decision \n    Type II error",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Describing uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "quant_uncertainty.html#the-impact-of-sample-size",
+    "href": "quant_uncertainty.html#the-impact-of-sample-size",
+    "title": "21  Describing uncertainty",
+    "section": "21.3 The impact of sample size",
+    "text": "21.3 The impact of sample size\nThe ability to detect a difference of a specific size, between two groups, if such a difference really exists, depends on the sample size and the variance in the variable that is measured. A smaller sample size typically has a larger variance, which makes the overlap between the distributions of the two groups larger, as demonstrated in the plots below. On the x-axis of each, is the variable in which we want to detect a difference. The orange dotted lines are the means for the two groups. Plot A has a sample size of 200, while plot B has a sample size of 20. You should be able to see that the difference in means for the two plots are very similar, but the overlap between the distributions is larger in the second plot. It will be harder for a difference test to detect the difference in the second plot, even though the size of the difference is similar for both scenarios. The only ways to improve the situation, is to enlarge the sample size, so that the variance decreases, or to settle for only being able to detect a larger difference, which will decrease the overlap by moving the two means further away from each other. The problem with the second approach is that many times we are not sure what size difference we are looking for, so if the sample size is too small to detect a smaller difference, we cannot claim that there is no difference, only that our sample size was too small to detect a smaller difference.\n\n\n\n\n\n\n\n\n\nThis topic can be discussed in much more detail with practical examples, but we will not do that here.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Describing uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "quant_uncertainty.html#multiple-testing",
+    "href": "quant_uncertainty.html#multiple-testing",
+    "title": "21  Describing uncertainty",
+    "section": "21.4 Multiple testing",
+    "text": "21.4 Multiple testing\nOne more important topic to discuss around quantifying uncertainty and type I and II error, is when multiple hypothesis tests are performed in an experiment. Due to new technology, it has become possible for us to measure thousands of analytes from the tissue samples of patients, for example. We can measure hundreds or thousands of proteins or RNA molecules in blood specimens. Often we want to test each one of those measured analytes for a difference between two groups, like the pneumonia cases and non-pneumonia controls of before. This means doing thousands of hypothesis tests. As we discussed before, for every hypothesis test we accept some threshold, usually 0.05, indicating the probability of false positives that we will tolerate. If we did 100 tests on completely random data (i.e. there is truly no associations between the variables we are testing), we would expect 5 tests to be positive, just by random chance. The number of false positives escalates quickly when we are doing thousands of tests. If we measure 14 000 genes and perform difference tests for each one, we would expect 700 false positives. Even though that still amounts to only 5%, the actual number of false positives has become unacceptable. We want to “protect” ourselves against getting so many false positive results by correcting for multiple testing. This is a fairly standard procedure in some fields where thousands of hypothesis tests are routinely done. We will not explain the methods here, but the principle is basically to adjust every p-value by some method, so that the p-values which are likely from false positive results, would no longer be statistically significant by the pre-specified cut-off (alpha). The Bonferroni correction and the Benjamini-Hochberg correction are two methods that are commonly used and you may come across them while reading papers.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Describing uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "quant_uncertainty.html#quiz",
+    "href": "quant_uncertainty.html#quiz",
+    "title": "21  Describing uncertainty",
+    "section": "21.5 Quiz",
+    "text": "21.5 Quiz\nComplete the following quiz to test your understanding.\nQUIZ",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Describing uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "classify.html",
+    "href": "classify.html",
+    "title": "20  Classification",
+    "section": "",
+    "text": "20.1 Logistic regression\nIn the linear models section, we explored models to represent a linear association between a continuous outcome variable and one or more predictors (which could be continuous or categorical). Now we will think of the specific case where the outcome variable is binary, i.e. it has only two categories. Again, we are interested in a relationship between the outcome variable and predictors, but this time, we will use logistic regression. The result a logistic regression model produces is quite different from linear models.\nImagine we want to explore the associations between a number of proteins that can be measured in blood, and whether or not a person has a particular disease. We take blood from each patient and measure three proteins of interest. Then we want to see if there is an association between these proteins and whether or not a patient has pneumonia. Another way to phrase it, is that we want to see whether the three proteins can classify a patient as having pneumonia, or not.\nPart of the output of a logistic regression model is a probability (between 0 and 1) for every individual to be a case (i.e. have pneumonia), or not. But like with linear models, there is also a coefficient for each predictor. The interpretation of the coefficients are however different for logistic regression.\nBelow is the output for a logistic regression model for the pneumonia example.\nfit &lt;- glm(pneumonia_case ~ protein_1 + protein_2 + protein_3,\n    data = logreg_dta)\nterm \n    estimate \n    std.error \n    statistic \n    p.value \n  \n \n\n  \n    (Intercept) \n    9.0804608 \n    3.1285267 \n    2.902472 \n    0.0056666 \n  \n  \n    protein_1 \n    -0.0072856 \n    0.0604692 \n    -0.120485 \n    0.9046237 \n  \n  \n    protein_2 \n    -0.0342820 \n    0.0125236 \n    -2.737382 \n    0.0087755 \n  \n  \n    protein_3 \n    -0.0258001 \n    0.0106809 \n    -2.415536 \n    0.0197420\nThe p-value can be interpreted as for linear models - when it is below 0.05, the predictor is significantly associated with the outcome. The coefficients themselves must be transformed to odds and then odds ratios to be interpreted. We will not discuss that further here, but if you are interested you can read more here[].",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Classification</span>"
+    ]
+  },
+  {
+    "objectID": "classify.html#classification",
+    "href": "classify.html#classification",
+    "title": "20  Classification",
+    "section": "20.2 Classification",
+    "text": "20.2 Classification\nWe will focus on another way to interpret logistic regression models, which pertains to the accuracy of a model to predict the class (pneumonia case or non-pneumonia control) of the outcome variable for each individual.\nBelow is the probability output for 10 of the 50 individuals from the model above. In the class column is the true class of each individual (pneumonia case = 1, non-pneumonia control = 0) and in the probability column is the model estimate of the probability that an individual is a case.\n\n\n\n \n  \n    class \n    probability \n  \n \n\n  \n    1 \n    0.6895645 \n  \n  \n    1 \n    0.1949715 \n  \n  \n    1 \n    0.5497160 \n  \n  \n    1 \n    0.5563442 \n  \n  \n    1 \n    0.3718135 \n  \n  \n    0 \n    0.6000741 \n  \n  \n    0 \n    0.6023452 \n  \n  \n    0 \n    0.4770100 \n  \n  \n    0 \n    0.3326095 \n  \n  \n    0 \n    0.4004710 \n  \n  \n    0 \n    -0.0371131 \n  \n\n\n\n\n\nWe can plot the probabilities per class like below. The dotted horizontal line indicates a probability of 0.5.\n\n\n\n\n\n\n\n\n\nAs you can see, the probability scores for cases and controls overlap, meaning that the model was not able to perfectly classify them.\nIf we decided that a probability score 0.5 or higher signifies a case, we can create table A below. In the left column, labelled “Class”, is the true class of the participants. In the two columns to the right, are the predicted classes. Table B below shows the interpretation of each cell.\n\n\n\nA\n \n  \n    class \n    case \n    control \n  \n \n\n  \n    case \n    18 \n    7 \n  \n  \n    control \n    7 \n    18 \n  \n\n\n\n\n\n\nB\n \n  \n    class \n    case \n    control \n  \n \n\n  \n    case \n    true pos \n    false neg \n  \n  \n    control \n    false pos \n    true neg \n  \n\n\n\n\n\nFrom the table we can calculate true positives and true negatives (where the predicted class and real class correspond), and false positives and false negatives (where the prediction was wrong), as depicted in table B.\nFrom this table we can compute a few important metrics of classification.\n\nSensitivity = true positives / total cases\n\nSpecificity = true negatives / total controls\n\nPositive predictive value = true positives / all positives\n\nNegative predictive value = true negatives / all negatives\n\nThese metrics are used to evaluate the usefulness of the classification for the situation. An in-depth discussion is beyond the scope of this section, but you can read more here[]. From the table and formulas above you should be able to appreciate that sensitivity and specificity are closely related. A high sensitivity generally means that there are few false negatives, while a high specificity means that there are few false positives. It is hard for tests to achieve both those things, and there is always a trade-off. If you want fewer false negatives, you usually have to tolerate a few more false positives and vice versa. Study the tables above to understand why this is the case.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Classification</span>"
+    ]
+  },
+  {
+    "objectID": "classify.html#the-receiver-operating-characteristic-curve",
+    "href": "classify.html#the-receiver-operating-characteristic-curve",
+    "title": "20  Classification",
+    "section": "20.3 The Receiver operating characteristic curve",
+    "text": "20.3 The Receiver operating characteristic curve\nHopefully you were wondering a bit about the probability score cut-off of 0.5 that we chose. How did we decide to choose that? Could we have used a different cut-off? We will now introduce the receiver operating characteristic (ROC) curve.\n\n\nYou can read more about these curves and how they got their name here[https://pmc.ncbi.nlm.nih.gov/articles/PMC6022965/#bibr1-2192568218778294].\n\n\n\n\n\n\n\n\n\nA sample of the data that was used to create this plot is shown below.\n\n\n\n \n  \n    thresh \n    sens \n    spec \n  \n \n\n  \n    0.1346457 \n    1.00 \n    0.16 \n  \n  \n    0.1657202 \n    1.00 \n    0.20 \n  \n  \n    0.1966859 \n    0.96 \n    0.20 \n  \n  \n    0.2022047 \n    0.96 \n    0.24 \n  \n  \n    0.2123637 \n    0.96 \n    0.28 \n  \n  \n    0.2249996 \n    0.96 \n    0.32 \n  \n  \n    0.2507000 \n    0.96 \n    0.36 \n  \n  \n    0.2815306 \n    0.96 \n    0.40 \n  \n  \n    0.3039705 \n    0.96 \n    0.44 \n  \n  \n    0.3172473 \n    0.92 \n    0.44 \n  \n  \n    0.3255839 \n    0.92 \n    0.48 \n  \n\n\n\n\n\nThe thresh column is the probability scores produced by the logistic regression model. For each entry, the sensitivity and specificity are calculated, as if that probability score was used as the cut-off between cases and controls. Before, we used 0.5 as an arbitrary threshold, but here, we use every possible cut-off between 0 and 1, in turn. Once we have the calculations, we can optimise either sensitivity or specificity (depending on the context of the classification problem) by using the cut-off that gives the best sensitivity, for example, while still retaining an acceptable specificity. The ROC curve demonstrates these sensitivity and specificity combinations, at each cut-off of the probability score. Each step (the “corner” where a horizontal and vertical segment of the line meet) in the graph, represents a specific cut-off, and the corresponding sensitivity and specificity can be read off from the axes. Note that the x-axis inverts the specificity.\nA second useful thing that can be calculated from the ROC analysis, is the area-under-the-curve (AUC). This refers to the area under the ROC curve and gives an overall value to how well the model correctly classified cases from controls. Perfect classification would produce an AUC of 1, while a model which is no better than a coin flip (i.e. random chance) will have an AUC of around 0.5. The plots below demonstrate a very good model in A and a poor model in B.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Classification</span>"
+    ]
+  },
+  {
+    "objectID": "classify.html#roc-curves-in-practice",
+    "href": "classify.html#roc-curves-in-practice",
+    "title": "20  Classification",
+    "section": "20.4 ROC curves in practice",
+    "text": "20.4 ROC curves in practice\nUse the Mutavhatsindi_2024 paper to answer the following quiz questions.\nQUIZ - to be done",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Classification</span>"
+    ]
+  },
+  {
+    "objectID": "classify.html#other-classification-methods",
+    "href": "classify.html#other-classification-methods",
+    "title": "20  Classification",
+    "section": "20.5 Other classification methods",
+    "text": "20.5 Other classification methods\nLogistic regression is not the only method available to classify observations into classes, using predictors. Many statistical learning and machine learning methods have been developed for classification, and some of them can handle classification of more than two categories. These methods can generally also be divided into supervised and unsupervised methods. Supervised methods are used in the case where the classes are known, as in the logistic regression example above. The model learns from the data with known classes, and can then be applied to new data for which the classes are not known, to predict the classes.\nIn the case of unsupervised classification, the classes are unknown, i.e. we don’t even know whether there are different classes in the data. These methods put together observations that are similar into groups and separates observations that are different into other groups. It is then up to an analyst to discover whether these groups are truly different classes and what the most important features are that distinguish them. An example in healthcare where one might use an unsupervised method, is if we suspect that there are two very different immune responses to SARS-CoV2 in people with moderate disease, for example. We could measure many different immune markers in the blood of people with moderate disease and apply an unsupervised classification method to the data, to see whether two distinct groups form. If two distinct groups form, we could investigate further which variables are most different between the groups and potentially discover that one group’s immune system mainly responds with T-cells, while the other group tend to have a more dominant B-cell response (this is a simple fictional example - no such difference has been discovered!).\nWe will not discuss other classification methods further here, but you can read more here.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Classification</span>"
+    ]
+  },
+  {
+    "objectID": "sampling_distro2.html",
+    "href": "sampling_distro2.html",
+    "title": "17  The sampling distribution Part 2",
+    "section": "",
+    "text": "Outcomes\n\n\n\n\n\n\nExplain how a sampling distribution is constructed from sample data\n\nExplain what a probability distribution is\n\nExplain area-under-the-curve\n\nUnderstand the conceptual link between a sampling distribution from data and theoretical distributions like the normal distribution and t-distribution\n\nUnderstand the central limit theorem conceptually\n\n\n\n\nIn the previous section, we covered how a sampling distribution is constructed from sample data and explained that the sampling distribution is a probability distribution. Now we will define the “area-under-the-curve”.\nBelow is the sampling distribution we created in the previous section.\n\n\n\n\n\n\n\n\n\nThe whole dark grey area of the curve of plot A represents a probability of 1, i.e. all possible observations of the population. The probability that the weight of an individual from the population of interest is somewhere along the x-axis of the whole sampling distribution, is 1, i.e. a 100% probability. This grey area is also called the area-under-the-curve, and that area therefore is always equal to 1.\nAs we discussed before, the probability for any value to fall below the 2.5th percentile of the distribution, is 2.5%. What we are really doing when we say that, is calculating the brown area of plot B, between the extreme left-hand side of the plot and the dotted grey line that represents the 2.5th percentile. That area is 2.5% of the whole area-under-the-curve. In the same way, 2.5% of the data that makes up the sampling distribution, falls within that area, and the probability of any observation to fall within that area, is 2.5%.\nNow we will briefly look at the Central Limit Theorem.\n\n\nFor an in-depth discussion, read Zhang_2022, which you will find in the resources folder.\nThe Central Limit Theorem (CLT) has a broad definition and implications, but we will focus here only on how it speaks to the sampling distribution of the mean. Simply put, the theorem states that the sampling distribution will tend toward being normally distributed as the sample size increases. So, if many studies were done, and the mean for some variable calculated every time, the distribution made up of all those means, will tend to be normally distributed.\nThere will of course be exceptions, but because the CLT usually holds, we have been using its principles in many statistical tests, to “replace” the sampling distribution, with theoretical distributions. Instead of doing the thought experiment we did before, and pretending we do many studies through the resampling method, we use a theoretical distribution to stand in for the sampling distribution we could have created as before. We can do this, because we can predict that the sampling distribution would be normally distributed if the sample size is large enough.\nThis concept of using a theoretical distribution, rather than creating a unique sampling distribution for every dataset, is one of the most central and important concepts in statistics. Examples of theoretical distributions used in statistical tests that you will come across, are the normal distribution, the t-distribution, the binomial distribution and the negative binomial distribution. These distributions each have specific characteristics that the statistical tests associated with them, utilise to provide estimates and the error(uncertainty) associated with the test results.\nIn the t-test for example, instead of using the sampling distribution generated from your own dataset (as in the plots above), and calculating a specific area of the plot to find out what the probability is for values to be below a certain cut-off, the t-distribution is used and the probability is obtained from it.\nIt is important to note that there are different branches of statistics and what we discussed in this section particularly applies to frequentist statistics. Other branches include resampling statistics and Bayesian statistics and you will encounter these when you read scientific papers.\nWatch the video to review the concepts we learned in this section.\nhttps://youtu.be/ozgd7tLFVw4\nNow complete the quiz to test your understanding.\nQUIZ",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>The sampling distribution Part 2</span>"
+    ]
+  },
+  {
+    "objectID": "sampling_distro.html",
+    "href": "sampling_distro.html",
+    "title": "16  The sampling distribution Part 1",
+    "section": "",
+    "text": "Outcomes\n\n\n\n\n\n\nExplain how a sampling distribution is constructed from sample data\n\nExplain what a probability distribution is\n\nExplain area-under-the-curve\n\nUnderstand the conceptual link between a sampling distribution from data and theoretical distributions like the normal distribution and t-distribution\n\nUnderstand the central limit theorem conceptually\n\n\n\n\nImagine you are involved in a field study where a specific species of frog is caught, weighed, and released again, with the goal of estimating the mean weight of the species. You generate data that looks like the table below.\n\n\n\n \n  \n    id \n    weight \n  \n \n\n  \n    f1 \n    33 \n  \n  \n    f2 \n    30 \n  \n  \n    f3 \n    34 \n  \n  \n    f4 \n    36 \n  \n\n\n\n\n\nYou do this not for only 4 frogs, like in the table, but for 40 frogs in total. You calculate the mean weight of all the frogs.\n\n\n\n \n  \n    calculation \n    mean \n  \n \n\n  \n    mean weight \n    33 \n  \n\n\n\n\n\nNow imagine doing this same study, 1000 times, with a different 40 frogs each time. Of course you cannot actually do this in real life (it would take a lot of time and money), but we are doing a thought experiment. For each of the studies, you calculate the mean weight of the frogs. Then you draw a histogram of all 1000 mean weights that you calculated and get the plot below.\n\n\n\n\n\n\n\n\n\nThe mean of the 1000 means you calculated, is indicated by the vertical black line in the middle. The 2.5th percentile and the 97.5th percentile are indicated by the grey dotted vertical lines.\nThis distribution is the sampling distribution. It is the distribution created by the 1000 different samples in our thought experiment.\nRecall what we discussed before - our experiment takes a sample, but our scientific question is actually about a population (all the individuals with the specific characteristics we are studying, e.g. all frogs of this species, or all tuberculosis patients in the world, or all HIV cases with suppressed viral loads in Sub-Saharan Africa, etc.) So the sampling distribution is an attempt to represent the whole population, rather than just the 1 sample of 40 frogs that we have.\nBut of course we have a problem - we were doing a thought experiment and our data and sampling distribution exists only in our thoughts, not in the real world. Now we will introduce a new concept: resampling.\nWe already established that it is not possible for us to do 1000 of these frog experiments, but we can probably do at least one. If we have data for one experiment, we can apply a clever trick to pretend we still have 1000 experiments. We do this by resampling from the data that we have.\nWe take 1000 different random samples of frogs from the data that we generated by our one study. If we want every new sample we take to contain 40 frogs, then we will take the same sample 1000 times, because we have only 40 frogs! That is not helpful at all, because we will get exactly the same mean weight every time and the histogram above will have no spread at all. We can follow one of two strategies:\n\nWe must either take smaller samples, e.g 30 frogs, then if we take every possible combination of 30 frogs, from the pool of 40 frogs, we can theoretically get 8.4766053^{8} unique samples. This type of resampling is called resampling without replacement.\n\n\n\nThe R code for the number of theoretical samples is:\n\nn &lt;- 40\nr &lt;- 30\n\nx &lt;- factorial(n)/(factorial(r)*factorial(n-r))\n\n\nWe take 40 frogs per sample, but we allow a frog to be picked for the sample, more than once, or not at all. So the frog with ID f1 might be picked for our first sample three times, while f2 was picked only once, f3 not picked at all and f4, once. Then for our second sample, f1 was picked once, f2 twice, f3 twice and f4, not at all. And so on, until we have 1000 random samples. This type of resampling is called resampling with replacement. The idea is that all the frog IDs have been written on slips of paper, and put into a bag. We draw out slips of paper, 1 at a time, write down the frog ID, then place the slip of paper back into the bag (instead of setting it aside so that it cannot be drawn out again). So the slip of paper can be drawn again, for the same sample.\n\n\n\n\n \n  \n    sample_1 \n    sample_2 \n  \n \n\n  \n    f1 \n    f1 \n  \n  \n    f1 \n    f2 \n  \n  \n    f1 \n    f2 \n  \n  \n    f2 \n    f3 \n  \n  \n    f4 \n    f3 \n  \n  \n    ... \n    ... \n  \n\n\n\n\n\nWatch this video to see the concepts visually.\nhttps://youtu.be/2cTdBbNLVBI\nNow back to our sampling distribution. We have one study with 40 frogs and we are now going to use random resampling with replacement, to pretend that we have 1000 studies. Like before, with our thought experiment, we will end up with data from 1000 samples of 40 frogs, but this time, the data is based on real life data, which we generated in our one frog study. It is not as good as actually having 1000 different studies, but it is better than having only one.\nLet’s remind ourselves of why we are interested in having 1000 samples… Our scientific question about the average weight of this frog species, is about the population of frogs, not just about our small sample of 40. We are trying to estimate the true population mean weight, using only the data we have from this sample. By resampling with replacement, we create 1000 “pretend” samples, so that we can create the sampling distribution, as before with our thought experiment.\nThe sampling distribution is a probability distribution. For every value on the x-axis of the graph, you can calculate the probability of a study finding that specific mean weight, or a weight difference smaller (or larger) than it, given what we know about the population. Let’s look at the sampling distribution from our resampling with replacement exercise. This time we will look at a density plot, rather than a histogram.\n\n\n\n\n\n\n\n\n\nThe solid black line in the middle, indicates the mean. The grey dotted lines on either side, indicate the 2.5th percentile and the 97.5th percentile, respectively.\n\n\nIf you need to review what a percentile is, now is a good time to look that up.\nIn a probability distribution, 2.5% of the data is found below the 2.5th percentile. Another way to say that is that the probability of a frog to have a weight lower than the 2.5th percentile, is 2.5%. In the same way, the probability of a frog weighing more than the 97.5th percentile, is 2.5%. And taking those two facts together, the probability of a frog having a weight between the 2.5th and the 97.5th percentile, is 100% minus (2.5% + 2.5% = 5%) = 95%. This is the usefulness of the sampling distribution - it gives us an estimate of the uncertainty (or probability) around our estimate of the mean weight for this frog species.\nMore formally, we think that the probability is 95% that the true population mean lies between the 2.5th and the 97.5th percentiles of the sampling distribution.\nNow let us make the connection between inference and the sampling distribution. Inference refers to the process by which we use information from a sample to describe a population. We take measurements from a relatively small group of representatives of the population of interest (the sample), to infer reasonable estimates of what those measurements would be, on average, for the whole population.\nThe sampling distribution that we created by resampling with replacement, using our sample data, is our attempt to get at what the distribution of weight might look like for the whole population. Because we are obviously not 100% certain of our estimates (because we cannot measure the whole population), the sampling distribution is a probability distribution, that specifies the probability that the population estimate lies between specific values, e.g. the 2.5th and the 97.5th percentiles.\nIn the next section we will take this concept further, into difference tests.",
+    "crumbs": [
+      "Inference",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>The sampling distribution Part 1</span>"
+    ]
+  },
+  {
+    "objectID": "inference.html",
+    "href": "inference.html",
+    "title": "Inference",
+    "section": "",
+    "text": "This section is where the previous discussions on samples and populations come into play again. Inference is how we draw conclusions about a population based on sample data.",
+    "crumbs": [
+      "Inference"
+    ]
+  },
+  {
+    "objectID": "tables.html",
+    "href": "tables.html",
+    "title": "15  Summarise categorical data",
+    "section": "",
+    "text": "Outcomes\n\n\n\n\n\n\nSummarise categorical variables by creating appropriate frequency tables and contingency tables.\n\nUse bar plots appropriately to visualise categorical variables.\n\n\n\n\nIn the same way that there is a need to summarise numerical data, to be able to make conclusions, we need to summarise categorical variables. Below is a snippet from a table in Kampmann_2023. It shows the gestational age categories and numbers (and percentages) of patients from the vaccinated group, belonging to each.\n This frequency table is simple to understand. Calculate the total number of patients included in the categories. What did you discover? What may be reasons for that?\nIf we wanted to know how the gestational age categories compared between males and females, a sample of the “raw” data we would need would look like the table below. (This is fictional data, not the actual data from Kampmann_2023.)\n\n\n\n \n  \n    gestational_age \n    sex \n  \n \n\n  \n    37_to_&lt;42_wk \n    female \n  \n  \n    37_to_&lt;42_wk \n    female \n  \n  \n    37_to_&lt;42_wk \n    female \n  \n  \n    37_to_&lt;42_wk \n    male \n  \n  \n    37_to_&lt;42_wk \n    female \n  \n  \n    37_to_&lt;42_wk \n    female \n  \n  \n    37_to_&lt;42_wk \n    female \n  \n  \n    37_to_&lt;42_wk \n    male \n  \n  \n    37_to_&lt;42_wk \n    male \n  \n  \n    37_to_&lt;42_wk \n    female \n  \n\n\n\n\n\nTo answer our question we need to summarise the two variables in a contingency table (or two-way table) like the one below.\n\n\n\n \n  \n    gestational_age \n    female \n    male \n  \n \n\n  \n    24_to_&lt;28_wk \n    2 \n    NA \n  \n  \n    28_to_&lt;34_wk \n    13 \n    4 \n  \n  \n    34_to_&lt;37_wk \n    97 \n    95 \n  \n  \n    37_to_&lt;42_wk \n    1689 \n    1651 \n  \n  \n    &gt;42_wk \n    7 \n    10 \n  \n\n\n\n\n\nThis table is also fairly simple, but can become quite confusing when you start having to answer questions about it. Answer the following questions about the table above.\n\nWhat is the total number of females?\nWhat is the total number of patients in the &gt;42 weeks category?\nWhat percentage of males are in the 28 to &lt;34 weeks category?\nWhat percentage of those in the 34 to &lt;37 weeks category, are female?\n\n\n\n\n\n\n\nExpand to see the answers\n\n\n\n\n\nYou would have discovered that you need the column totals and the row totals to answer the questions.\n\n\n\n \n  \n    gestational_age \n    female \n    male \n    total \n  \n \n\n  \n    24_to_&lt;28_wk \n    2 \n    NA \n    NA \n  \n  \n    28_to_&lt;34_wk \n    13 \n    4 \n    17 \n  \n  \n    34_to_&lt;37_wk \n    97 \n    95 \n    192 \n  \n  \n    37_to_&lt;42_wk \n    1689 \n    1651 \n    3340 \n  \n  \n    &gt;42_wk \n    7 \n    10 \n    17 \n  \n  \n    total \n    1808 \n    NA \n    NA \n  \n\n\n\n\n\nWhat is the total number of females?\n1829\nWhat is the total number of patients in the &gt;42 weeks category?\n25\nWhat percentage of males are in the 28 to &lt;34 weeks category?\n10/1739*100 = 0.58%\nWhat percentage of those in the 34 to &lt;37 weeks category, are female?\n78/171*100 = 45.61%\nThe last two questions can be confusing, because you must carefully select the correct total to calculate the percentage.\n\n\n\nThe data can also be visualised with a bar plot. Below we demonstrate two different plots from the same data. What is the difference? Why would you choose one over the other?",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Summarise categorical data</span>"
+    ]
+  },
+  {
+    "objectID": "central_spread.html",
+    "href": "central_spread.html",
+    "title": "14  Measures of centrality and spread",
+    "section": "",
+    "text": "14.1 Definitions\nNow that we have discussed types of data and ways to visualise data, we will move on to ways to describe data using summary statistics. A study in which a number of variables were measured on a 100 participants, likely will produce a spreadsheet with rows and columns, where the observations of each measurement, for each participant were captured. If you have ever seen a spreadsheet like that, you will appreciate that it is hard to come to any conclusions about the experiment by looking at the “raw” data (i.e. the individual numbers in a spreadsheet). Usually, we need to make summaries and visualisations of the data, relevant to the scientific questions we are trying to answer.\nOne way to summarise numeric data, is through measures of centrality and spread. We touched on this before, briefly. Measures of centrality represent where the bulk of the data can be found. If the mean age of a group of people is 30 years, we would expect that most people’s age is relatively close to 30. Measures of spread, indicate how much variability there is.\nImportant measures of centrality and spread that you should know the definitions of are:\nWe will not define these here, it is up to you to familiarise yourself with the definitions and how to calculate these.",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Measures of centrality and spread</span>"
+    ]
+  },
+  {
+    "objectID": "central_spread.html#definitions",
+    "href": "central_spread.html#definitions",
+    "title": "14  Measures of centrality and spread",
+    "section": "",
+    "text": "Mean\n\nMedian\nMode\n\nStandard deviation (SD)\n\nVariance\n\nRange\n\nInterquartile range (IQR)",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Measures of centrality and spread</span>"
+    ]
+  },
+  {
+    "objectID": "central_spread.html#the-box-and-whisker-plot",
+    "href": "central_spread.html#the-box-and-whisker-plot",
+    "title": "14  Measures of centrality and spread",
+    "section": "14.2 The box-and-whisker plot",
+    "text": "14.2 The box-and-whisker plot\nWe have encountered the box-and-whisker plot (box plot for short) before. It is a very valuable plot to represent the distribution of numeric data. On the plot below, which features represent the median, the interquartile range, the range and the minimum and maximum in the data? What percentage of the data is represented by the box? What percentage of the data falls outside the box?\n\n\n\n\n\n\n\n\n\nThe dots at the top and bottom of the whiskers are called outliers. There are different definitions for what constitutes an outlier, but a common definition (and the definition used in this plot) is values that are more than 1.5 IQRs away from the 25th and 75th percentiles. If you investigated the questions above, you would have found that the top line of the box is the 75th percentile and the bottom line is the 25th percentile. The height of the box, therefore is the IQR. If a value is 2.5 times the height of the box, away from the median, that observation is considered an outlier, and will be represented as a dot beyond the whisker.\nNow consider the three boxplots below. List which differences and similarities you observe between them.\n\n\n\n\n\n\n\n\n\nTheir medians are similar. A and C are symmetrically distributed (the top and bottom halves of the box and whiskers are similar in size). B is assymetrically distributed, with a long “tail” at the top. Since the dark line in the middle represents the median, we can see that the bottom 50% of the data fits into a very small range on the y-axis, while the top 50% of the data spreads out over a larger range.\nLook at the histograms below. Which histogram corresponds with A, B and C above?",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Measures of centrality and spread</span>"
+    ]
+  },
+  {
+    "objectID": "central_spread.html#distributions",
+    "href": "central_spread.html#distributions",
+    "title": "14  Measures of centrality and spread",
+    "section": "14.3 Distributions",
+    "text": "14.3 Distributions\nBox plots and histograms are useful plots to show the distribution of numeric variables. A distribution is defined by parameters, such as the mean, standard deviation, median, IQR. There are many theoretical distributions which are defined by other parameters than the ones listed here, but we will not discuss those.\nAn important distribution that is often used or referred to, is the standard normal distribution. It is defined as having a mean of 0 and a SD of 1 and is symmetrical. The distributions A and E in the plots above, are standard normal distributions. Many statistical concepts use the principles of the normal distribution, most importantly, its symmetry and its spread (the fact that the SD is equal to 1).\nBecause the SD of the normal distribution is 1, a very useful property is that percentiles of the normal distribution can be expressed as multiples of its SD. 68 % of the data that generates a normal distribution, lie between -1 and 1 SDs from the mean. 95% of the data lie between -1.96 SDs and 1.96 SDs. Therefore, 1 SD deviation below the mean, corresponds to the 16th percentile ((100 - 68)/2), while 1 SD above the mean, corresponds to the 84th percentile (100 - (32/2)), so that 68% (84 - 16) of the data lie between those two percentiles. In the same way, 95% of the data lie between the 2.5th and 97.5th, or -1.96 and 1.96 SDs from the mean.\n\n\n\n\n\n\n\n\n\nYou will likely see some people rounding the SD multiples, to make it easier to remember. In this simplified rule, 68%, 95% and 99.7% of the data lie between 1, 2 and 3 SDs from the mean, respectively.\nIt is useful to compare the distribution of your data to the normal distribution, in terms of whether the data is distributed symmetrically, and how wide its spread is (i.e. the standard deviation). We would describe the distributions below as A = normal, B = right skewed (long “tail” to the right), C = left skewed (long “tail” to the left) and D = symmetrical, wide (it is wider than a normal distribution).\n\n\n\n\n\n\n\n\n\nDistributions can also be stranger than these and have more than one peak or no peak at all. The distributions below can be described as A = uniform (mostly flat with no distinct peaks), B = bimodal (as opposed to unimodal, when there is only one peak) and C = multimodal.",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Measures of centrality and spread</span>"
+    ]
+  },
+  {
+    "objectID": "central_spread.html#variability-and-precision",
+    "href": "central_spread.html#variability-and-precision",
+    "title": "14  Measures of centrality and spread",
+    "section": "14.4 Variability and precision",
+    "text": "14.4 Variability and precision\nAt the start of this chapter you were required to revise what the standard deviation and variance are. You would have discovered that the square of the SD is the variance. Both therefore are ways to describe how widely the data are spread apart, or how narrowly it is distributed. Again, the normal distribution with its SD of 1, serves as a good comparison of whether data is spread more widely or more narrowly than the normal distribution. Data that is highly variable will have a large standard deviation and variance.\nWhen we summarise a numeric variable by reporting its mean and standard deviation, we would say that an estimate with a smaller SD is more precise than an estimate with a larger associated SD. A more precise estimate is usually more useful and a larger sample size usually gives a more precise estimate. Some types of data are inherently more variable and will have larger standard deviations around the mean, than data that is inherently less variable.",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Measures of centrality and spread</span>"
+    ]
+  },
+  {
+    "objectID": "central_spread.html#standardisation-of-numeric-data",
+    "href": "central_spread.html#standardisation-of-numeric-data",
+    "title": "14  Measures of centrality and spread",
+    "section": "14.5 Standardisation of numeric data",
+    "text": "14.5 Standardisation of numeric data\nWe pointed out before that the normal distribution has the special property that its percentiles can be described as number of SDs from the mean. This is very useful, because if you know an observation within a normal distribution lies within 2 SDs from the mean, you know it is within the range of 95% of all the data, while if it lies beyond 3 SDs from the mean, it lies within the outside 0.3% of the data, and is therefore a rare observation in the distribution.\nThis property is however only true of the normal distribution. When you measure something for your experiment, it is highly unlikely that it will be perfectly normally distributed (i.e. have a mean of 0 and a SD of 1). There is however a clever way to transform any numeric variable into a normal distribution, so that we can use its properties to describe our data.\nWe will first do an exercise to demonstrate the principle. Do the following calculations on the numbers in the table below.\n\nCalculate the mean of column A.\n\nCalculate the SD of column A.\n\nSubtract the mean from each observation in column A, and then divide your answer by the SD.\nWrite down the new number for each observation in column B.\n\nCalculate the mean and SD for column B.\n\n\n\n\n \n  \n    A \n    B \n  \n \n\n  \n    19.22 \n     \n  \n  \n    26.01 \n     \n  \n  \n    27.13 \n     \n  \n  \n    14.37 \n     \n  \n  \n    23.17 \n     \n  \n  \n    23.67 \n     \n  \n  \n    14.17 \n     \n  \n  \n    17.62 \n     \n  \n  \n    15.97 \n     \n  \n  \n    27.72 \n     \n  \n\n\n\n\n\nYou should find that the mean of column B is equal or very close to 0 and the SD equal or very close to 1. This should sound familiar, as these are the properties of the normal distribution. We know that variable A did not have a standard normal distribution, because when you calculated the mean and SD for A, they were not equal to 0 and 1, respectively. Therefore, subtracting the mean from each observation and then dividing by the SD, transformed variable A into B, which has those two properties of the normal distribution. We call the new observations in B, z-scores. Each observation is now the multiple of SDs that the observation is away from the mean (which is 0).\nIt is a clever way to transform the data, because essentially we don’t change the order of the observations or the spread. We just turned them into z-scores, which are very useful in specific cases.\nOne context where z-scores are useful, is in comparing the weight or height of individuals, both human or animals. Rather than comparing the actual weights, converting each individual’s weight to a z-score makes it easy to immediately understand where it fits into the spread of the population. The population mean will be 0, and therefore if an individual’s weight is -1, it is 1 SD below the population mean, or if it is 3, it is 3 SDs above. Combining this, with the knowledge that 99.7% of the data in a normal distribution lie within 3 SDs, we also deduce that this individual’s weight is highly unusual, compared to the rest of the population. Some statistical methods also require data to be standardised before performing the test. Usually the reason for this is to put variables that were measured on very different scales, on the same scale, because variables with very high numbers will have a bigger influence on the result than those on smaller scales.\nFinally, it is important to understand that data that was standardised, will have the properties of a normal distribution in that the mean is 0 and the SD is 1, but the distribution will not necessarily be symmetrical. Therefore, to standardise a variable, does not make it normally distributed. In addition, very confusingly, you can also normalise a variable, which means to change its scale to range from 0 to 1. That can also be very useful, but we will not discuss it further, here.",
+    "crumbs": [
+      "Describing data",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Measures of centrality and spread</span>"
+    ]
+  },
+  {
+    "objectID": "describe.html",
+    "href": "describe.html",
+    "title": "Describing data",
+    "section": "",
+    "text": "In a given experiment we may be measuring hundreds of things in hundreds of individuals. In a gene expression experiment, for example, we will have count data for thousands of genes in each sample. We produce a count file, which will have genes as rows and samples as columns. The table containing this information will therefore have thousands of rows and as many columns as the samples in the experiment.\nIt should be fairly obvious that it will not benefit you much to stare at such a table if you wanted to understand something about how genes are expressed in different groups of individuals. Instead, we need to summarise and describe the data in a way that is more digestible. This is typically done using summary statistics and visualisations.",
+    "crumbs": [
+      "Describing data"
+    ]
+  },
+  {
+    "objectID": "plot_types.html",
+    "href": "plot_types.html",
+    "title": "13  Types of plots",
+    "section": "",
+    "text": "13.1 Box plots\nThe figure below is from Chen_2023 and the caption provided is:\nGene expression from RNA-seq (log2FPKM) of Rv2164c under drug pressure and hypoxia. Read the paper to understand the context for this plot.\nWhen evaluating and discussing plots, it is best to follow a systematic approach. There is more than one way, but the steps below is a good start.\nYour turn to interpret the next plot. It will be very good practice to write down your answer according to the systematic approach above.\nThis figure is from Kotliar_2020 and the caption provided is: CyTOF intensity of HLA-DR protein in antigen-presenting cells. Boxes: median and interquartile range; whiskers: 2.5th and 97.5th percentiles. Colored stars indicate significant decreases from baseline (rank-sum test p &lt; 0.05) with color corresponding to stage.",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "plot_types.html#box-plots",
+    "href": "plot_types.html#box-plots",
+    "title": "13  Types of plots",
+    "section": "",
+    "text": "What type of plot is it?\nIn this case, box plots.\n\nDescribe the axes of the plot. What variable is represented on the x-axis and what variable on the y-axis?\nThe exposure status is on the x-axis - whether the culture was exposed to drug or hypoxia, or not. Gene expression is on the y-axis.\nDescribe the legend, if present. What do the different colours represent?\nThe dots are coloured for the exposure status.\n\nWhat does the different elements on the plot (e.g. boxes, dots, lines) represent?\nHere, each dot represents a separate culture, and the boxes represent the summary of the data, with the central line being the median, the range between the top and bottom of the box showing the interquartile range and the whiskers extending for the range of the data.\n\nWhat is the main question the plot aims to answer?\nIn this case cultures with and without exposure to drugs or hypoxia are portrayed to show differences in the gene expression level of Rv2164c, under the different conditions.\n\nWhat is the main message (results or meaning) of the plot?\nStatistically significant differences in gene expression were seen for Isoniazid, Rifampicin and hypoxia, but not Ethambutol.",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "plot_types.html#dot-plots",
+    "href": "plot_types.html#dot-plots",
+    "title": "13  Types of plots",
+    "section": "13.2 Dot plots",
+    "text": "13.2 Dot plots\n\nThe image above is from Liu_2023 and the caption provided is: Serum soluble CD163 (sCD163) concentrations and circulating monocyte changes in Ebola virus (EBOV)–exposed monkeys. A, Significant increases in serum sCD163 concentrations at day 6 after EBOV exposure and at the terminal day (T). B, Flow cytometry and hematology show significant increases in total circulatory CD3−CD14−CD20−CD11c−CD163+ cells at 3, 4, and 5 days after exposure. C, There were no significant differences in the CD3−CD14−CD20−CD163−CD11c+ population during disease progression. 1 asterisk P &lt; .05; 2 asterisks P &lt; .01; 3 asterisks P &lt; .001.\nThe caption should ideally have described what each dot and each red line represents, as well as which statistical test’s p-values are reported. In this case, each dot represents a monkey in the study, and the horizontal red lines are the mean expression of the marker displayed on the y-axis. The vertical red lines are most probably the standard deviation of the mean. The way to interpret the significance bars (the horizontal black lines at the top of each plot), is to read the values on the x-axis, that align with the left extreme end and right extreme end of the significance bar. These are the comparison groups, while the number of stars indicates the significance level, as described in the figure caption.",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "plot_types.html#histograms",
+    "href": "plot_types.html#histograms",
+    "title": "13  Types of plots",
+    "section": "13.3 Histograms",
+    "text": "13.3 Histograms\nThink back to the pages that covered categorical and numeric data and remember that some plots were introduced there. You should now recognise that different plots are appropriate for different types of data. We use specific plots to represent categorical data and others for numeric data. So far in this chapter, the plots have all been for numeric data. Histograms are also used for numeric data and they are very interesting if you spend a bit of time with them.\nDifferent types of plots are differently suited to represent specific characteristics of data. Histograms are especially good for showing the distribution of a variable, i.e. where most of the data lies as well as how spread out or clumped together it is around certain values. Look at the plots below and describe the distribution for each.\n\n\n\n\n\n\n\n\n\nCan you see that the variables have the same mean (around 0), but very different spreads? Also note that the y-axis is labelled “count”. What is being counted?\nLook at the two plots below. They are of the same variable, but the plot is drawn differently in each case. What are the differences that you see?\n\n\n\n\n\n\n\n\n\nThe main difference is that there are few bars in plot A, more in plot B and even more in plot C, yet the data is the same. Another name for the bars, are bins. Think of it as a bin (like a container) that you can throw balls into. Imagine the data that is plotted, was produced by drawing balls with numbers on them from a bag (a bit like in a lottery when the winning numbers are announced). For plot A, there are five bins (bars). Each time you draw a ball, you check the number printed on it and then throw it into one of the bins. The plot below shows the 5 bins more clearly. If the number is between -7.5 and -4.5, the ball goes into the leftmost bin. If it is between -4.5 and -1.5, it goes into the bin second from the left, and so on. The bin grows taller the more balls (numbers) you throw into it.\n\n\n\n\n\n\n\n\n\nCan you see that the width of the bins in plot A is 3, whereas the width of the bins in plot B below is 0.5 (Only a few of the bins are indicated with the red lines). This explains why the bins in plot A are much taller than the bins in plot B, and why plot B gives a more detailed view of the distribution. The width of the bins in plot C is even smaller, and therefore we have a very granular view of the data in that case.\n\n\n\n\n\n\n\n\n\nHistograms are also useful to show whether the data distribution is symmetrical. Look at the plots below and describe the differences between their symmetry.\n\n\n\n\n\n\n\n\n\nHopefully you can see that plot A is fairly symmetrical, whereas plots B and C are skewed to the right and left, respectively (B has a long “tail” to the right, and C has a long “tail” to the left). We will describe these characteristics of distributions more in the section on describing data.",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "plot_types.html#scatter-plots",
+    "href": "plot_types.html#scatter-plots",
+    "title": "13  Types of plots",
+    "section": "13.4 Scatter plots",
+    "text": "13.4 Scatter plots\nLike all the plots before in this chapter, scatter plots are also used for numeric data and specifically for showing the relationship between two variables. Think of children and the relationship between their age and their height. You probably expect their height to increase with their age, right? There is a positive correlation between children’s age and height. The relationship may be linear (both variables increase on a constant scale, e.g. one variable increases by 1 unit, then the other increases by 3 units, across the range of both variables), or non-linear (e.g. exponential - one variable doubles every time the other increases by 1 unit). Look at the plots below. Which plot shows no relationship, which shows a linear relationship and which shows an exponential relationship?",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "plot_types.html#bar-plots",
+    "href": "plot_types.html#bar-plots",
+    "title": "13  Types of plots",
+    "section": "13.5 Bar plots",
+    "text": "13.5 Bar plots\nUp to now we have looked at plots to represent numeric data. Now we will look at bar plots, which are used to represent categorical data. Think of a study testing a vaccine for some disease. The investigators are interested in three study outcomes - participants who remain healthy, those who develop mild disease and those who develop severe disease during the study. The outcome group that each participant belongs to, is a categorical variable. We can plot the outcomes of interest in the vaccinated and unvaccinated groups, with bar plots.\n\n\n\n\n\n\n\n\n\nWhich two categorical variables are represented in the plot?\n\n\n\n\n\n\nExpand to see the answer\n\n\n\n\n\nOutcome group and vaccination status.\n\n\n\nInstead of having two panels as in the plot above, two categorical variables can also be represented on the same plot, like in the plot below from Chen_2023. Describe the plot below following the systematic approach we introduced at the start of this chapter. It will benefit you to write down your description.\n\nStacked bar plots are a specific type of barplot showing percentage on the y-axis, and then instead of having bars for each category of the variable next to each other on the x-axis, like in the previous two plots, all the categories are stacked on top of each other. Notice that every bar adds up to 100%. This plot does not show actual number of participants in each group. Below is the plot from the imagined vaccine trial, as a stacked bar plot. Do you think this type of plot makes it easier or more difficult to see differences between groups?",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "plot_types.html#quiz",
+    "href": "plot_types.html#quiz",
+    "title": "13  Types of plots",
+    "section": "13.6 Quiz",
+    "text": "13.6 Quiz\nComplete the quiz below to make sure you have a good grasp of the plots we discussed.\nQUIZ",
+    "crumbs": [
+      "Visualising data",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Types of plots</span>"
+    ]
+  },
+  {
+    "objectID": "visualise.html",
+    "href": "visualise.html",
+    "title": "Visualising data",
+    "section": "",
+    "text": "It is not difficult to appreciate the value of data visualisation. Explore the two resources below to be inspired.\n\nInformation is Beautiful https://informationisbeautiful.net/\n\nOur World in Data https://ourworldindata.org/",
+    "crumbs": [
+      "Visualising data"
+    ]
+  },
+  {
+    "objectID": "software.html",
+    "href": "software.html",
+    "title": "12  Software for data management and analysis",
+    "section": "",
+    "text": "Name examples of software applications for data collection, data storage and data analysis\n\nUnderstand strengths and limitations of different applications for data collection, storage and reproducible analysis\n\nComing soon",
+    "crumbs": [
+      "Working with data",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Software for data management and analysis</span>"
+    ]
+  },
+  {
+    "objectID": "file_types.html",
+    "href": "file_types.html",
+    "title": "11  Notes on file types",
+    "section": "",
+    "text": "Understand that data can be stored in different types of files\n\nUnderstand the strengths and limitations of a few example file types for storing different kinds of data\n\nComing soon",
+    "crumbs": [
+      "Working with data",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Notes on file types</span>"
+    ]
+  },
+  {
+    "objectID": "goals.html",
+    "href": "goals.html",
+    "title": "10  Goals of working with data",
+    "section": "",
+    "text": "Coming soon",
+    "crumbs": [
+      "Working with data",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Goals of working with data</span>"
+    ]
+  },
+  {
+    "objectID": "working_with_data.html",
+    "href": "working_with_data.html",
+    "title": "Working with data",
+    "section": "",
+    "text": "Data management\nIn the context of research, we generate data to answer the questions we have about the phenomenon that we are studying. Data management processes need to be put in place to ensure the security and integrity of such data. Security refers to making sure sensitive data is stored with access control (password protected) and not shared in ways where the data can be leaked to parties who should not have access, e.g sharing data on external hard drives that are left unattended on your desk. Integrity refers to making sure the data is correct, by having processes that minimise errors, e.g. never copying and pasting data from one spreadsheet to another. Data management is a big topic, so we will not discuss it in more detail here, but it is worth establishing your own data management process when you work with data. Below are some aspects to consider.",
+    "crumbs": [
+      "Working with data"
+    ]
+  },
+  {
+    "objectID": "working_with_data.html#data-management",
+    "href": "working_with_data.html#data-management",
+    "title": "Working with data",
+    "section": "",
+    "text": "Use a database whenever possible - databases were designed to store data and have many benefits over spreadsheets. Of course, when data is exported from a database, it ends up in a spreadsheet, but the original data remains unchanged in the database. If the original data is in a spreadsheet, the risk of modifying such data by accident (and without knowing!), is high.\n\nData sharing - make it a rule to not share spreadsheets via email, but share them on reputible password protected platforms like OneDrive, giving access permissions only to relevant people.\n\nVersion control - if data is stored or shared as a spreadsheet, give each version a number, which increments every time when something changes. Do not use words like “final” or other descriptive terms in the filename, because you will inevitably end up with a “final final” version, which makes the renders the word “final” meaningless.\n\nUse code scripts to manipulate and analyse data. This documents and tracks exactly how the data or data structure was changed, and all the steps can be reproduced at another time, or by another peson. In contrast, when using spreadsheet software to make new columns or remove rows, for example, there is no record of what was done to the data, and you yourself would not be able to reproduce the steps you took, even one week later.\n\nUse sensible file saving practises. Do not save all files in a generic Documents folder. Create a folder (directory) system for separate projects and use the same hierarchy for all of them. Below is an example of how you might structure a folder containing all your data analysis projects.\n\n-Documents\n  - Analysis_projects\n      - TB_diagnostics\n          - data\n          - scripts\n          - reports\n          - images\n      - COVID19_vaccine\n          - data\n          - scripts\n          - reports\n          - images",
+    "crumbs": [
+      "Working with data"
+    ]
+  },
+  {
+    "objectID": "bias.html",
+    "href": "bias.html",
+    "title": "9  Optional: Bias",
+    "section": "",
+    "text": "Bias is an important topic, but it will not be covered in depth here.\nIf you are interested, read the Wikipedia article below:\nhttps://en.wikipedia.org/wiki/Bias_(statistics)",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Optional:  Bias</span>"
+    ]
+  },
+  {
+    "objectID": "measurement.html",
+    "href": "measurement.html",
+    "title": "8  Variation and measurement",
+    "section": "",
+    "text": "8.1 We study variation!\nRevisit the abstracts from the previous chapter (Kampman_2023, Luetkemeyer_2023, Hall_2023 and Chen_2023) and read the research question you wrote down for each. In each case, the researchers were interested in differences (variation!) between different groups or times or conditions. We want to study changes that happen because of certain exposures or interventions or with a period of time passing. In the biological sciences, the changes we care about are usually biological changes, like changes in the immune response to a pathogen, or change in symptoms or bacterial load in response to a drug, or changes in drug efficacy due to variation in the pathogen’s genome. This is why the research question is so important to define - we should understand exactly which variation it is that we are interested in, because in order to study it, we have to measure it. And as you will find out during the course of your scientific career, measuring different types of biological phenomena can get very complex.\nWatch this video about Illumina sequencing-by-synthesis and ask yourself, what is actually being measured during the process to determine the nucleotide sequence? Nucleotides do not actually have the letters “A”, “C”, “G” or “T” printed on them! We are also not taking out each single nucleotide and looking at it under some very powerful microscope to see what it is. We are measuring something that is bound to each nucleotide, but even then we are not directly measuring that bound molecule… What are we actually measuring during the process?\nhttps://www.youtube.com/watch?v=fCd6B5HRaZ8\nYou need to appreciate that many technologies do not directly measure the molecule you are interested in, but in fact measures some proxy of it, like in the case of Illumina sequencing. We are not looking at the actual nucleotide under a microscope and noting down which one of the four candidates it is, but we measure fluorescence, emitted by a fluorescent marker bound to the nucleotide. Therefore, there is some error rate associated with all measurements, in part because the technologies we use to measure molecules, add several layers (like the fluorescent marker, and the fluorescence itself and the camera that detects the fluorescence) on top of what we are actually interested in measuring. Illumina reports on the expected error rates of base calling (the process of identifying which nucleotide was added to the sequence by interpreting the fluorescence signal), so that researchers can understand what the level of uncertainty for their results are.\nAfter sequencing, in the data pre-processing steps of sequencing experiments, another step is alignment to a reference genome. Here, an additional error rate comes into play, when a sequence can match a section of the reference genome, perfectly, or only partially. Here again, we usually record the alignment accuracy, so that we have some notion of the uncertainty of our results.\nWhat you should have concluded so far, is that:",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Variation and measurement</span>"
+    ]
+  },
+  {
+    "objectID": "measurement.html#we-study-variation",
+    "href": "measurement.html#we-study-variation",
+    "title": "8  Variation and measurement",
+    "section": "",
+    "text": "If proxy is an unfamiliar word to you, read about its meaning here.\n\nSee Illumina’s discussion of error rates here.\n\n\n\n\nOur measurements will never be 100% accurate according to the objective truth. Because we very rarely know the objective truth of a measurement, our estimates of error rates are usually based on simulation studies where we in a sense “create” the objective truth for the experiment. We will not cover simulation here, but feel free to read more about it, if you are interested.\n\n\nResearchers in biology (that includes you!) are interested in biological variation.\n\nThey specify a specific biological variation they are interested in in a research question. This guides which measurements they must take, because if you want to study something, you have to measure it.\n\nMeasurement can involve very complex technologies, with many hundreds or thousands of steps, before capturing an observation.\n\nMeasurement is sometimes indirect, i.e. they do not directly measure the molecule of interest, but some proxy, like the fluorescence emitted by a molecule bound to the molecule of interest.\n\nThe presence of many steps in a workflow that aims to measure a specific molecule, and the indirectness of many measurements, introduce error into the data.",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Variation and measurement</span>"
+    ]
+  },
+  {
+    "objectID": "measurement.html#unwanted-variation",
+    "href": "measurement.html#unwanted-variation",
+    "title": "8  Variation and measurement",
+    "section": "8.2 “Unwanted” variation",
+    "text": "8.2 “Unwanted” variation\nError in the sense that we are using it here, does not mean that anyone is necessarily doing something wrong (although one can certainly take some precautions to reduce error as much as possible). Introducing some error into data is usually practically unavoidable. Error is also just another form of variation, like the biological variation we are aiming to study. But the difference with error is that we are not interested in this variation, and it can interfere with our results about the variation we are actually interested in. In that sense it is unwanted, but largely unavoidable.\nLook at the picture below, and imagine these researchers are busy with an experiment. Blood was drawn from a female patient at a peripheral clinic, into a tube with some reagents to prevent clotting, and was then manually labelled with the patient’s study ID number and time of blood draw. It was then brought to the laboratory by a research assistant - a 30 minute drive. At the laboratory it was received by another research assistant, who documented the time of arrival, and then applied a study protocol for specimen preparation to it, which involved adding some reagents and splitting the specimen into several aliquots, (each manually labelled with new specimen IDs) which were then stored in a -80 degree Celsius freezer. The researchers depicted in the photo then retrieved one of the aliquots, thawed it, and added reagents, according to a study protocol for the specific assay they were doing, and documented the results in a standard data capture form. Some sources of variability and/or error have been highlighted in the picture. Can you think of even more sources of variation on a specimen’s journey from being collected, until data analysis has been done and results are reported?\n\n\n\nThis image is from the Digital Collections of the National Library of Medicine’s Images from the History of Medicine and can be viewed, along with many others, here.",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Variation and measurement</span>"
+    ]
+  },
+  {
+    "objectID": "study_design.html",
+    "href": "study_design.html",
+    "title": "7  Study design",
+    "section": "",
+    "text": "7.1 Research question\nRead the abstracts of Kampman_2023, Luetkemeyer_2023, Hall_2023 and Chen_2023 and in each case, extract the information listed below:\nFrom the information you extracted from each abstract, formulate the research question for each study.\nFocusing on Chen_2023 only, look at the examples of datasets below. Which one do you think best represents the data collection step for the study?",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Study design</span>"
+    ]
+  },
+  {
+    "objectID": "study_design.html#research-question",
+    "href": "study_design.html#research-question",
+    "title": "7  Study design",
+    "section": "",
+    "text": "Who or what is the population of interest?\n\nWhat is the exposure or intervention under investigation?\n\nAre different conditions, exposures or interventions compared in the study?\n\nWhat is the outcome of interest and how is it measured?\n\nAre measurements done at different time points?\n\n\n\n\n\n\n\n\n\n\n\nA\n\n\n\n\n\n\n\nB\n\n\n\n\n\n\n\nC",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Study design</span>"
+    ]
+  },
+  {
+    "objectID": "study_design.html#types-of-studies",
+    "href": "study_design.html#types-of-studies",
+    "title": "7  Study design",
+    "section": "7.2 Types of studies",
+    "text": "7.2 Types of studies\nRead Thiese_2014 and complete the quiz to test your own understanding.\nQUIZ",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Study design</span>"
+    ]
+  },
+  {
+    "objectID": "study_design.html#explanatory-and-response-variables",
+    "href": "study_design.html#explanatory-and-response-variables",
+    "title": "7  Study design",
+    "section": "7.3 Explanatory and response variables",
+    "text": "7.3 Explanatory and response variables\nThinking back to the studies for which you previously formulated research questions, you should recall that each study was investigating relationships between different variables. In Chen_2023, researchers were looking for genetic variants, or clinical characteristics, that were associated with TB treatment outcomes, in people with drug-sensitive M.tb disease. Look at the example dataset B above. The variable called Treatment outcome is the outcome of interest - the one they are trying to find more information about. They want to explain which factors have an influence on the treatment outcome of the participants in the study. This variable, which they are trying to understand better, is called the response variable, outcome variable or dependent variable.\nThe researchers also collected data from some other variables, which you can see in dataset B. They collected those because they suspected that those variables influence the response variable, i.e. that changes in these variables may cause a different treatment outcome. For example, if the M.tb strain a patient was infected with, had a specific genomic variant, that may have made them more likely to have a poor treatment outcome (“failure” in the dataset). These variables that are investigated for their influence on the response variable, are called explanatory variables, or independent variables.\nNow complete the quiz below about response and explanatory variables.\nQUIZ",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Study design</span>"
+    ]
+  },
+  {
+    "objectID": "study_design.html#confounders",
+    "href": "study_design.html#confounders",
+    "title": "7  Study design",
+    "section": "7.4 Confounders",
+    "text": "7.4 Confounders\nRead Yan_2020. Take note of the following terms that appear in the paper and make sure you understand what they mean:\n\na priori\n\npost hoc\n\nbias\n\nconfounder\n\nrandomisation\n\nstratified randomisation\n\noutcome of interest\n\nWatch this video for an overview of important concepts for this topic.\nhttps://youtu.be/A8Apv2JML34",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Study design</span>"
+    ]
+  },
+  {
+    "objectID": "where_data.html",
+    "href": "where_data.html",
+    "title": "Where does data come from?",
+    "section": "",
+    "text": "It is not hard to agree that we live in an “everything is data” age. Even so, it still needs to be measured and captured to be useful for analysis. In some cases, this can be very easy and cheap, but other times it needs careful planning and expensive equipment. To do data analysis, you do need to understand where data comes from, how it is collected, and what limitations it might have. It is not appropriate to analyse and come to conclusions about a system, using data that just happened to be available, but which doesn’t really measure exactly the thing which you are making conclusions about. A simple example of this may be using data available for one country, to make conclusions about another country, which may have very different characteristics. Our task as researchers therefore is not just about taking whichever data we obtain, or generate at face value, but to think critically about how bias may have been introduced and how this may affect our conclusions.",
+    "crumbs": [
+      "Where does data come from?"
+    ]
+  },
+  {
+    "objectID": "numeric.html",
+    "href": "numeric.html",
+    "title": "6  Numeric data",
+    "section": "",
+    "text": "6.1 Quiz\nWe will continue using the abstract from Chen_2023. Below is the example of a subset of variables that they were collecting in their study, which we used in the previous chapter.\nWe will now focus on the age variable.\nTo summarise numeric variables, we usually calculate a measure of centrality and a measure of spread. This gives a representation of where most of the data can be found (the measure of centrality) and how far it spreads out in both directions, from the center (the measure of spread).\nThe summary statistics for age look like this:\nNumeric variables can be represented in a number of ways that aim to emphasise where the bulk of the data is situated (measure of centrality) and how it is spread out in either direction from there. Two closely related plots are histograms and density plots.\nYou already encountered another very useful plot for numeric variables - the boxplot. Here we will use it slightly differently, in combination with a categorical variable, to compare the numeric variable between two groups.\nFor the Chen_2023 example data that we have been looking at, we can make the plot below.\nSometimes density plots can also be useful for such comparisons. The same data can make the plot below.\nLook at the plot from Our World in Data below and draw the structure of the table from which this plot was likely created. (Tip: there are at least 5 variables) Note the ones that are numeric and the ones that are categorical.\nComplete the quiz below to test your understanding of data types.\nQuiz",
+    "crumbs": [
+      "What is data?",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Numeric data</span>"
+    ]
+  },
+  {
+    "objectID": "categorical.html",
+    "href": "categorical.html",
+    "title": "5  Categorical data",
+    "section": "",
+    "text": "Read the abstract for Chen_2023. Below is an example of a subset of variables that they were collecting in their study.\n\n\n\nTable 5.1\n \n  \n    patient_ID \n    treatment_outcome \n    sex \n    age \n  \n \n\n  \n    ID1 \n    cured \n    male \n    33 \n  \n  \n    ID2 \n    failed \n    male \n    22 \n  \n  \n    ID3 \n    cured \n    female \n    50 \n  \n  \n    ID4 \n    cured \n    female \n    28 \n  \n  \n    ID5 \n    cured \n    male \n    30 \n  \n  \n    ID6 \n    cured \n    female \n    64 \n  \n  \n    ID7 \n    failed \n    male \n    20 \n  \n  \n    ID8 \n    failed \n    male \n    41 \n  \n  \n    ID9 \n    cured \n    male \n    44 \n  \n  \n    ID10 \n    cured \n    female \n    54 \n  \n  \n    ID11 \n    failed \n    male \n    64 \n  \n  \n    ID12 \n    failed \n    female \n    47 \n  \n  \n    ID13 \n    cured \n    female \n    25 \n  \n  \n    ID14 \n    failed \n    male \n    54 \n  \n  \n    ID15 \n    failed \n    male \n    41 \n  \n\n\n\n\n\nAs you can see, treatment_outcome and sex are categorical variables, while age is numeric.\nTo summarise categorical variables, we can make a frequency table, and calculate what proportion of the total number of observations each category in the categorical variable, represents.\n\n\nRecall that in a dataset where there is one or more rows for each participant, and different columns for different characteristics or measurements for each participant, we call the rows, observations, and the columns, variables.\nThe frequency table looks like this:\n\n\n\n \n  \n    total \n    female \n    male \n  \n \n\n  \n    15 \n    6 \n    9 \n  \n\n\n\n\n\nCalculate the proportion of males and females for yourself. Check your answer by ensuring that the two proportions add up to 1.\nOften we are interested in two or more groups, for example, what proportion of females had a poor treatment outcome. Construct the table you would need to answer that question. (You can click the triangle to reveal the answer, but try it for yourself first!)\n\n\n\n\n\n\nExpand to see the answer\n\n\n\n\n\n\n\n\n \n  \n    sex \n    cured \n    failed \n    total \n  \n \n\n  \n    female \n    5 \n    1 \n    6 \n  \n  \n    male \n    3 \n    6 \n    9 \n  \n\n\n\n\n\n\n\n\nOften we want to plot these types of results. A common way to do that, is to create a bar plot.\n\n\n\n\n\n\n\n\n\n\n\nHow many variables from Table 5.1 are represented in this plot?\nIf we wanted to plot sex and treatment outcome, there are at least four different ways to represent the same data. Some plots may communicate the message one wants to convey, better than others. Study the plots below and think about what each plot emphasises, and how they differ from each other.\n\n\n\n\n\n\n\n\n\nLook at the plot from Our World in Data below and draw the structure of the table from which this plot was likely created. (Tip: there are at least 4 variables)\n\n\n\nThis plot was accessed in April 2024, and could be found here at that time.\nDo the same for the plot below. This is also a bar graph, even though the orientation is different from the plots earlier in this chapter.\n\n\n\n\n\n\nThis plot was accessed in April 2024, and could be found here at that time.",
+    "crumbs": [
+      "What is data?",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Categorical data</span>"
+    ]
+  },
+  {
+    "objectID": "what_is_data.html",
+    "href": "what_is_data.html",
+    "title": "What is data?",
+    "section": "",
+    "text": "Learning outcomes\n\n\n\n\n\nIdentify different data types.\n\n\n\nHere are 12 rows of a fictional dataset on a viral disease outbreak. The full dataset has 344 observations (rows), and 12 variables (columns). It describes imaginary participants from 3 fictional towns who fell ill with 3 strains of an unknown viral disease. Some measurements were taken from their blood.\n\n\n\n\n \n  \n    study_id \n    year \n    town \n    strain \n    age \n    sex \n    height \n    weight \n    immune_prot_A \n    immune_prot_B \n    immune_prot_C \n    immune_prot_D \n  \n \n\n  \n    ID262 \n    2021 \n    Brenbo \n    G879 \n    65 \n    male \n    191.7948 \n    110.20692 \n    64.25698 \n    354.7057 \n    47.72071 \n    2.974343 \n  \n  \n    ID131 \n    2020 \n    Drogen \n    A52 \n    60 \n    female \n    162.7763 \n    57.84103 \n    46.91766 \n    517.3959 \n    33.62138 \n    3.027348 \n  \n  \n    ID312 \n    2020 \n    Drogen \n    CC3 \n    36 \n    female \n    187.8243 \n    77.84265 \n    60.56472 \n    343.5823 \n    47.35561 \n    1.549771 \n  \n  \n    ID88 \n    2021 \n    Brenbo \n    A52 \n    47 \n    male \n    174.0133 \n    78.80887 \n    62.15218 \n    427.7935 \n    37.80385 \n    2.922519 \n  \n  \n    ID123 \n    2020 \n    Drogen \n    A52 \n    35 \n    female \n    187.5730 \n    70.02742 \n    22.05171 \n    572.3164 \n    36.45592 \n    3.054800 \n  \n  \n    ID113 \n    2019 \n    Drogen \n    A52 \n    38 \n    male \n    172.0306 \n    67.98987 \n    72.94602 \n    474.6845 \n    41.05051 \n    3.344616 \n  \n  \n    ID95 \n    2021 \n    Brenbo \n    A52 \n    30 \n    female \n    176.6070 \n    78.17008 \n    16.66279 \n    241.3661 \n    38.10638 \n    3.094263 \n  \n  \n    ID301 \n    2019 \n    Drogen \n    CC3 \n    58 \n    female \n    180.8139 \n    65.56254 \n    21.14028 \n    539.7325 \n    45.06605 \n    3.044736 \n  \n  \n    ID158 \n    2019 \n    Brenbo \n    G879 \n    36 \n    female \n    198.8155 \n    90.93318 \n    46.72582 \n    400.8632 \n    45.88606 \n    2.319105 \n  \n  \n    ID177 \n    2019 \n    Brenbo \n    G879 \n    36 \n    female \n    188.7475 \n    100.20788 \n    58.32949 \n    369.6569 \n    42.63333 \n    3.007940 \n  \n  \n    ID46 \n    2021 \n    Tenwa \n    A52 \n    26 \n    male \n    187.3578 \n    80.20075 \n    71.01672 \n    161.9475 \n    39.77271 \n    1.564233 \n  \n  \n    ID107 \n    2019 \n    Drogen \n    A52 \n    44 \n    female \n    157.3296 \n    62.69030 \n    49.57028 \n    582.8601 \n    36.47359 \n    3.072070 \n  \n\n\n\n\n\n\nThe plot below was created from some of the variables in the dataset. Answer the questions below. You can click to reveal the correct answer, but try it yourself first!\n\n\n\n\n\n\n\n\n\n\nList all the variables you see represented in this plot (Tip: there are 4).\n\n\n\n\n\n\n\nExpand to see the answer\n\n\n\n\n\n\nstrain\n\ntown\n\nsex\n\nimmune_prot_A\n\nIf you thought “Brenbo”, “Drogen” and “Tenwa” were variables, look at the data table again. They are not variables, but observations inside the town variable. The same is true for “A52”, “CC3” and “G879”. They are observations in the strain variable.\n\n\n\n\nWhich colour represents the female participants?\n\n\n\n\n\n\n\nExpand to see the answer\n\n\n\n\n\ngrey\n\n\n\n\nTrue or false: Immune protein A was slightly higher in females with strain A52, who lived in Drogen.\n\n\n\n\n\n\n\nExpand to see the answer\n\n\n\n\n\nFalse. You can find the answer in the middle panel, by looking at the two boxplots aligned with strain A52.\n\n\n\n\nTrue or false: There were no participants from Brenbo who were ill with the CC3 strain.\n\n\n\n\n\n\n\nExpand to see the answer\n\n\n\n\n\nTrue. In the left panel, there is no plot for CC3, because the dataset contained no data for participants from Brenbo with that strain.\n\n\n\nData are information we capture about individuals, events or phenomena. We usually make it useful by putting it into a format that organises it, like a table, so that pieces of information that belong together, are together. When data are in a tidy table, we can usually call the rows observations and the columns variables.\n\n\nData are may sound strange to you, but the word data is actually the plural of the word datum, which is one data point. See https://www.collinsdictionary.com/dictionary/english/datum.\nThe variables can have different types, according to what they represent, as listed in the table below.\n\n\n\n \n  \n    Data type \n    Data subtype \n    Definition \n  \n \n\n  \n    categorical \n    nominal \n    Variables with categories (rather than numbers).  Nominal is when the categories have no natural order. \n  \n  \n     \n    ordinal \n    Variable with categories of things (rather than numbers).  Ordinal is when the categories have a natural order, like 'high' and 'low'. \n  \n  \n    numeric \n    discrete \n    Variables with numbers only.  Discrete is when the numbers are whole numbers (no decimal possible), like apples or children. \n  \n  \n     \n    continuous \n    Variables with numbers only.  Continuous is when the numbers can have decimals, which can stretch to infinity.",
+    "crumbs": [
+      "What is data?"
+    ]
+  },
+  {
+    "objectID": "what_is_model.html",
+    "href": "what_is_model.html",
+    "title": "4  What is a model?",
+    "section": "",
+    "text": "Watch the video to stimulate your thoughts on what a statistical model really is.\nhttps://youtu.be/X79iHkdy6tY",
+    "crumbs": [
+      "Why statistics?",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>What is a model?</span>"
+    ]
+  },
+  {
+    "objectID": "probability.html",
+    "href": "probability.html",
+    "title": "3  Probability",
+    "section": "",
+    "text": "Outcomes\n\n\n\n\n\n\nAble to define probability, independence and conditional probability.\n\nAble to name examples of probability distributions and their underlying assumptions.\n\n\n\n\nWe will now discuss probability conceptually. Many statistics textbooks and other resources discuss probability in detail and you can consult those if you are interested in more in-depth information. Here, we will only introduce a few important concepts.\n\n\n\n\n\n\nThe probability of an outcome is the proportion of times the outcome would occur if the random phenomenon could be observed an infinite number of times.\n\n\n\n\n\nThis definition was taken from the OpenIntro statistics book Introductory Statistics for the Life and Biomedical Sciences, which you can find here.\nThe simplest way to demonstrate the definition above, is to think about flipping a coin and calling heads or tails.\n\n\n\n\n\n\n\n\n\nAs in the gif, if you were to flip a coin thousands of times, what proportion of those flips will be heads? Most people intuitively know the answer is 0.5. We know this, because there are only two options, and because we know the coin is going to be flipped. We also know that the outcome is random - the outcome of the coin flip does not depend on the day of the week, the gender of the person flipping the coin or the oil price in the world.\n\n\n\n\n\nIf a coin is about to be flipped, the probability of getting heads, is 0.5. If we were not sure that the coin will be flipped though, the probability of getting heads is different, because there is now also a probability of the coin being flipped or not! As you can see, things can get interesting. See later for conditional probabilities.\n\n\n\n\n\n\nNow think of an elite basketball player. When that player aims at the hoop, shoots and scores, the event is not random at all. That elite player practised for many hours to become excellent at putting the ball through the hoop. The probability of the event happening is much higher than 0.5 (otherwise the player would not be considered an elite player!).",
+    "crumbs": [
+      "Why statistics?",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Probability</span>"
+    ]
+  },
+  {
+    "objectID": "probability.html#probability-distributions",
+    "href": "probability.html#probability-distributions",
+    "title": "3  Probability",
+    "section": "3.2 Probability distributions",
+    "text": "3.2 Probability distributions\n\n\n\n\n\n\nFinally, we will briefly discuss probability distributions. There is more detail about this in the section on the sampling distribution, later. Imagine you have a container filled with many black and white plastic balls (black and white in equal number), as depicted in the picture. You close your eyes, draw out 10 balls, and then (with your eyes open again!), count and record how many black balls you have. Then you put the balls back in the container. You repeat this whole process 100 times, so that you end up with 100 values.",
+    "crumbs": [
+      "Why statistics?",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Probability</span>"
+    ]
+  },
+  {
+    "objectID": "sample_population.html",
+    "href": "sample_population.html",
+    "title": "2  Samples and populations",
+    "section": "",
+    "text": "If you wanted to know the heights of all the people in your family, you could measure each person and make a data table with each person’s name and height. This table would represent your entire “population” of interest (your family) and you would not need any statistics for that.\nMost of the time, however, we are interested in much larger populations, such as all the people in a country, or all the trees in a forest. Measuring every individual in these populations is usually not feasible, so instead we take a smaller sample from the population and use statistics to make inferences about the entire population based on that sample. Statistics bridges the gap between the sample we are able to measure, and the much larger population we are interested in.\nWhen we measure the heights of the people in our sample, it is not because we are only interested in those specific people, but because we want to use that information to make statements about the heights of all the people in the population of interest. The population of interest is some group of people that we want to learn about - it can be all the people in a country, or all the people with a certain disease. The sample is a smaller group of people that we actually measure, and who represent the larger population. For this reason, they should actually be selected very carefully, because they must truly represent (be silimar enough to) the larger population we want to learn about.\nOnce we have measured our sample, we usually summarise the data we gathered, for example by calculating the average height of the people in our sample. This summary statistic (the average height) is then used as a starting point for estimating what the true average height of the entire population might be. Because our sample is only a small part of the entire population, our estimate of the population average will not be exact, but will have some uncertainty associated with it. It should be quite intuitive as well that, the more people we measure in our sample, the more accurate our estimate of the population average will be. The size of the sample is therefore many times a decision between the resources we have available (time, money, effort) and the accuracy we want to achieve.\nWe don’t just take the sample average as the population average, as is. We use both the average and the average variation across the different individuals in our sample to estimate the population average and its variability (uncertainty or error). To do this, we use the principles of probability theory and what we have learned over many hundreds of years about measuring things and how those measurements tend to be distributed across a range of possible values. This is how statistical methods have been developed - finding ways to estimate the true population characteristics, based on measuring sample characteristics in a relatively small number of individuals. The way statistical methods have been developed also ensures that we can quantify the uncertainty in our estimates, always reminding ourselves that we are estimating, not actually measuring the true population characteristics.",
+    "crumbs": [
+      "Why statistics?",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Samples and populations</span>"
+    ]
+  },
+  {
+    "objectID": "uncertainty.html",
+    "href": "uncertainty.html",
+    "title": "1  Uncertainty",
+    "section": "",
+    "text": "Statistics is the study of uncertainty. Uncertainty is the source of variability in data and variability is what makes data interesting. In a given situation, there are many sources of variability. Some of these are real effects that we want to measure, while others are just noise that we want to ignore. The goal of statistical analysis is to separate the signal from the noise, to identify the real effects and to quantify their uncertainty. Our challenge is that it is not clear which parts of the data are signal and which parts are noise.\nIf we were always measuring the same thing in the same way, like one would in pure physics experiments, for example, we could just repeat the measurements many times and average them to get a good estimate of the true value. Because that is what we are in fact seeking - the true value of the thing we are measuring. However, in most real-world situations, especially in the life sciences, just repeating the measurements many times, doesn’t fully solve the problem. Biological systems vary even from minute to minute, and our tools for measuring also introduce variability because of characteristics inherent to the technology.\nImagine measuring a certain concentration of a protein in blood samples from different individuals. The concentration of the protein may vary between individuals due to genetic differences, environmental factors, or health status. Additionally, the measurement within the same person will vary over time. Even taking the measurement from the same blood sample, but at two different instances, on the same instrument will vary because of changes in temperature, air pressure and the calibration of instruments slowly changing over time. Two different lab members measuring the same sample may get slightly different results. All these sources of variability contribute to the uncertainty in our measurements.\nWe know that uncertainty will be there, but there are better and worse scenarios. The best case scenario is if the variability is random and unbiased. This means that the errors are equally likely to be positive or negative, and they do not systematically favor one direction over another. In this case, we can use statistical methods to estimate the true value and quantify the uncertainty around it.\nAnother scenario that is potentially easier to manage, is if the error is systematic and consistent. If we know that a certain instrument always overestimates the concentration by 5%, we can correct for that bias in our analysis. One of the worst scenarios is if the variability is both systematic and inconsistent. And add to that the possibility that we are unaware of the systematic errors, then we are in trouble.\nFor systematic errors, we often have to investigate and correct it in the study design or the technology used for measurement. Statistics in general can not solve systematic errors easily, and it is unwise to design a study in a sloppy way, hoping that statistical analysis will fix it later. Statistics is however very good at handling random errors, and many times in fact, rely on the assumption that errors are random and unbiased.\nRandom error can be small or large, depending on the situation. Sometimes, we can control the sources of variability to some extent, for example by standardizing the measurement procedures, using high-quality instruments, training personnel or choosing to study a homogeneous population, for example in-bred lab animals. These approaches try to ensure that there is less unnecessary noise in the data, which would drown out the signal we are looking for. Some situations are however, inherently more variable. Some technologies are more noisy than others, because a better way to measure just has not been developed yet. It is evident that studying human populations will be more variable than studying in-bred lab animals.\nWith statistics we attept to quantify how variable the system is. Many times, this takes the form of providing some sort of range around the estimate we are providing. For example, instead of saying that the concentration of a protein is 50 ng/mL, we might say that it is 50 ng/mL +/- 5 ng/mL, indicating that the true value is likely to be between 45 and 55 ng/mL. With this we acknowledge the uncertainty in our measurement and provide a more informative result for others to judge. In some situations, the stakes are high, because the estimate may change clinical practice or influence public health decisions. In these cases, it is especially important to quantify and communicate the uncertainty in the estimates.",
+    "crumbs": [
+      "Why statistics?",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Uncertainty</span>"
+    ]
+  },
+  {
+    "objectID": "measurement.html#accuracy-and-precision",
+    "href": "measurement.html#accuracy-and-precision",
+    "title": "8  Variation and measurement",
+    "section": "8.3 Accuracy and precision",
+    "text": "8.3 Accuracy and precision\nRead the Wikipedia article on accuracy and precision here, and complete the quiz to test your understanding.\nQUIZ",
+    "crumbs": [
+      "Where does data come from?",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Variation and measurement</span>"
+    ]
+  }
+]
